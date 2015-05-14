@@ -59,7 +59,7 @@ public class EventMenu extends Activity {
         user2_button.setOnClickListener(new pressButton());
         user3_button.setOnClickListener(new pressButton());
         user4_button.setOnClickListener(new pressButton());
-
+        location_button.setOnClickListener(new pressButton());
         /************************UI init*******************/
 
 
@@ -178,6 +178,14 @@ public class EventMenu extends Activity {
 
             }
             else if(view.getId()==R.id.user4_button){
+
+            }
+            else if(view.getId()==R.id.location_button){
+                Intent intent = new Intent(getApplicationContext(), Map.class);
+                intent.putExtra("lat",event.latitude);
+                intent.putExtra("lon",event.longitude);
+                intent.putExtra(Constants.eventCode,200);
+                startActivity(intent);
 
             }
         }
