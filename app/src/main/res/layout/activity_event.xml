@@ -59,27 +59,27 @@
             <Button
                 android:layout_width="97dp"
                 android:layout_height="wrap_content"
-                android:text="New Button"
-                android:id="@+id/button" />
+                android:text="-"
+                android:id="@+id/user1_button" />
 
             <Button
                 android:layout_width="84dp"
                 android:layout_height="match_parent"
-                android:text="New Button"
-                android:id="@+id/button2"
+                android:text="-"
+                android:id="@+id/user2_button"
                 android:layout_weight="0.63" />
 
             <Button
                 android:layout_width="92dp"
                 android:layout_height="match_parent"
-                android:text="New Button"
-                android:id="@+id/button3" />
+                android:text="-"
+                android:id="@+id/user3_button" />
 
             <Button
                 android:layout_width="88dp"
                 android:layout_height="match_parent"
-                android:text="New Button"
-                android:id="@+id/button4"
+                android:text="-"
+                android:id="@+id/user4_button"
                 android:layout_weight="0.24" />
         </LinearLayout>
 
@@ -107,7 +107,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="31dp"
                 android:text="Location on map"
-                android:id="@+id/button5"
+                android:id="@+id/location_button"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="0.06" />
 
