@@ -190,8 +190,10 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
 //                    }
                 }
             }
+
             Log.i(TAG,"pass through fucking id");
             Intent startEvent=new Intent(Map.this,EventMenu.class);
+            getIntent().putExtra(Constants.eventId, _id);
             startActivity(startEvent);
             finish();
         }

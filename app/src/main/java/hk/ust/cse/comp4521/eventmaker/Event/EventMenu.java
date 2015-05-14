@@ -65,7 +65,7 @@ public class EventMenu extends Activity {
 
 
         Intent intent = getIntent();
-        event_id = intent.getExtras().getString(Constants.eventId);
+        event_id = intent.getStringExtra(Constants.eventId);
         Thread get_event_thread=new get_my_event();
         get_event_thread.start();
 
