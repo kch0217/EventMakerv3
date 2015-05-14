@@ -29,7 +29,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import hk.ust.cse.comp4521.eventmaker.Constants;
 import hk.ust.cse.comp4521.eventmaker.Event.Event;
+import hk.ust.cse.comp4521.eventmaker.Event.EventMenu;
 import hk.ust.cse.comp4521.eventmaker.Event.Event_T;
 import hk.ust.cse.comp4521.eventmaker.R;
 import hk.ust.cse.comp4521.eventmaker.SearchFrag;
@@ -78,12 +80,14 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
     // Bool to track whether the app is already resolving an error
     private boolean mResolvingError = false;
 
-    private ArrayList<CharSequence> interest;
+    private ArrayList<String> interest;
 
     private NotificationManager mNotificationManager;
     private int noteId = 1;
 
-    private List<Event> all;
+
+
+    //private List<Event> all;
 
 
     public SearchHelper() {
@@ -110,13 +114,17 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
         mLastUpdateTime = "";
 
         mGoogleApiClient.connect();
-
-        interest = intent.getCharSequenceArrayListExtra("Interest");
-        Log.i(TAG, "Interests are received" );
-
         downloadAllEvents();
 
-        putNotification();
+        if (intent.getStringExtra("Mode").equals("Passive")) {
+
+            interest = intent.getStringArrayListExtra("Interest");
+            Log.i(TAG, "Interests are received");
+
+
+
+            putNotification();
+        }
 
 
         return super.onStartCommand(intent, flags, startId);
@@ -152,6 +160,25 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
     }
 
+    private void updateNotification(String instructions){
+        Bitmap largeIcon;
+
+        largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.playing);
+
+        Notification.Builder mBuilder =
+                new Notification.Builder(this)
+                        .setSmallIcon(R.drawable.playing)
+                        .setLargeIcon(largeIcon.createScaledBitmap(largeIcon,72,72,false))
+                        .setOngoing(true)
+                        .setContentTitle("Found an event.")
+                        .setContentText("It is about "+ instructions);
+
+        // Creates an explicit intent for the Activity
+        Intent resultIntent = new Intent(this, EventMenu.class);
+        resultIntent.putExtra("","");
+
+    }
+
     private void cancelNotification() {
         mNotificationManager.cancel(noteId);
         stopForeground(true);
@@ -180,6 +207,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
     public void downloadAllEvents(){
         Event_T eventdownloader = new Event_T();
         eventdownloader.getAllEvent();
+
     }
 
     protected GoogleApiClient mGoogleApiClient;
@@ -268,7 +296,9 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
                 "  Longitude = " + String.valueOf(mCurrentLocation.getLongitude() +
                 "\nLast Updated = " + mLastUpdateTime);
         Log.i(TAG, message);
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        Thread comparison = new Thread(new InternetHelper());
+        comparison.start();
     }
 
     @Override
@@ -301,17 +331,22 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
         protected void onPreExecute() {
             super.onPreExecute();
             Event_T eventdownloader = new Event_T();
+            Event_T.test = null;
             eventdownloader.getAllEvent();
+            while (Event_T.test==null){
+
+            }
 
         }
 
         @Override
         protected ArrayList<String> doInBackground(String... strings) {
             ArrayList<String> temp = new ArrayList<>();
+            List<Event> all = Event_T.test;
             for (int i = 0 ; i< all.size(); i++){
                 float [] results={};
                 Location.distanceBetween(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), all.get(i).latitude, all.get(i).longitude, results);
-                if (results.length!=0 && results[0] < 500){
+                if (results.length!=0 && results[0] < Constants.DEFAULT_RANGE_DETECTION){
                     temp.add(all.get(i)._id);
                 }
             }
@@ -319,6 +354,44 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
         }
 
 
+    }
+
+    private class InternetHelper implements Runnable{
+
+        @Override
+        public void run() {
+            Event_T eventdownloader = new Event_T();
+            Event_T.test = null;
+            eventdownloader.getAllEvent();
+            while (Event_T.test==null){
+
+            }
+
+            ArrayList<String> temp = new ArrayList<>();
+            List<Event> all = Event_T.test;
+            for (int i = 0 ; i< all.size(); i++){
+                float [] results={};
+                boolean matchInterest = true;
+                for (int j = 0 ; j< interest.size(); j++)
+                    if (all.get(i).interest.equals(interest.get(j))){
+                        matchInterest = false;
+                        break;
+                    }
+                if (!matchInterest){
+                    break;
+                }
+                Location.distanceBetween(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), all.get(i).latitude, all.get(i).longitude, results);
+                if (results.length!=0 && results[0] < Constants.DEFAULT_RANGE_DETECTION){
+                    temp.add(all.get(i)._id);
+                }
+            }
+            if (temp.size()>0){
+
+            }
+
+
+
+        }
     }
 
 
