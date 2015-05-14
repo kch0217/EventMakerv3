@@ -23,6 +23,6 @@ public class Constants {
     public static final String MAP_KEY="AIzaSyD_zzrOpDDnlECR-swGuKpHHo44WZaxI1I";
 
     public static final String eventId="eventId";
-    public static final String eventCode="eventCode";
+    public static final String eventCode="eventCode";//100 from hin 200 from him
 
 }

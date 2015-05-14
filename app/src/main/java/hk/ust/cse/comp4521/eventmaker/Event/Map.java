@@ -34,8 +34,14 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
     private Marker marker;
     private int num=0;
     Button but;
+
     private double lat;
     private double lon;
+    private double orilat;
+    private double orilon;
+    private String interest;
+    private int mode;//100 =from hin 200=from him
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +59,22 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
         mMapFragment.getMapAsync(this);
         but= (Button) findViewById(R.id.submit);
         but.setVisibility(View.INVISIBLE);
+        Intent receive=getIntent();
+        if(receive!=null){
+            mode=receive.getExtras().getInt(Constants.eventCode,0);
+            orilat=receive.getExtras().getDouble("lat",0);
+            orilon=receive.getExtras().getDouble("lon",0);
+            if(mode==100){
+                interest=receive.getExtras().getString("Interest", null);
+                Log.i(TAG,"from search");
+            }
+            else if(mode==200){
+                Log.i(TAG,"receive from event");
+            }
+            else{
+                Log.i(TAG,"something goes wrong");
+            }
+        }
     }
 
     @Override
@@ -80,37 +102,42 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         googleMap.setMyLocationEnabled(true);
-        Location curLocation=googleMap.getMyLocation();
+        if(mode==100){
+            LatLng mylocation=new LatLng(orilat,orilon);
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mylocation,16));
+            but.setVisibility(View.VISIBLE);
+        }
+        else if(mode==200){
 
-        LatLng mylocation = null;
-        if(curLocation !=null){
-            mylocation=new LatLng(curLocation.getLatitude(),curLocation.getLongitude());
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 16));
         }
 
 
-        but.setVisibility(View.VISIBLE);
         but.setOnClickListener(this);
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                Log.i(TAG, "clicked");
-                if (num < ballcount) {
-                    num++;
-                    marker = googleMap.addMarker(new MarkerOptions()
-                                    .position(latLng)
-                                    .title("destination")
-                    );
-                    lat = latLng.latitude;
-                    lon = latLng.longitude;
-                } else {
-                    marker.remove();
-                    marker = googleMap.addMarker(new MarkerOptions()
-                                    .position(latLng)
-                                    .title("destination")
-                    );
-                    lat = latLng.latitude;
-                    lon = latLng.longitude;
+                if(mode==100) {
+                    Log.i(TAG, "clicked");
+                    if (num < ballcount) {
+                        num++;
+                        marker = googleMap.addMarker(new MarkerOptions()
+                                        .position(latLng)
+                                        .title("destination")
+                        );
+                        lat = latLng.latitude;
+                        lon = latLng.longitude;
+                    } else {
+                        marker.remove();
+                        marker = googleMap.addMarker(new MarkerOptions()
+                                        .position(latLng)
+                                        .title("destination")
+                        );
+                        lat = latLng.latitude;
+                        lon = latLng.longitude;
+                    }
+                }
+                else{
+
                 }
             }
         });
