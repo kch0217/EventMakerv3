@@ -1,0 +1,126 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#67a9a592"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:id="@+id/a">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:weightSum="1"
+        android:background="#00000000"
+        android:id="@+id/b">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.06"
+            android:weightSum="1"
+            android:id="@+id/c">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="－"
+                android:id="@+id/event_name"
+                android:textSize="21dp"
+                android:gravity="center|center_horizontal"
+                android:layout_gravity="center" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:background="#fffdfff3">
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="48dp"
+                android:layout_height="34dp"
+                android:text="Setting"
+                android:id="@+id/setting"
+                android:layout_weight="0.09" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:background="#fffdfff3">
+
+            <Button
+                android:layout_width="97dp"
+                android:layout_height="wrap_content"
+                android:text="New Button"
+                android:id="@+id/button" />
+
+            <Button
+                android:layout_width="84dp"
+                android:layout_height="match_parent"
+                android:text="New Button"
+                android:id="@+id/button2"
+                android:layout_weight="0.63" />
+
+            <Button
+                android:layout_width="92dp"
+                android:layout_height="match_parent"
+                android:text="New Button"
+                android:id="@+id/button3" />
+
+            <Button
+                android:layout_width="88dp"
+                android:layout_height="match_parent"
+                android:text="New Button"
+                android:id="@+id/button4"
+                android:layout_weight="0.24" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.17"
+            android:id="@+id/information_layout"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Location:-"
+                android:id="@+id/location_text"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:layout_weight="0.39" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="fill_parent"
+                android:layout_height="31dp"
+                android:text="Location on map"
+                android:id="@+id/button5"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="0.06" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="time:-"
+                android:id="@+id/time_text"
+                android:layout_gravity="right"
+                android:gravity="center"
+                android:layout_weight="0.56" />
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>
