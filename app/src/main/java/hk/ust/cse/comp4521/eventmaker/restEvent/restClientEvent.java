@@ -25,7 +25,8 @@ public class restClientEvent {
                 .setEndpoint(Constants.KSERVER_URL)
                 .setErrorHandler(new retErrorHandler())
                 .setClient(new OkClient(new OkHttpClient()))
-                .setLogLevel(RestAdapter.LogLevel.FULL);
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setExecutors(new eventExecutor(),new eventExecutor());
 
         RestAdapter restAdapter=builder.build();
         restClient=restAdapter.create(eventApi.class);
@@ -34,7 +35,7 @@ public class restClientEvent {
     private static class eventExecutor implements Executor {
         @Override
         public void execute(Runnable command) {
-
+            new Thread(command).start();
         }
     }
 }

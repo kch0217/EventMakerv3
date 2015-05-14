@@ -19,7 +19,7 @@ public class Event_T{
     public static Event returnevt;
     public static String testid;
     public static Event2 eventCreated;
-    public Event_T(){}
+
 
     public static double locationDetection(Location one, Location two){
         double latdif=one.getLatitude()-two.getLatitude();
@@ -58,6 +58,7 @@ public class Event_T{
                 else{
                     test=new ArrayList<Event>();
                 }
+                Log.i(TAG,"wellprogramworksidkwhy");
             }
             @Override
             public void failure(RetrofitError retrofitError) {

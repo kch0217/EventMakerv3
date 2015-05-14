@@ -20,7 +20,7 @@ public class Constants {
     public static final String KPORT_NUM="3000";
     public static final String KSERVER_URL="http://"+KSERVER_ID+":"+KPORT_NUM;
 
-    public static final String MAP_KEY="AIzaSyD_zzrOpDDnlECR-swGuKpHHo44WZaxI1I";
+    public static final String MAP_KEY="AIzaSyCP9l_atibNsB7jmMxV2bPC_Olrn34ihx0";
 
     public static final String eventId="eventId";
     public static final String eventCode="eventCode";//100 from hin 200 from him

@@ -85,6 +85,8 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
     private NotificationManager mNotificationManager;
     private int noteId = 1;
 
+    private String mode;
+
 
 
     //private List<Event> all;
@@ -120,11 +122,15 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
             interest = intent.getStringArrayListExtra("Interest");
             Log.i(TAG, "Interests are received");
+            mode = "Passive";
 
 
 
             putNotification();
         }
+        else
+        mode = "Voluntary";
+
 
 
         return super.onStartCommand(intent, flags, startId);
@@ -306,8 +312,10 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
                 "\nLast Updated = " + mLastUpdateTime);
         Log.i(TAG, message);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-        Thread comparison = new Thread(new InternetHelper());
-        comparison.start();
+        if (mode.equals("Passive")) {
+            Thread comparison = new Thread(new InternetHelper());
+            comparison.start();
+        }
     }
 
     @Override
