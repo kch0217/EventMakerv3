@@ -63,10 +63,18 @@
             android:label="@string/title_activity_map" >
         </activity>
         <activity
+            android:name=".Event.EventMenu"
+            android:label="@string/title_activity_eventMenu" >
+        </activity>
+        <activity
             android:name=".About"
             android:label="@string/title_activity_about" >
         </activity>
 
+        <activity
+            android:name=".User.UserDisplay"
+            android:label="@string/title_activity_user_display" >
+        </activity>
         <service
             android:name=".PassiveSearch.SearchHelper"
             android:enabled="true"

@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 import hk.ust.cse.comp4521.eventmaker.Constants;
 import hk.ust.cse.comp4521.eventmaker.PassiveSearch.SearchHelper;
@@ -47,6 +48,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG,"map starting");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         GoogleMapOptions options=new GoogleMapOptions();
@@ -105,6 +107,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
+        Log.i(TAG,"map ready");
         googleMap.setMyLocationEnabled(true);
         if(mode==100){
             but.setVisibility(View.VISIBLE);
@@ -157,20 +160,34 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
             eventToSubmit.latitude=lat;
             eventToSubmit.longitude=lon;
             Timestamp eventtime=eventToSubmit.currentTimestamp;
+
             Event_T eventhelper=new Event_T();
             eventhelper.createEvent(eventToSubmit);
             boolean find=false;
             //id
             String _id=null;
             ProgressDialog dialog=ProgressDialog.show(Map.this,"loading","Please wait...",true);
-
+            Log.i(TAG,"fucking the id");
             while(find!=true){
                 for(int i=0;i<Event_T.test.size();i++){
-                    if(eventtime.compareTo(Event_T.test.get(i).currentTimestamp)==0){
+                    int year = eventtime.getYear();
+                    int month = eventtime.getMonth();
+                    int date = eventtime.getDate();
+                    int hour = eventtime.getHours();
+                    int min = eventtime.getMinutes();
+                    if (year==Event_T.test.get(i).currentTimestamp.getYear() && month == Event_T.test.get(i).currentTimestamp.getMonth()&&
+                            date == Event_T.test.get(i).currentTimestamp.getDate()&& hour==Event_T.test.get(i).currentTimestamp.getHours()&&
+                            min==Event_T.test.get(i).currentTimestamp.getMinutes()){
                         find=true;
                         dialog.dismiss();
                         _id=Event_T.test.get(i)._id;
                     }
+
+//                    if(eventtime.compareTo(Event_T.test.get(i).currentTimestamp)==0){
+//                        find=true;
+//                        dialog.dismiss();
+//                        _id=Event_T.test.get(i)._id;
+//                    }
                 }
             }
             Log.i(TAG,"pass through fucking id");

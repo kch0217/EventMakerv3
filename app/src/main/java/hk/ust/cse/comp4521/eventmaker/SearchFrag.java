@@ -218,35 +218,39 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
         public MainSearchFragment() {
         }
 
+        Intent getloc;
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_search, container, false);
             activity = getResources().getStringArray(R.array.interest_array2);
 
-            ListView list = (ListView) rootView.findViewById(R.id.searchselectionList);
+            final ListView list = (ListView) rootView.findViewById(R.id.searchselectionList);
             list.setAdapter(new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_list_item_single_choice, activity));
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Intent intent = new Intent(getActivity(), SearchHelper.class);
-                    intent.putExtra("Mode", "Voluntary");
-                    getActivity().startService(intent);
-                    ProgressDialog progress= ProgressDialog.show(getActivity(), "Loading", "Matching....", true);
-                    while (SearchHelper.mCurrentLocation == null){
 
-                    }
+
+//                    while (SearchHelper.mCurrentLocation == null){
+//                        //Log.i("Help", "Waiting");
+//                    }
                     double lat = SearchHelper.mCurrentLocation.getLatitude();
                     double lon =SearchHelper.mCurrentLocation.getLongitude();
+                    Log.i("SearchFrag",(String) list.getAdapter().getItem(i)+" "+lat+" "+ lon );
                     String id = Matching.checking((String) list.getAdapter().getItem(i), lat , lon );
-                    getActivity().stopService(intent);
-                    progress.dismiss();
+                    getActivity().stopService(getloc);
+
+
+                    Log.i(ARG_SECTION_NUMBER, "Successfully get the location");
                     if (id == null){
                         Intent intent2 = new Intent(getActivity(), Map.class);
                         intent2.putExtra("Interest",(String) list.getAdapter().getItem(i) );
                         intent2.putExtra("lat", lat);
                         intent2.putExtra("lon", lon);
                         intent2.putExtra(Constants.eventCode, 100);
+                        Log.i(ARG_SECTION_NUMBER, "Create new event");
                         startActivity(intent2);
 
                     }
@@ -254,6 +258,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                     {
                         Intent intent2 = new Intent(getActivity(), EventMenu.class);
                         intent2.putExtra(Constants.eventId, id);
+                        Log.i(ARG_SECTION_NUMBER, "Go to the existing event");
                         startActivity(intent2);
                     }
                 }
@@ -287,6 +292,9 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
 
                 
             }
+            getloc = new Intent(getActivity(), SearchHelper.class);
+            getloc.putExtra("Mode", "Voluntary");
+            getActivity().startService(getloc);
             progress.dismiss();
 
 //            Log.i(ARG_SECTION_NUMBER, UserServer.returnInfo._id);
