@@ -32,12 +32,13 @@ public class Event_T{
             @Override
             public void success(retrofit.client.Response response, retrofit.client.Response response2) {
                 Log.i(TAG, "Add Response is " + response.getBody().toString());
-                eventCreated=evt;
+                eventCreated = evt;
+                getAllEvent();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.i(TAG,"cannot conect"+retrofitError.getKind().name());
+                Log.i(TAG, "cannot conect" + retrofitError.getKind().name());
             }
         });
         getAllEvent();
@@ -71,11 +72,13 @@ public class Event_T{
             @Override
             public void success(retrofit.client.Response response, retrofit.client.Response response2) {
                 Log.i(TAG, "update successfully on" + id);
+                getAllEvent();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 Log.i(TAG, "failed update");
+
             }
         });
         getAllEvent();
@@ -86,6 +89,7 @@ public class Event_T{
             @Override
             public void success(retrofit.client.Response response, retrofit.client.Response response2) {
                 Log.i(TAG, "delete ok");
+                getAllEvent();
             }
 
             @Override
@@ -102,6 +106,7 @@ public class Event_T{
             public void success(Event event, retrofit.client.Response response) {
                 Log.i(TAG,"get event ok"+event._id);
                 returnevt=event;
+                getAllEvent();
             }
 
             @Override
