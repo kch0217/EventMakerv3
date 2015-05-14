@@ -1,6 +1,7 @@
 package hk.ust.cse.comp4521.eventmaker.Event;
 
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.sql.Timestamp;
 
 import hk.ust.cse.comp4521.eventmaker.Constants;
 import hk.ust.cse.comp4521.eventmaker.PassiveSearch.SearchHelper;
@@ -60,6 +63,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
         but= (Button) findViewById(R.id.submit);
         but.setVisibility(View.INVISIBLE);
         Intent receive=getIntent();
+
         if(receive!=null){
             mode=receive.getExtras().getInt(Constants.eventCode,0);
             orilat=receive.getExtras().getDouble("lat",0);
@@ -103,14 +107,16 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
     public void onMapReady(final GoogleMap googleMap) {
         googleMap.setMyLocationEnabled(true);
         if(mode==100){
-            LatLng mylocation=new LatLng(orilat,orilon);
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mylocation,16));
             but.setVisibility(View.VISIBLE);
         }
-        else if(mode==200){
-
+        LatLng mylocation=new LatLng(orilat,orilon);
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 16));
+        if(mode==200){
+            googleMap.addMarker(new MarkerOptions()
+                            .position(mylocation)
+                            .title("destination")
+            );
         }
-
 
         but.setOnClickListener(this);
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -150,10 +156,25 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
             eventToSubmit._ownerid= UserServer.returnInfo._id;
             eventToSubmit.latitude=lat;
             eventToSubmit.longitude=lon;
+            Timestamp eventtime=eventToSubmit.currentTimestamp;
             Event_T eventhelper=new Event_T();
             eventhelper.createEvent(eventToSubmit);
-            Intent startEvent=new Intent(Map.this,EventMenu.class);
+            boolean find=false;
+            //id
+            String _id=null;
+            ProgressDialog dialog=ProgressDialog.show(Map.this,"loading","Please wait...",true);
 
+            while(find!=true){
+                for(int i=0;i<Event_T.test.size();i++){
+                    if(eventtime.compareTo(Event_T.test.get(i).currentTimestamp)==0){
+                        find=true;
+                        dialog.dismiss();
+                        _id=Event_T.test.get(i)._id;
+                    }
+                }
+            }
+            Log.i(TAG,"pass through fucking id");
+            Intent startEvent=new Intent(Map.this,EventMenu.class);
             startActivity(startEvent);
             finish();
         }

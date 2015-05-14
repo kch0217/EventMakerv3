@@ -12,7 +12,7 @@ public class Constants {
     public static final int MODIFY_REG = 0;
     public static final int DEFAULT_RANGE_DETECTION = 500;
 
-    public static final String SERVER_ID = "192.168.0.109";
+    public static final String SERVER_ID = "147.8.246.197";
     public static final String PORT_NUM = "3000";
     public static final String SERVER_URL = "http://"+SERVER_ID+":"+PORT_NUM;
 
