@@ -49,7 +49,7 @@ public class Event_T{
             @Override
             public void success(ArrayList<Event> events, retrofit.client.Response response) {
                 test = events;
-                if (test.size() > 0) {
+                if (test!=null) {
                     for (int i = 0; i < test.size(); i++) {
                         Log.i(TAG, test.get(i)._id);
                     }
@@ -61,6 +61,7 @@ public class Event_T{
             @Override
             public void failure(RetrofitError retrofitError) {
                 Log.i(TAG, "youknowwhat"+retrofitError.getKind().name());
+                test=new ArrayList<Event>();
             }
         });
     }
