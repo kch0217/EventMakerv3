@@ -38,7 +38,6 @@ public class Event_Test extends Activity implements GoogleApiClient.ConnectionCa
         setContentView(R.layout.activity_event__test);
         buildGoogleApiClient();
         Event_T tak=new Event_T();
-        tak.getAllEvent();
     }
 
     protected synchronized void buildGoogleApiClient(){

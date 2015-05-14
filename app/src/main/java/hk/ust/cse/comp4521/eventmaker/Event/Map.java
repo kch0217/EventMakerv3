@@ -1,6 +1,7 @@
 package hk.ust.cse.comp4521.eventmaker.Event;
 
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -18,9 +19,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import hk.ust.cse.comp4521.eventmaker.Constants;
 import hk.ust.cse.comp4521.eventmaker.R;
+import hk.ust.cse.comp4521.eventmaker.User.UserServer;
 
-public class Map extends FragmentActivity implements OnMapReadyCallback{
+public class Map extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener{
     private MapFragment mMapFragment;
     private String TAG="MAP";
     private final int ballcount=1;
@@ -74,6 +77,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback{
     public void onMapReady(final GoogleMap googleMap) {
         googleMap.setMyLocationEnabled(true);
         but.setVisibility(View.VISIBLE);
+        but.setOnClickListener(this);
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -84,26 +88,34 @@ public class Map extends FragmentActivity implements OnMapReadyCallback{
                                     .position(latLng)
                                     .title("destination")
                     );
-                    lat=latLng.latitude;
-                    lon=latLng.longitude;
-                }
-                else {
+                    lat = latLng.latitude;
+                    lon = latLng.longitude;
+                } else {
                     marker.remove();
                     marker = googleMap.addMarker(new MarkerOptions()
                                     .position(latLng)
                                     .title("destination")
                     );
-                    lat=latLng.latitude;
-                    lon=latLng.longitude;
+                    lat = latLng.latitude;
+                    lon = latLng.longitude;
                 }
             }
         });
-        but.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Event2 evtToCreate=new Event2();
+    }
 
-            }
-        });
+    @Override
+    public void onClick(View v) {
+        if(v.getId()==R.id.submit){
+            Event2 eventToSubmit=new Event2();
+            eventToSubmit._ownerid= UserServer.returnInfo._id;
+            eventToSubmit.latitude=lat;
+            eventToSubmit.longitude=lon;
+            Event_T eventhelper=new Event_T();
+            eventhelper.createEvent(eventToSubmit);
+            Intent startEvent=new Intent(Map.this,EventMenu.class);
+
+            startActivity(startEvent);
+            finish();
+        }
     }
 }

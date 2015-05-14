@@ -27,7 +27,7 @@ public class Event_T{
         double result=Math.sqrt(latdif*latdif+longdif*longdif);
         return result;
     };
-    public void createEvent(final Event2 evt){;
+    public void createEvent(final Event2 evt){
         restClientEvent.get().addEvent(evt, new Callback<retrofit.client.Response>() {
             @Override
             public void success(retrofit.client.Response response, retrofit.client.Response response2) {
@@ -37,7 +37,7 @@ public class Event_T{
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.i(TAG,"cannot conect");
+                Log.i(TAG,"cannot conect"+retrofitError.getKind().name());
             }
         });
         getAllEvent();
@@ -54,10 +54,13 @@ public class Event_T{
                         Log.i(TAG, test.get(i)._id);
                     }
                 }
+                else{
+                    test=new ArrayList<Event>();
+                }
             }
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.i(TAG, "youknowwhat");
+                Log.i(TAG, "youknowwhat"+retrofitError.getKind().name());
             }
         });
     }
