@@ -35,6 +35,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import hk.ust.cse.comp4521.eventmaker.Event.EventMenu;
+import hk.ust.cse.comp4521.eventmaker.Event.Map;
+import hk.ust.cse.comp4521.eventmaker.Event.Matching;
 import hk.ust.cse.comp4521.eventmaker.PassiveSearch.SearchHelper;
 import hk.ust.cse.comp4521.eventmaker.User.UserInfo;
 import hk.ust.cse.comp4521.eventmaker.User.UserModel;
@@ -221,6 +224,37 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
 
             ListView list = (ListView) rootView.findViewById(R.id.searchselectionList);
             list.setAdapter(new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_list_item_single_choice, activity));
+            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Intent intent = new Intent(getActivity(), SearchHelper.class);
+                    intent.putExtra("Mode", "Voluntary");
+                    getActivity().startService(intent);
+                    ProgressDialog progress= ProgressDialog.show(getActivity(), "Loading", "Matching....", true);
+                    while (SearchHelper.mCurrentLocation == null){
+
+                    }
+                    double lat = SearchHelper.mCurrentLocation.getLatitude();
+                    double lon =SearchHelper.mCurrentLocation.getLongitude();
+                    String id = Matching.checking((String) list.getAdapter().getItem(i), lat , lon );
+                    getActivity().stopService(intent);
+                    if (id == null){
+                        Intent intent2 = new Intent(getActivity(), Map.class);
+                        intent2.putExtra("Interest",(String) list.getAdapter().getItem(i) );
+                        intent2.putExtra("lat", lat);
+                        intent2.putExtra("lon", lon);
+                        intent2.putExtra(Constants.eventCode, 100);
+                        startActivity(intent2);
+
+                    }
+                    else
+                    {
+                        Intent intent2 = new Intent(getActivity(), EventMenu.class);
+                        intent2.putExtra(Constants.eventId, id);
+                        startActivity(intent2);
+                    }
+                }
+            });
 
             UserServer userServer = new UserServer();
             UserServer.updateInternalState();
@@ -229,7 +263,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
 //            } catch (InterruptedException e) {
 //                e.printStackTrace();
 //            }
-            ProgressDialog progress= ProgressDialog.show(getActivity(), "Loading", "Downloading important info from the Internet.", true);;
+            ProgressDialog progress= ProgressDialog.show(getActivity(), "Loading", "Downloading important info from the Internet.", true);
             while (UserServer.UserInfoArrayList ==null){
 
             }
@@ -246,6 +280,8 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
             progress.dismiss();
 
 //            Log.i(ARG_SECTION_NUMBER, UserServer.returnInfo._id);
+
+
 
             return rootView;
         }
@@ -325,7 +361,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                     }
                     Log.i(ARG_SECTION_NUMBER, result);
 
-
+                    intent.putExtra("Mode", "Passive");
                     intent.putStringArrayListExtra("Interest", tempPassive);
                     getActivity().startService(intent);
 
