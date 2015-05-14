@@ -35,7 +35,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import hk.ust.cse.comp4521.eventmaker.Event.Event;
 import hk.ust.cse.comp4521.eventmaker.Event.EventMenu;
+import hk.ust.cse.comp4521.eventmaker.Event.Event_T;
 import hk.ust.cse.comp4521.eventmaker.Event.Map;
 import hk.ust.cse.comp4521.eventmaker.Event.Matching;
 import hk.ust.cse.comp4521.eventmaker.PassiveSearch.SearchHelper;
@@ -238,6 +240,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                     double lon =SearchHelper.mCurrentLocation.getLongitude();
                     String id = Matching.checking((String) list.getAdapter().getItem(i), lat , lon );
                     getActivity().stopService(intent);
+                    progress.dismiss();
                     if (id == null){
                         Intent intent2 = new Intent(getActivity(), Map.class);
                         intent2.putExtra("Interest",(String) list.getAdapter().getItem(i) );
@@ -276,6 +279,13 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
 //            }
             while (UserServer.returnInfo == null){
 
+            }
+
+            Event_T event_t = new Event_T();
+            event_t.getAllEvent();
+            while (Event_T.test == null) {
+
+                
             }
             progress.dismiss();
 
