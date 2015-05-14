@@ -32,6 +32,8 @@ public class UserServer {
             @Override
             public void success(ArrayList<UserInfo> userInfos, Response response) {
                 UserInfoArrayList = userInfos;
+                if (UserInfoArrayList==null)
+                    UserInfoArrayList = new ArrayList<UserInfo>();
                 Log.w(TAG, "Succeed to fetch all data! The size of Array is " + UserInfoArrayList.size());
                 if (!(UserInfoArrayList.size() > 0)) {
                     Log.w(TAG, "Failed to fetch data!");
@@ -41,6 +43,8 @@ public class UserServer {
             @Override
             public void failure(RetrofitError retrofitError) {
                 Log.e(TAG, "Retrofit Error");
+                if (UserInfoArrayList==null)
+                    UserInfoArrayList = new ArrayList<UserInfo>();
             }
         });
 
@@ -61,7 +65,7 @@ public class UserServer {
                 Log.e(TAG, "Retrofit Error");
             }
         });
-        updateInternalState();
+
 
     }
 
@@ -77,7 +81,7 @@ public class UserServer {
 
             }
         });
-        updateInternalState();
+
     }
 
     public static UserInfo getAUser(String phone){

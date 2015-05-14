@@ -58,7 +58,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
      */
     protected LocationRequest mLocationRequest;
 
-    protected Location mLastLocation, mCurrentLocation;
+    public static Location mLastLocation, mCurrentLocation;
 
     /**
      * Tracks the status of the location updates request. Value changes when the user presses the
@@ -160,7 +160,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
     }
 
-    private void updateNotification(String instructions){
+    private void updateNotification(String instructions, String _id){
         Bitmap largeIcon;
 
         largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.playing);
@@ -175,7 +175,16 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
         // Creates an explicit intent for the Activity
         Intent resultIntent = new Intent(this, EventMenu.class);
-        resultIntent.putExtra("","");
+        resultIntent.putExtra(Constants.eventId, _id);
+
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, 0);
+
+        mBuilder.setContentIntent(resultPendingIntent);
+
+        Log.i(TAG, "Service: updateNotification()");
+
+        // noteId allows you to update the notification later on.
+        mNotificationManager.notify(noteId, mBuilder.build());
 
     }
 
@@ -367,7 +376,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
             }
 
-            ArrayList<String> temp = new ArrayList<>();
+            ArrayList<Event> temp = new ArrayList<>();
             List<Event> all = Event_T.test;
             for (int i = 0 ; i< all.size(); i++){
                 float [] results={};
@@ -382,11 +391,11 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
                 }
                 Location.distanceBetween(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), all.get(i).latitude, all.get(i).longitude, results);
                 if (results.length!=0 && results[0] < Constants.DEFAULT_RANGE_DETECTION){
-                    temp.add(all.get(i)._id);
+                    temp.add(all.get(i));
                 }
             }
             if (temp.size()>0){
-
+                updateNotification(temp.get(0).interest, temp.get(0)._id);
             }
 
 
