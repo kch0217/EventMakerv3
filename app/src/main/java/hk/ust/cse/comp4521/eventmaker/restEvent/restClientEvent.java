@@ -2,6 +2,8 @@ package hk.ust.cse.comp4521.eventmaker.restEvent;
 
 import com.squareup.okhttp.OkHttpClient;
 
+import java.util.concurrent.Executor;
+
 import hk.ust.cse.comp4521.eventmaker.Constants;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
@@ -27,5 +29,12 @@ public class restClientEvent {
 
         RestAdapter restAdapter=builder.build();
         restClient=restAdapter.create(eventApi.class);
+    }
+
+    private static class eventExecutor implements Executor {
+        @Override
+        public void execute(Runnable command) {
+
+        }
     }
 }

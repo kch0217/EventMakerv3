@@ -15,10 +15,10 @@ import retrofit.RetrofitError;
  */
 public class Event_T{
     String TAG="VZXYZ";
-    List<Event> test;
-    Event returnevt;
-    String testid;
-
+    public static List<Event> test;
+    public static Event returnevt;
+    public static String testid;
+    public static Event2 eventCreated;
     public Event_T(){}
 
     public static double locationDetection(Location one, Location two){
@@ -27,22 +27,23 @@ public class Event_T{
         double result=Math.sqrt(latdif*latdif+longdif*longdif);
         return result;
     };
-    public void createEvent(){
-        Event2 test=new Event2();
-      restClientEvent.get().addEvent(test, new Callback<retrofit.client.Response>() {
-          @Override
-          public void success(retrofit.client.Response response, retrofit.client.Response response2) {
-              Log.i(TAG, "Add Response is " + response.getBody().toString());
-          }
+    public void createEvent(final Event2 evt){;
+        restClientEvent.get().addEvent(evt, new Callback<retrofit.client.Response>() {
+            @Override
+            public void success(retrofit.client.Response response, retrofit.client.Response response2) {
+                Log.i(TAG, "Add Response is " + response.getBody().toString());
+                eventCreated=evt;
+            }
 
-          @Override
-          public void failure(RetrofitError retrofitError) {
-              Log.i(TAG,"cannot conect");
-          }
-      });
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.i(TAG,"cannot conect");
+            }
+        });
+        getAllEvent();
     }
 
-    public List<Event> getAllEvent(){
+    public void getAllEvent(){
 
         restClientEvent.get().getEvents(new Callback<ArrayList<Event>>() {
             @Override
@@ -54,13 +55,11 @@ public class Event_T{
                     }
                 }
             }
-
             @Override
             public void failure(RetrofitError retrofitError) {
                 Log.i(TAG, "youknowwhat");
             }
         });
-        return test;
     }
 
     public void updateEvent(Event2 evt, final String id){
@@ -75,6 +74,7 @@ public class Event_T{
                 Log.i(TAG, "failed update");
             }
         });
+        getAllEvent();
     }
 
     public void deleteEvent(String id){
@@ -89,9 +89,10 @@ public class Event_T{
                 Log.i(TAG, "delete fail");
             }
         });
+        getAllEvent();
     }
 
-    public Event getEvent(String id){
+    public void getEvent(String id){
         restClientEvent.get().getEvent(id, new Callback<Event>() {
             @Override
             public void success(Event event, retrofit.client.Response response) {
@@ -104,7 +105,7 @@ public class Event_T{
                 Log.i(TAG,"FAIL get");
             }
         });
-        return returnevt;
+        getAllEvent();
     }
 
 

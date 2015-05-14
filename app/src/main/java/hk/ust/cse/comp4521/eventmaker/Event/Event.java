@@ -1,5 +1,8 @@
 package hk.ust.cse.comp4521.eventmaker.Event;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
+
 /**
  * Created by User on 5/3/2015.
  */
@@ -10,6 +13,11 @@ public class Event {
     public double longitude;
     public double latitude;
     public int numOfPart; //default as 3
+    public Timestamp currentTimestamp;
+    public String locationName;
+    public String starting;
+    public String ending;
+
 
     public Event(){    }
 
@@ -20,5 +28,10 @@ public class Event {
         _id=evt._id;
         _ownerid=evt._ownerid;
         interest=evt.interest;
+        Calendar calendar = Calendar.getInstance();
+        java.util.Date now = calendar.getTime();
+        currentTimestamp = evt.currentTimestamp;
+        starting=evt.starting;
+        ending=evt.ending;
     }
 }

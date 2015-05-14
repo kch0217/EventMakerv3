@@ -27,6 +27,8 @@ public class Map extends FragmentActivity implements OnMapReadyCallback{
     private Marker marker;
     private int num=0;
     Button but;
+    private double lat;
+    private double lon;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,18 +84,24 @@ public class Map extends FragmentActivity implements OnMapReadyCallback{
                                     .position(latLng)
                                     .title("destination")
                     );
-                } else {
+                    lat=latLng.latitude;
+                    lon=latLng.longitude;
+                }
+                else {
                     marker.remove();
                     marker = googleMap.addMarker(new MarkerOptions()
                                     .position(latLng)
                                     .title("destination")
                     );
+                    lat=latLng.latitude;
+                    lon=latLng.longitude;
                 }
             }
         });
         but.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Event2 evtToCreate=new Event2();
 
             }
         });

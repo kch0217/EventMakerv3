@@ -179,7 +179,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
     public void downloadAllEvents(){
         Event_T eventdownloader = new Event_T();
-        all = eventdownloader.getAllEvent();
+        eventdownloader.getAllEvent();
     }
 
     protected GoogleApiClient mGoogleApiClient;
@@ -301,7 +301,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
         protected void onPreExecute() {
             super.onPreExecute();
             Event_T eventdownloader = new Event_T();
-            all = eventdownloader.getAllEvent();
+            eventdownloader.getAllEvent();
 
         }
 
