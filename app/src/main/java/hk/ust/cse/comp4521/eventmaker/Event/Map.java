@@ -111,10 +111,12 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
         }
         LatLng mylocation=new LatLng(orilat,orilon);
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 16));
-        googleMap.addMarker(new MarkerOptions()
-            .position(mylocation)
-                .title("destination")
-        );
+        if(mode==200){
+            googleMap.addMarker(new MarkerOptions()
+                            .position(mylocation)
+                            .title("destination")
+            );
+        }
 
         but.setOnClickListener(this);
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -171,7 +173,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
                     }
                 }
             }
-
+            Log.i(TAG,"pass through fucking id");
             Intent startEvent=new Intent(Map.this,EventMenu.class);
             startActivity(startEvent);
             finish();
