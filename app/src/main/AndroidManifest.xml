@@ -52,15 +52,16 @@
         <activity
             android:name=".Event.Event_Test"
             android:label="@string/title_activity_event__test" >
+
+        </activity>
+        <activity
+            android:name=".Event.Map"
+            android:label="@string/title_activity_map" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".Event.Map"
-            android:label="@string/title_activity_map" >
         </activity>
         <activity
             android:name=".About"

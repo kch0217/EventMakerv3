@@ -2,7 +2,9 @@ package hk.ust.cse.comp4521.eventmaker.Event;
 
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
@@ -20,6 +23,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import hk.ust.cse.comp4521.eventmaker.Constants;
+import hk.ust.cse.comp4521.eventmaker.PassiveSearch.SearchHelper;
 import hk.ust.cse.comp4521.eventmaker.R;
 import hk.ust.cse.comp4521.eventmaker.User.UserServer;
 
@@ -76,6 +80,15 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         googleMap.setMyLocationEnabled(true);
+        Location curLocation=googleMap.getMyLocation();
+
+        LatLng mylocation = null;
+        if(curLocation !=null){
+            mylocation=new LatLng(curLocation.getLatitude(),curLocation.getLongitude());
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 16));
+        }
+
+
         but.setVisibility(View.VISIBLE);
         but.setOnClickListener(this);
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
