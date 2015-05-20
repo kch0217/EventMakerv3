@@ -71,6 +71,26 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
      */
     ViewPager mViewPager;
     Intent mainloc;
+    private Object lock;
+    private ProgressDialog pd2;
+    private static Boolean networkIO;
+    public static Handler handle = new Handler(){
+        @Override
+        public void handleMessage(Message inputMessage) {
+            if (inputMessage.what == Constants.ConnectionError) {
+//                    pd2.dismiss();
+//                    if (pd != null)
+//                        pd.dismiss();
+                networkIO = false;
+            }
+            else {
+//                    pd2.dismiss();
+//                    if (pd != null)
+//                        pd.dismiss();
+                networkIO = true;
+            }
+        }
+    };
 
 
     @Override
@@ -111,6 +131,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
+        pd2= ProgressDialog.show(SearchFrag.this, "Loading", "Downloading important info from the Internet.", true);
     }
 
     @Override
@@ -123,6 +144,41 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
     protected void onResume() {
 
         super.onResume();
+        UserServer userServer = new UserServer();
+
+
+        ServerConnection serverConn = new ServerConnection(SearchFrag.this, handle);
+        serverConn.run();
+
+
+        if (userServer.connectionState ==true) {
+            lock = new Object();
+            userServer.lock = lock;
+            UserInfo user = userServer.getAUser(UserModel.getUserModel().getPhoneNumberFromSP());
+
+            if (UserServer.returnInfo == null) {
+                synchronized (lock) {
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+
+            Event_T event_t = new Event_T();
+            event_t.getAllEvent();
+
+
+            while (Event_T.test == null) {
+
+
+            }
+
+        }
+        pd2.dismiss();
+
         mainloc = new Intent(getApplicationContext(), SearchHelper.class);
         mainloc.putExtra("Mode", "Voluntary");
         MainSearchFragment.getloc = mainloc;
@@ -226,7 +282,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
          */
         private static final String ARG_SECTION_NUMBER = "main search";
         private static String [] activity;
-        private Boolean networkIO;
+
 
 
         /**
@@ -247,25 +303,8 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
 
         private static Intent getloc;
         private ProgressDialog pd;
-        private ProgressDialog pd2;
-        private Object lock;
-        public Handler handle = new Handler(){
-            @Override
-            public void handleMessage(Message inputMessage) {
-                if (inputMessage.what == Constants.ConnectionError) {
-//                    pd2.dismiss();
-//                    if (pd != null)
-//                        pd.dismiss();
-                    networkIO = false;
-                }
-                else {
-//                    pd2.dismiss();
-//                    if (pd != null)
-//                        pd.dismiss();
-                    networkIO = true;
-                }
-            }
-        };
+
+
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -280,8 +319,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
 
-
-                    if (SearchHelper.mCurrentLocation == null){
+                    if (SearchHelper.mCurrentLocation == null) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
                         //  Chain together various setter methods to set the dialog characteristics
@@ -299,31 +337,30 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                         builder.create().show();
                         return;
                     }
-                    pd = ProgressDialog.show(getActivity(),"Network Access", "Connecting to the server", true);
+                    pd = ProgressDialog.show(getActivity(), "Network Access", "Connecting to the server", true);
                     ServerConnection serverConn = new ServerConnection(getActivity(), handle);
                     serverConn.run(); //test network connection
                     pd.dismiss();
 
-                    while (UserServer.connectionState ==null){
+                    while (UserServer.connectionState == null) {
 
                     }
-                    if (!networkIO){
+                    if (!UserServer.connectionState) {
                         return;
                     }
 
 
-
                     double lat = SearchHelper.mCurrentLocation.getLatitude();
-                    double lon =SearchHelper.mCurrentLocation.getLongitude();
-                    Log.i("SearchFrag",(String) list.getAdapter().getItem(i)+" "+lat+" "+ lon );
-                    String id = Matching.checking((String) list.getAdapter().getItem(i), lat , lon );
+                    double lon = SearchHelper.mCurrentLocation.getLongitude();
+                    Log.i("SearchFrag", (String) list.getAdapter().getItem(i) + " " + lat + " " + lon);
+                    String id = Matching.checking((String) list.getAdapter().getItem(i), lat, lon);
                     getActivity().stopService(getloc);
 
 
                     Log.i(ARG_SECTION_NUMBER, "Successfully get the location");
-                    if (id == null){
+                    if (id == null) {
                         Intent intent2 = new Intent(getActivity(), Map.class);
-                        intent2.putExtra("Interest",(String) list.getAdapter().getItem(i) );
+                        intent2.putExtra("Interest", (String) list.getAdapter().getItem(i));
                         intent2.putExtra("lat", lat);
                         intent2.putExtra("lon", lon);
                         intent2.putExtra(Constants.eventCode, 100);
@@ -331,9 +368,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
 
                         startActivity(intent2);
 
-                    }
-                    else
-                    {
+                    } else {
                         Intent intent2 = new Intent(getActivity(), EventMenu.class);
                         intent2.putExtra(Constants.eventId, id);
                         Log.i(ARG_SECTION_NUMBER, "Go to the existing event");
@@ -344,46 +379,10 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
 
 
 
-            UserServer userServer = new UserServer();
-
-            UserServer.updateInternalState();
-
-            pd2= ProgressDialog.show(getActivity(), "Loading", "Downloading important info from the Internet.", true);
-            ServerConnection serverConn = new ServerConnection(getActivity(), handle);
-            serverConn.run();
 
 
-            if (userServer.connectionState ==true) {
-                lock = new Object();
-                userServer.lock = lock;
-                UserInfo user = userServer.getAUser(UserModel.getUserModel().getPhoneNumberFromSP());
-
-                if (UserServer.returnInfo == null) {
-                    synchronized (lock) {
-                        try {
-                            lock.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                }
-
-                Event_T event_t = new Event_T();
-                event_t.getAllEvent();
-
-                try {
-                    Thread.currentThread().sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                while (Event_T.test == null) {
 
 
-                }
-
-            }
-            pd2.dismiss();
 //            getloc = new Intent(getActivity(), SearchHelper.class);
 //            getloc.putExtra("Mode", "Voluntary");
 //            getActivity().startService(getloc);

@@ -30,20 +30,28 @@
         </activity>
         <activity
             android:name=".User.UserRegistration"
-            android:label="@string/title_activity_user_registration" >
+            android:label="@string/title_activity_user_registration"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">>
         </activity>
         <activity
             android:name=".SearchMain"
-            android:label="@string/title_activity_search_main" >
+            android:label="@string/title_activity_search_main"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">>
         </activity>
         <activity
             android:name=".Setting"
-            android:label="@string/title_activity_setting" >
+            android:label="@string/title_activity_setting"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">>
         </activity>
         <activity
             android:name=".SearchFrag"
             android:label="@string/title_activity_search_frag"
-            android:theme="@style/SearchTheme" >
+            android:theme="@style/SearchTheme"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">>
         </activity>
 
         <meta-data
@@ -51,7 +59,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCP9l_atibNsB7jmMxV2bPC_Olrn34ihx0" />
+            android:value="AIzaSyBJGM6O9Wrllxp2_4l_RWkp9KvHusUNjl4" />
 
         <activity
             android:name=".Event.Event_Test"
@@ -60,20 +68,28 @@
         </activity>
         <activity
             android:name=".Event.Map"
-            android:label="@string/title_activity_map" >
+            android:label="@string/title_activity_map"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">>
         </activity>
         <activity
             android:name=".Event.EventMenu"
-            android:label="@string/title_activity_eventMenu" >
+            android:label="@string/title_activity_eventMenu"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">>
         </activity>
         <activity
             android:name=".About"
-            android:label="@string/title_activity_about" >
+            android:label="@string/title_activity_about"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">>
         </activity>
 
         <activity
             android:name=".User.UserDisplay"
-            android:label="@string/title_activity_user_display" >
+            android:label="@string/title_activity_user_display"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">>
         </activity>
         <service
             android:name=".PassiveSearch.SearchHelper"

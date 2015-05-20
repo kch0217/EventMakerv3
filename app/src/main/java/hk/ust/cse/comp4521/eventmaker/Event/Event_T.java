@@ -21,6 +21,7 @@ public class Event_T{
     public static Event2 eventCreated;
 
 
+
     public static double locationDetection(Location one, Location two){
         double latdif=one.getLatitude()-two.getLatitude();
         double longdif=one.getLongitude()-two.getLongitude();

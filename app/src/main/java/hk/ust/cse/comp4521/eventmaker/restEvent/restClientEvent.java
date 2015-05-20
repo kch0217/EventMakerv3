@@ -3,6 +3,7 @@ package hk.ust.cse.comp4521.eventmaker.restEvent;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
 import hk.ust.cse.comp4521.eventmaker.Constants;
 import retrofit.RestAdapter;
@@ -21,10 +22,16 @@ public class restClientEvent {
     public static  eventApi get(){return restClient;}
 
     private static void setupRestClient(){
+        // create client
+        OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setReadTimeout(3, TimeUnit.SECONDS);
+        okHttpClient.setConnectTimeout(3, TimeUnit.SECONDS);
+        okHttpClient.setWriteTimeout(3, TimeUnit.SECONDS);
+
         RestAdapter.Builder builder=new RestAdapter.Builder()
                 .setEndpoint(Constants.KSERVER_URL)
                 .setErrorHandler(new retErrorHandler())
-                .setClient(new OkClient(new OkHttpClient()))
+                .setClient(new OkClient(okHttpClient))
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setExecutors(new eventExecutor(),new eventExecutor());
 

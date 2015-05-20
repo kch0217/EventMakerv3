@@ -1,10 +1,14 @@
 package hk.ust.cse.comp4521.eventmaker.Event;
 
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.SyncStateContract;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -28,6 +32,7 @@ import java.util.Date;
 
 import hk.ust.cse.comp4521.eventmaker.Constants;
 import hk.ust.cse.comp4521.eventmaker.PassiveSearch.SearchHelper;
+import hk.ust.cse.comp4521.eventmaker.PassiveSearch.ServerConnection;
 import hk.ust.cse.comp4521.eventmaker.R;
 import hk.ust.cse.comp4521.eventmaker.User.UserServer;
 
@@ -45,6 +50,23 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
     private double orilon;
     private String interest;
     private int mode;//100 =from hin 200=from him
+    private ProgressDialog pd;
+    private boolean click;
+
+    public Handler handle = new Handler(){
+        @Override
+        public void handleMessage(Message inputMessage) {
+            if (inputMessage.what == Constants.ConnectionError) {
+                finish();
+            }
+            else {
+//                    pd2.dismiss();
+//                    if (pd != null)
+//                        pd.dismiss();
+
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +92,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
             mode=receive.getExtras().getInt(Constants.eventCode,0);
             orilat=receive.getExtras().getDouble("lat",0);
             orilon=receive.getExtras().getDouble("lon",0);
+            interest = receive.getExtras().getString("Interest", "");
             if(mode==100){
                 interest=receive.getExtras().getString("Interest", null);
                 Log.i(TAG,"from search");
@@ -81,6 +104,23 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
                 Log.i(TAG,"something goes wrong");
             }
         }
+        click = false;
+        // 1. Instantiate an AlertDialog.Builder with its constructor
+        AlertDialog.Builder builder = new AlertDialog.Builder(Map.this);
+
+        // 2. Chain together various setter methods to set the dialog characteristics
+        builder.setMessage("A new event has been created for you. Please select a location for it by putting a marker on the map.")
+                .setTitle("Instruction")
+                .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+
+                    }
+                });
+
+        // 3. Get the AlertDialog from create()
+        builder.create().show();
     }
 
     @Override
@@ -148,6 +188,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
                 else{
 
                 }
+                click = true;
             }
         });
     }
@@ -156,11 +197,30 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
     public void onClick(View v) {
         if(v.getId()==R.id.submit){
             Event2 eventToSubmit=new Event2();
+            if (click == false && mode ==100) {
+                Toast.makeText(Map.this, "Please select a venue for the event to take place!", Toast.LENGTH_SHORT).show();
+                return;
+            }
             eventToSubmit._ownerid= UserServer.returnInfo._id;
+
             eventToSubmit.latitude=lat;
             eventToSubmit.longitude=lon;
             Timestamp eventtime=eventToSubmit.currentTimestamp;
+            eventToSubmit.interest = interest;
 
+            pd = ProgressDialog.show(Map.this,"Network Access", "Connecting to the server", true);
+            ServerConnection serverConn = new ServerConnection(Map.this, handle);
+            serverConn.run(); //test network connection
+            pd.dismiss();
+
+            while (UserServer.connectionState ==null){
+
+            }
+
+            if (UserServer.connectionState == false){
+                Toast.makeText(Map.this, "No Internet access", Toast.LENGTH_SHORT);
+                return;
+            }
             Event_T eventhelper=new Event_T();
             eventhelper.createEvent(eventToSubmit);
             boolean find=false;
@@ -191,7 +251,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
                 }
             }
 
-            Log.i(TAG,"pass through fucking id");
+            Log.i(TAG,"pass through id");
             Intent startEvent=new Intent(Map.this,EventMenu.class);
             getIntent().putExtra(Constants.eventId, _id);
             startActivity(startEvent);

@@ -5,6 +5,7 @@ import android.util.Log;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
 import hk.ust.cse.comp4521.eventmaker.Constants;
 import retrofit.RestAdapter;
@@ -34,10 +35,16 @@ public class RestClient {
     }
 
     private static void setupRestClient() {
+        // create client
+        OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setReadTimeout(2, TimeUnit.SECONDS);
+        okHttpClient.setConnectTimeout(2, TimeUnit.SECONDS);
+        okHttpClient.setWriteTimeout(2, TimeUnit.SECONDS);
+
         RestAdapter.Builder builder = new RestAdapter.Builder()
                 .setEndpoint(Constants.SERVER_URL)
                 .setErrorHandler(new RetrofitErrorHandler())
-                .setClient(new OkClient(new OkHttpClient()))
+                .setClient(new OkClient(okHttpClient))
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setExecutors(new executeRest(), new executeRest()) ;
 

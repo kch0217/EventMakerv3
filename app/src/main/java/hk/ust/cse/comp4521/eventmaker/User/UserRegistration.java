@@ -79,9 +79,7 @@ public class UserRegistration extends Activity {
 
 
         pd = ProgressDialog.show(UserRegistration.this,"Network Access", "Connecting to the server", true);
-        ServerConnection serverConn = new ServerConnection(UserRegistration.this, handle);
-        serverConn.run();
-        pd.dismiss();
+
 
 
 //        myserver.updateInternalState();
@@ -93,6 +91,23 @@ public class UserRegistration extends Activity {
 //
 //        }
 
+    }
+
+    @Override
+    protected void onStart() {
+
+
+        super.onStart();
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ServerConnection serverConn = new ServerConnection(UserRegistration.this, handle);
+        serverConn.run();
+        pd.dismiss();
     }
 
     public Handler handle = new Handler(){
@@ -243,6 +258,7 @@ public class UserRegistration extends Activity {
                 ServerConnection serverConn = new ServerConnection(UserRegistration.this, handle);
                 serverConn.run(); //test network connection
                 saveInfo();
+                pd.dismiss();
                 UserModel.getUserModel().saveSetting(true);
                 Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
                 if (getIntent().getIntExtra("Context", -1) ==Constants.NEW_REGISTRATION) {
