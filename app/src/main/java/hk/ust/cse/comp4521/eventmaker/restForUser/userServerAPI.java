@@ -16,6 +16,8 @@ public interface userServerAPI {
     void getUsers(Callback<ArrayList<UserInfo>> callback);
 
 
+
+
     @GET("/users/{id}")
     void getUser(@Path("id") String id, Callback<UserInfo> callback);
 

@@ -21,7 +21,7 @@ public interface eventApi {
     @GET("/events")
     void getEvents(Callback<ArrayList<Event>> callback);
 
-
+    //
     @GET("/events/{id}")
     void getEvent(@Path("id") String id, Callback<Event> callback);
 

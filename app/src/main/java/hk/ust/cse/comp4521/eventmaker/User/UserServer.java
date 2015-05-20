@@ -20,6 +20,12 @@ public class UserServer {
     public static List<UserInfo> UserInfoArrayList;
     public static UserInfo returnInfo;
     public static UserInfo searchUser;
+    public static Boolean connectionState;
+    public static Object lock;
+
+    public UserServer() {
+        connectionState = null;
+    }
 
     public static List<UserInfo> getAllUsers(){
         updateInternalState();
@@ -27,24 +33,32 @@ public class UserServer {
     }
 
     public static void updateInternalState(){
-
+        Log.w(TAG, "Trying to update");
         RestClient.get().getUsers(new Callback<ArrayList<UserInfo>>() {
             @Override
             public void success(ArrayList<UserInfo> userInfos, Response response) {
                 UserInfoArrayList = userInfos;
-                if (UserInfoArrayList==null)
+                if (UserInfoArrayList == null)
                     UserInfoArrayList = new ArrayList<UserInfo>();
                 Log.w(TAG, "Succeed to fetch all data! The size of Array is " + UserInfoArrayList.size());
                 if (!(UserInfoArrayList.size() > 0)) {
                     Log.w(TAG, "Failed to fetch data!");
+                }
+                connectionState = true;
+                synchronized (lock) {
+                    lock.notify();
                 }
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 Log.e(TAG, "Retrofit Error");
-                if (UserInfoArrayList==null)
+                if (UserInfoArrayList == null)
                     UserInfoArrayList = new ArrayList<UserInfo>();
+                connectionState = false;
+                synchronized (lock) {
+                    lock.notify();
+                }
             }
         });
 
@@ -53,16 +67,36 @@ public class UserServer {
 
     }
 
+//    public static void updateInternalStateTest(){
+//        Log.w(TAG, "Trying to update");
+//        UserInfoArrayList = RestClient.get().getUsers2();
+//        if (UserInfoArrayList==null) {
+//            UserInfoArrayList = new ArrayList<UserInfo>();
+//            Log.w(TAG, "Failed to fetch data!");
+//            return;
+//        }
+//        synchronized (lock) {
+//            lock.notify();
+//        }
+//
+//
+//
+//
+//
+//    }
+
     public static void addAUser(UserInfo2 userInfo){
         RestClient.get().addUser(userInfo, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 Log.i(TAG, "Add Response is " + response.getBody().toString());
+                connectionState = true;
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 Log.e(TAG, "Retrofit Error");
+                connectionState = false;
             }
         });
 
@@ -102,12 +136,18 @@ public class UserServer {
 
                     returnInfo = userInfo;
                 }
+                synchronized (lock) {
+                    lock.notify();
+                }
 
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 Log.i(TAG, "fail to get a user");
+                synchronized (lock) {
+                    lock.notify();
+                }
             }
         });
         return returnInfo;

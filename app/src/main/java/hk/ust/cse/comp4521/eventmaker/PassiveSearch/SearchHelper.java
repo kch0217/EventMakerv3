@@ -93,6 +93,8 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
 
     public SearchHelper() {
+        mLastLocation = null;
+        mCurrentLocation = null;
     }
 
     @Override
@@ -166,22 +168,30 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
     }
 
-    private void updateNotification(String instructions, String _id){
+    private void updateNotification(List<Event> temp){
         Bitmap largeIcon;
 
         largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.playing);
+
+        String interests = "";
+        for (int i = 0; i<temp.size()-1 ; i++){
+            interests = interests + temp.get(i) + ", ";
+        }
+        interests = interests + temp.get(temp.size()-1);
 
         Notification.Builder mBuilder =
                 new Notification.Builder(this)
                         .setSmallIcon(R.drawable.playing)
                         .setLargeIcon(largeIcon.createScaledBitmap(largeIcon,72,72,false))
                         .setOngoing(true)
-                        .setContentTitle("Found an event.")
-                        .setContentText("It is about "+ instructions);
+                        .setContentTitle("Found matched event(s).")
+                        .setContentText(interests);
 
         // Creates an explicit intent for the Activity
-        Intent resultIntent = new Intent(this, EventMenu.class);
-        resultIntent.putExtra(Constants.eventId, _id);
+//        Intent resultIntent = new Intent(this, EventMenu.class);
+//        resultIntent.putExtra(Constants.eventId, _id);
+        Intent resultIntent = new Intent(this, SearchFrag.class);
+//        resultIntent.putExtra(Constants.eventId, _id);
 
         PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, 0);
 
@@ -403,7 +413,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
                 }
             }
             if (temp.size()>0){
-                updateNotification(temp.get(0).interest, temp.get(0)._id);
+                updateNotification(temp);
             }
 
 

@@ -1,5 +1,7 @@
 package hk.ust.cse.comp4521.eventmaker.restForUser;
 
+import android.util.Log;
+
 import com.squareup.okhttp.OkHttpClient;
 
 import java.util.concurrent.Executor;
@@ -13,6 +15,8 @@ import retrofit.client.OkClient;
  */
 public class RestClient {
     private static userServerAPI restClient;
+//    public static Thread network;
+//    public static Thread networkIO;
 
     static {
         setupRestClient();
@@ -45,7 +49,12 @@ public class RestClient {
 
         @Override
         public void execute(Runnable runnable) {
+//            network = new Thread(runnable);
+//            network.start();
+            Log.i("RestClient", "Using new thread to execute network...");
             new Thread(runnable).start();
         }
     }
+
+
 }

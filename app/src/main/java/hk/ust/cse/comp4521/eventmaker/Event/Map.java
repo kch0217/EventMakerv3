@@ -167,7 +167,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
             //id
             String _id=null;
             ProgressDialog dialog=ProgressDialog.show(Map.this,"loading","Please wait...",true);
-            Log.i(TAG,"fucking the id");
+            Log.i(TAG,"the id");
             while(find!=true){
                 for(int i=0;i<Event_T.test.size();i++){
                     int year = eventtime.getYear();

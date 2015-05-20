@@ -1,9 +1,15 @@
 package hk.ust.cse.comp4521.eventmaker.User;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,21 +21,23 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
 
+
 import hk.ust.cse.comp4521.eventmaker.About;
 import hk.ust.cse.comp4521.eventmaker.Constants;
+import hk.ust.cse.comp4521.eventmaker.PassiveSearch.ServerConnection;
 import hk.ust.cse.comp4521.eventmaker.R;
 import hk.ust.cse.comp4521.eventmaker.SearchFrag;
-import hk.ust.cse.comp4521.eventmaker.SearchMain;
 
 public class UserRegistration extends Activity {
 
-    private boolean modify;
+    private boolean ismodify;
+    private ProgressDialog pd;
+    private Boolean networkIO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,18 +67,48 @@ public class UserRegistration extends Activity {
         EditText name = (EditText) findViewById(R.id.RegNameText);
         name.requestFocus();
 
-        modify = false;
+        ismodify = false;
         Log.i(null, "onCreate of UserRegistration");
 
         if (getIntent().getIntExtra("Context", -1) == Constants.MODIFY_REG){
-            modify = true;
+            ismodify = true;
             loadInfo();
 
 
         }
-        UserServer myserver = new UserServer();
-        myserver.updateInternalState();
+
+
+        pd = ProgressDialog.show(UserRegistration.this,"Network Access", "Connecting to the server", true);
+        ServerConnection serverConn = new ServerConnection(UserRegistration.this, handle);
+        serverConn.run();
+        pd.dismiss();
+
+
+//        myserver.updateInternalState();
+//        while (myserver.connectionState == null){
+//
+//        }
+//        pd.dismiss();
+//        if (myserver.connectionState == false){
+//
+//        }
+
     }
+
+    public Handler handle = new Handler(){
+        @Override
+        public void handleMessage(Message inputMessage) {
+            if (inputMessage.what == Constants.ConnectionError) {
+                finish();
+                pd.dismiss();
+            }
+
+
+
+        }
+    };
+
+
 
 
     @Override
@@ -141,7 +179,7 @@ public class UserRegistration extends Activity {
         data.put("AgePrivacy", (((CheckBox) findViewById(R.id.RegAgeBox)).isChecked())?"Check":"Uncheck");
         data.put("GenderPrivacy", (((CheckBox) findViewById(R.id.RegGenderBox)).isChecked())?"Check":"Uncheck");
 
-        UserModel.getUserModel().saveAllInfo(data, modify);
+        UserModel.getUserModel().saveAllInfo(data, ismodify);
     }
 
     public void clearInfo(){
@@ -201,6 +239,9 @@ public class UserRegistration extends Activity {
                 if (!validation()){
                     return;
                 }
+                pd = ProgressDialog.show(UserRegistration.this,"Network Access", "Connecting to the server", true);
+                ServerConnection serverConn = new ServerConnection(UserRegistration.this, handle);
+                serverConn.run(); //test network connection
                 saveInfo();
                 UserModel.getUserModel().saveSetting(true);
                 Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
@@ -224,4 +265,25 @@ public class UserRegistration extends Activity {
 
         }
     }
+
+//    public class ErrorDialogFragment extends DialogFragment {
+//        @Override
+//        public Dialog onCreateDialog(Bundle savedInstanceState) {
+//            // Use the Builder class for convenient dialog construction
+//            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//            builder.setMessage("Cannot connect to the server!")
+//                    .setPositiveButton(R.string.fire, new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+//                            // FIRE ZE MISSILES!
+//                        }
+//                    })
+//                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+//                            // User cancelled the dialog
+//                        }
+//                    });
+//            // Create the AlertDialog object and return it
+//            return builder.create();
+//        }
+//    }
 }
