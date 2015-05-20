@@ -29,7 +29,7 @@ public class Setting extends Activity {
         DetectionRange.setText(Constants.DEFAULT_RANGE_DETECTION+"");
         DetectionRange.setEnabled(false);
 
-        CheckBox checkBox = (CheckBox) findViewById(R.id.NotificationBox);
+//        CheckBox checkBox = (CheckBox) findViewById(R.id.NotificationBox);
 
         Button confirm = (Button) findViewById(R.id.SettingConfirmButton);
         confirm.setOnClickListener(new pressButton());
@@ -42,13 +42,13 @@ public class Setting extends Activity {
 
 
 
-        if (((Boolean) UserModel.getUserModel().getSetting().get("allowPassiveSearching")) == true){
-            checkBox.setChecked(true);
-        }
-        else
-        {
-            checkBox.setChecked(false);
-        }
+//        if (((Boolean) UserModel.getUserModel().getSetting().get("allowPassiveSearching")) == true){
+//            checkBox.setChecked(true);
+//        }
+//        else
+//        {
+//            checkBox.setChecked(false);
+//        }
 
         UserServer myServer  = new UserServer();
         myServer.updateInternalState();
@@ -71,7 +71,7 @@ public class Setting extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_about) {
             Intent intent = new Intent(this, About.class);
             startActivity(intent);
         }
@@ -84,14 +84,14 @@ public class Setting extends Activity {
         @Override
         public void onClick(View view) {
             if (view.getId()== R.id.SettingConfirmButton){
-                CheckBox checkBox = (CheckBox) findViewById(R.id.NotificationBox);
-                if (checkBox.isChecked()){
-                    UserModel.getUserModel().saveSetting(true);
-                }
-                else
-                {
-                    UserModel.getUserModel().saveSetting(false);
-                }
+//                CheckBox checkBox = (CheckBox) findViewById(R.id.NotificationBox);
+//                if (checkBox.isChecked()){
+//                    UserModel.getUserModel().saveSetting(true);
+//                }
+//                else
+//                {
+//                    UserModel.getUserModel().saveSetting(false);
+//                }
 
                 finish();
 

@@ -1,7 +1,10 @@
 package hk.ust.cse.comp4521.eventmaker.Event;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -34,6 +37,8 @@ public class EventMenu extends Activity {
     private TextView time_text;
     private Button location_button;
     private Button setting;
+
+    private BroadcastReceiver mReceiver;
 
 
     @Override
@@ -70,6 +75,7 @@ public class EventMenu extends Activity {
         get_event_thread.start();
 
     }
+
 
     //update the info of UI
     public void update_info()  {
@@ -190,5 +196,38 @@ public class EventMenu extends Activity {
             }
         }
     }
+
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        IntentFilter intentFilter = new IntentFilter(Constants.signaling);
+
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getIntExtra("Signal", -1) ==Constants.ConnectionError){
+                    finish();
+                }
+                else if (intent.getIntExtra("Signal", -1) ==Constants.EventDeleted){
+                    finish();
+                }
+
+            }
+        };
+
+        this.registerReceiver(mReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //unregister our receiver
+        this.unregisterReceiver(this.mReceiver);
+    }
+
 
 }

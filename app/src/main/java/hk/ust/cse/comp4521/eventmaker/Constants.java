@@ -32,6 +32,13 @@ public class Constants {
     public static final String eventId="eventId";
     public static final String eventCode="eventCode";//100 from hin 200 from him
 
+
+    //for broadcase receiver
     public static final int ConnectionError = 20;
+    public static final int EventDeleted = 21;
+    public static final int closeNotification = 40;
+
+    public static final String signaling = "android.intent.action.monitor";
+    public static final String closeNot = "android.intent.action.CloNot";
 
 }

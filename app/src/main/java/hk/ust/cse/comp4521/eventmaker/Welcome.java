@@ -44,6 +44,7 @@ public class Welcome extends Activity {
 
         if (!((String) data.get("Name")).equals("")) {
             Intent intent = new Intent(this, SearchFrag.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
         if (savedInstanceState == null) {

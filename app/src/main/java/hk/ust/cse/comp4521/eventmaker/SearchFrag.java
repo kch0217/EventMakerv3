@@ -5,9 +5,13 @@ import java.util.Locale;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -125,7 +129,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
     @Override
     protected void onPause() {
         super.onPause();
-        stopService(mainloc);
+        unbindService(serviceConnection);
     }
 
     @Override
@@ -170,9 +174,21 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
         mainloc = new Intent(getApplicationContext(), SearchHelper.class);
         mainloc.putExtra("Mode", "Voluntary");
         MainSearchFragment.getloc = mainloc;
-        startService(mainloc);
+        bindService(mainloc, serviceConnection, Context.BIND_AUTO_CREATE);
 
     }
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
+        }
+    };
 
 
     @Override
@@ -199,6 +215,13 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
         if (id ==R.id.action_about){
             Intent intent = new Intent(this, About.class);
             startActivity(intent);
+            return true;
+        }
+        if (id == R.id.action_ic_settings){
+            Log.i(null, "Setting Button is clicked");
+            Intent intent = new Intent(getApplicationContext(), Setting.class);
+            startActivity(intent);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -447,6 +470,8 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                     Intent intent = new Intent(getActivity(), SearchHelper.class);
                     if (enableButton){
 
+                        Intent i = new Intent(Constants.closeNot).putExtra("Signal", Constants.closeNotification);
+                        getActivity().sendBroadcast(i);
                         enableButton = false;
                         getActivity().stopService(intent);
 

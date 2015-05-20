@@ -4,12 +4,16 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -87,6 +91,8 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
     private String mode;
 
+    private BroadcastReceiver mReceiver;
+
 
 
     //private List<Event> all;
@@ -105,12 +111,6 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
         Toast.makeText(this, "Service starts", Toast.LENGTH_SHORT).show();
 
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-
-
         // Build the Google API client so that connections can be established
         buildGoogleApiClient();
 
@@ -119,6 +119,14 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
         mGoogleApiClient.connect();
         downloadAllEvents();
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+
+
 
         if (intent.getStringExtra("Mode").equals("Passive")) {
 
@@ -132,6 +140,20 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
         }
         else
         mode = "Voluntary";
+
+        IntentFilter intentFilter = new IntentFilter(Constants.closeNot);
+
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getIntExtra("Signal", -1) ==Constants.closeNotification){
+                    cancelNotification();
+                }
+
+            }
+        };
+
+        this.registerReceiver(mReceiver, intentFilter);
 
 
 
@@ -179,13 +201,16 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
         }
         interests = interests + temp.get(temp.size()-1);
 
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
         Notification.Builder mBuilder =
                 new Notification.Builder(this)
                         .setSmallIcon(R.drawable.playing)
                         .setLargeIcon(largeIcon.createScaledBitmap(largeIcon,72,72,false))
                         .setOngoing(true)
                         .setContentTitle("Found matched event(s).")
-                        .setContentText(interests);
+                        .setContentText(interests)
+                        .setSound(alarmSound);
 
         // Creates an explicit intent for the Activity
 //        Intent resultIntent = new Intent(this, EventMenu.class);
@@ -207,6 +232,12 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
     private void cancelNotification() {
         mNotificationManager.cancel(noteId);
         stopForeground(true);
+        try {
+            this.unregisterReceiver(this.mReceiver);
+        }
+        catch (Exception E){
+
+        }
     }
 
     @Override
@@ -351,6 +382,8 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 //            mResolvingError = true;
 //        }
     }
+
+
 
     private class CompareHelper extends AsyncTask<String, Integer, ArrayList<String>>{
 
