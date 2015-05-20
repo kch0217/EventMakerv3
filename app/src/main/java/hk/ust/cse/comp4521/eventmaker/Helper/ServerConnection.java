@@ -1,4 +1,4 @@
-package hk.ust.cse.comp4521.eventmaker.PassiveSearch;
+package hk.ust.cse.comp4521.eventmaker.Helper;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -25,10 +25,14 @@ public class ServerConnection implements Runnable{
     Handler handle;
     Object lock;
 
+
+
     public ServerConnection(Context in, Handler h) {
         currentStage = in;
         handle = h;
     }
+
+
 
 //    public ServerConnection() {
 //        currentStage = null;

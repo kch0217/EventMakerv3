@@ -1,15 +1,11 @@
 package hk.ust.cse.comp4521.eventmaker.User;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,7 +25,7 @@ import java.util.Map;
 
 import hk.ust.cse.comp4521.eventmaker.About;
 import hk.ust.cse.comp4521.eventmaker.Constants;
-import hk.ust.cse.comp4521.eventmaker.PassiveSearch.ServerConnection;
+import hk.ust.cse.comp4521.eventmaker.Helper.ServerConnection;
 import hk.ust.cse.comp4521.eventmaker.R;
 import hk.ust.cse.comp4521.eventmaker.SearchFrag;
 

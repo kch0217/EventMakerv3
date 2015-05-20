@@ -1,22 +1,14 @@
 package hk.ust.cse.comp4521.eventmaker;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.ListFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -34,19 +26,15 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import hk.ust.cse.comp4521.eventmaker.Event.Event;
 import hk.ust.cse.comp4521.eventmaker.Event.EventMenu;
 import hk.ust.cse.comp4521.eventmaker.Event.Event_T;
 import hk.ust.cse.comp4521.eventmaker.Event.Map;
 import hk.ust.cse.comp4521.eventmaker.Event.Matching;
 import hk.ust.cse.comp4521.eventmaker.PassiveSearch.SearchHelper;
-import hk.ust.cse.comp4521.eventmaker.PassiveSearch.ServerConnection;
+import hk.ust.cse.comp4521.eventmaker.Helper.ServerConnection;
 import hk.ust.cse.comp4521.eventmaker.User.UserInfo;
 import hk.ust.cse.comp4521.eventmaker.User.UserModel;
 import hk.ust.cse.comp4521.eventmaker.User.UserServer;

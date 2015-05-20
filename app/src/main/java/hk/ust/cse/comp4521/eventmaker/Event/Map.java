@@ -5,11 +5,9 @@ import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.SyncStateContract;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -28,11 +26,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 import hk.ust.cse.comp4521.eventmaker.Constants;
-import hk.ust.cse.comp4521.eventmaker.PassiveSearch.SearchHelper;
-import hk.ust.cse.comp4521.eventmaker.PassiveSearch.ServerConnection;
+import hk.ust.cse.comp4521.eventmaker.Helper.ServerConnection;
 import hk.ust.cse.comp4521.eventmaker.R;
 import hk.ust.cse.comp4521.eventmaker.User.UserServer;
 
@@ -90,7 +86,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
 
         if(receive!=null){
             mode=receive.getExtras().getInt(Constants.eventCode,0);
-            orilat=receive.getExtras().getDouble("lat",0);
+            orilat=receive.getExtras().getDouble("lat", 0);
             orilon=receive.getExtras().getDouble("lon",0);
             interest = receive.getExtras().getString("Interest", "");
             if(mode==100){
