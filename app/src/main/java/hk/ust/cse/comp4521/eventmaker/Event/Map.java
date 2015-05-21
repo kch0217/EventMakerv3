@@ -250,7 +250,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
                 }
             }
 
-            Log.i(TAG, "pass through id");
+            Log.i(TAG, "pass through id"+ _id);
             Intent startEvent=new Intent(Map.this,EventMenu.class);
             getIntent().putExtra(Constants.eventId, _id);
             // put it to the relationship
