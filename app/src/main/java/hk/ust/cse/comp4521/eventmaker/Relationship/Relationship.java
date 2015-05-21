@@ -12,5 +12,6 @@ public class Relationship {
         userId=rel.userId;
         relId=rel.relId;
     }
+    public Relationship(){}
 
 }

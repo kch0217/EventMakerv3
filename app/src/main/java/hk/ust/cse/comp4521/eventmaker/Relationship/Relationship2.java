@@ -5,6 +5,12 @@ package hk.ust.cse.comp4521.eventmaker.Relationship;
  */
 public class Relationship2 extends Relationship{
     transient String relId;
+
+    public Relationship2 (String _eventId, String _userId){
+        eventId=_eventId;
+        userId=_userId;
+    }
+
     public Relationship2(Relationship rel) {
         super(rel);
     }

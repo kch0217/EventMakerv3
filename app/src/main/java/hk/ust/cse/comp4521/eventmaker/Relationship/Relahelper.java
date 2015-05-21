@@ -16,20 +16,21 @@ import retrofit.client.Response;
 public class Relahelper {
     String TAG="RELAHELPER";
     public static List<Relationship> relas;
-    public static Relationship relcreated;
+    public static Relationship2 relcreated;
+    public static Relationship returnrel;
 
-    public void createRelationship(final Relationship rel){
-        restRelationship.get().addRelationship(rel, new Callback<Relationship>() {
+    public void createRelationship(final Relationship2 rel){
+        restRelationship.get().addRelationship(rel, new Callback<Response>() {
             @Override
-            public void success(Relationship relationship, Response response) {
-                Log.i(TAG, "Add Response is " + response.getBody().toString());
+            public void success(Response response, Response response2) {
+                Log.i(TAG,"create rel success");
                 relcreated=rel;
                 getAllRelationship();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.i(TAG,"createion fails"+retrofitError.getKind().name());
+                Log.i(TAG,"create rel fails");
             }
         });
         getAllRelationship();
@@ -57,4 +58,52 @@ public class Relahelper {
         });
     }
 
+    public void updateRelationship(Relationship2 rel, final String _id){
+        restRelationship.get().updateRelationship(rel, _id, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                Log.i(TAG,"update rel successfully"+_id);
+                getAllRelationship();
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.i(TAG,"fail rel update"+retrofitError.getKind().name());
+            }
+        });
+        getAllRelationship();
+    }
+
+    public void deleteRelationship(String id){
+        restRelationship.get().deleteRelationship(id, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                Log.i(TAG,"delete rel successfully");
+                getAllRelationship();
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.i(TAG,"delete rel fail");
+            }
+        });
+        getAllRelationship();
+    }
+
+    public void getRelationship(String id){
+        restRelationship.get().getRelationship(id, new Callback<Relationship>() {
+            @Override
+            public void success(Relationship relationship, Response response) {
+                Log.i(TAG,"get rel success");
+                returnrel=relationship;
+                getAllRelationship();
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                Log.i(TAG, "fail rel get"+retrofitError.getKind().name());
+            }
+        });
+        getAllRelationship();
+    }
 }

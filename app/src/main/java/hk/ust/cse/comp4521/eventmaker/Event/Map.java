@@ -30,7 +30,9 @@ import java.sql.Timestamp;
 import hk.ust.cse.comp4521.eventmaker.Constants;
 import hk.ust.cse.comp4521.eventmaker.Helper.ServerConnection;
 import hk.ust.cse.comp4521.eventmaker.R;
+import hk.ust.cse.comp4521.eventmaker.Relationship.Relahelper;
 import hk.ust.cse.comp4521.eventmaker.Relationship.Relationship;
+import hk.ust.cse.comp4521.eventmaker.Relationship.Relationship2;
 import hk.ust.cse.comp4521.eventmaker.User.UserServer;
 
 public class Map extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener{
@@ -252,8 +254,10 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
             Intent startEvent=new Intent(Map.this,EventMenu.class);
             getIntent().putExtra(Constants.eventId, _id);
             // put it to the relationship
-
-
+//            Relahelper relhelp=new Relahelper();
+//            Relationship2 relationtosubmit=new Relationship2(_id,UserServer.returnInfo._id);
+//            relhelp.createRelationship(relationtosubmit);
+//            Log.i(TAG,"created rela and event on server(should be)");
             startActivity(startEvent);
             finish();
         }

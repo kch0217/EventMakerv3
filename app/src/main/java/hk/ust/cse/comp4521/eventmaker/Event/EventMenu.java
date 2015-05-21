@@ -2,10 +2,13 @@ package hk.ust.cse.comp4521.eventmaker.Event;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -14,7 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import hk.ust.cse.comp4521.eventmaker.Constants;
+import hk.ust.cse.comp4521.eventmaker.Helper.ActivityRefresh;
+import hk.ust.cse.comp4521.eventmaker.Helper.ServerConnection;
 import hk.ust.cse.comp4521.eventmaker.R;
+import hk.ust.cse.comp4521.eventmaker.Relationship.Relahelper;
+import hk.ust.cse.comp4521.eventmaker.Relationship.Relationship;
+import hk.ust.cse.comp4521.eventmaker.Relationship.Relationship2;
 import hk.ust.cse.comp4521.eventmaker.User.UserInfo;
 import hk.ust.cse.comp4521.eventmaker.User.UserServer;
 
@@ -26,6 +34,7 @@ public class EventMenu extends Activity {
     private Event event = null;
     private String event_id;
     private int check_interval=30000;
+    private List<Relationship> roommemlist;
 
     /*********UI***************/
     private TextView event_name;
@@ -39,13 +48,13 @@ public class EventMenu extends Activity {
     private Button setting;
 
     private BroadcastReceiver mReceiver;
+    private ServiceConnection serverConnection;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
-
 
         /************************UI init*******************/
         event_name =(TextView)findViewById(R.id.event_name);
@@ -71,6 +80,26 @@ public class EventMenu extends Activity {
 
         Intent intent = getIntent();
         event_id = intent.getStringExtra(Constants.eventId);
+
+        Intent refresh = new Intent(EventMenu.this, ActivityRefresh.class);
+        serverConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        };
+        bindService(refresh, serverConnection, Context.BIND_AUTO_CREATE);
+        //deal with relationship
+        Relahelper relahelper=new Relahelper();
+        relahelper.getAllRelationship();
+        Relationship2 newrela=new Relationship2(event_id,UserServer.returnInfo._id);
+        relahelper.createRelationship(newrela);
+
         Thread get_event_thread=new get_my_event();
         get_event_thread.start();
 
@@ -168,9 +197,17 @@ public class EventMenu extends Activity {
             }
 
         }
-
-
     }
+
+    public class update_rela implements Runnable{
+
+        @Override
+        public void run() {
+
+        }
+    }
+
+
     public class pressButton implements View.OnClickListener {
 
         @Override
@@ -227,6 +264,7 @@ public class EventMenu extends Activity {
         super.onPause();
         //unregister our receiver
         this.unregisterReceiver(this.mReceiver);
+        unbindService(serverConnection);
     }
 
 

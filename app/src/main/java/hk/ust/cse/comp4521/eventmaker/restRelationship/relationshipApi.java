@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import hk.ust.cse.comp4521.eventmaker.Event.Event;
 import hk.ust.cse.comp4521.eventmaker.Event.Event2;
 import hk.ust.cse.comp4521.eventmaker.Relationship.Relationship;
+import hk.ust.cse.comp4521.eventmaker.Relationship.Relationship2;
 import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.Body;
@@ -27,14 +28,14 @@ public interface relationshipApi {
 
     //
     @DELETE("/relationship/{id}")
-    void deleteRelationship(@Path("id") String id, Callback<Relationship> callback);
+    void deleteRelationship(@Path("id") String id, Callback<Response> callback);
 
     //
     @POST("/relationship")
-    void addRelationship(@Body Relationship event, Callback<Relationship> callback);
+    void addRelationship(@Body Relationship2 event, Callback<Response> callback);
 
     //
     @PUT("/relationship/{id}")
-    void updateRelationship(@Body Relationship event, @Path("id") String id, Callback<Relationship> callback);
+    void updateRelationship(@Body Relationship2 event, @Path("id") String id, Callback<Response> callback);
 
 }
