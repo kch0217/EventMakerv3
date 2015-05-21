@@ -8,14 +8,13 @@ public class Relationship2 extends Relationship{
 
     public Relationship2(){
         _Id="";
-        eventId="";
+        roomId="";
         userId="";
-        idk="3";
         you="12";
     }
 
-    public Relationship2 (String _eventId, String _userId){
-        eventId=_eventId;
+    public Relationship2 (String _roomId, String _userId){
+        roomId=_roomId;
         userId=_userId;
     }
 
