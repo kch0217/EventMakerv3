@@ -7,6 +7,9 @@ public class Relationship {
     public String eventId;
     public String userId;
     public String _Id;
+    public String idk;
+    public String you;
+
     public Relationship(Relationship rel){
         _Id=rel._Id;
         eventId=rel.eventId;
