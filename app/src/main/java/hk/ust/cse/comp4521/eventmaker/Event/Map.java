@@ -30,6 +30,7 @@ import java.sql.Timestamp;
 import hk.ust.cse.comp4521.eventmaker.Constants;
 import hk.ust.cse.comp4521.eventmaker.Helper.ServerConnection;
 import hk.ust.cse.comp4521.eventmaker.R;
+import hk.ust.cse.comp4521.eventmaker.Relationship.Relationship;
 import hk.ust.cse.comp4521.eventmaker.User.UserServer;
 
 public class Map extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener{
@@ -198,7 +199,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
                 return;
             }
             eventToSubmit._ownerid= UserServer.returnInfo._id;
-
+            Log.i(TAG,eventToSubmit._ownerid);
             eventToSubmit.latitude=lat;
             eventToSubmit.longitude=lon;
             Timestamp eventtime=eventToSubmit.currentTimestamp;
@@ -247,9 +248,13 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
                 }
             }
 
-            Log.i(TAG,"pass through id");
+            Log.i(TAG, "pass through id");
             Intent startEvent=new Intent(Map.this,EventMenu.class);
             getIntent().putExtra(Constants.eventId, _id);
+            // put it to the relationship
+            Relationship rela=new Relationship(_id,eventToSubmit._ownerid);
+
+
             startActivity(startEvent);
             finish();
         }

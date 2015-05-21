@@ -28,6 +28,7 @@ public class Event_T{
         double result=Math.sqrt(latdif*latdif+longdif*longdif);
         return result;
     };
+
     public void createEvent(final Event2 evt){
         restClientEvent.get().addEvent(evt, new Callback<retrofit.client.Response>() {
             @Override

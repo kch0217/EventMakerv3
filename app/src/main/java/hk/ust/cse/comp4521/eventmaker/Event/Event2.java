@@ -8,7 +8,7 @@ import java.util.Calendar;
  */
 public class Event2 extends Event {
     transient String _id;
-    transient String _ownerid;
+    String _ownerid;
 
     public Event2(){
         longitude=0.0;
