@@ -360,49 +360,50 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                     if (!UserServer.connectionState) {
                         return;
                     }
-                    SharedPreferences  pre=UserModel.getUserModel().getSharedPreferences();
-                    if(pre.contains("Event")){
-                        final String eventId=pre.getString("Event","");
+                    SharedPreferences pre = UserModel.getUserModel().getSharedPreferences();
+                    if (pre.contains("Event")) {
+                        final String eventId = pre.getString("Event", "");
                         new AlertDialog.Builder(getActivity())
                                 .setTitle("redirection")
                                 .setMessage("brining you back to the event")
                                 .setNeutralButton("ok", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Intent back=new Intent(getActivity(),EventMenu.class);
-                                        back.putExtra(Constants.eventId,eventId);
-                                        Log.i(ARG_SECTION_NUMBER,"sending back to event menu");
+                                        Intent back = new Intent(getActivity(), EventMenu.class);
+                                        back.putExtra(Constants.eventId, eventId);
+                                        Log.i(ARG_SECTION_NUMBER, "sending back to event menu");
                                         startActivity(back);
                                     }
                                 })
                                 .setIcon(android.R.drawable.ic_dialog_alert)
                                 .show();
-                    }
-
-
-                    double lat = SearchHelper.mCurrentLocation.getLatitude();
-                    double lon = SearchHelper.mCurrentLocation.getLongitude();
-                    Log.i("SearchFrag", (String) list.getAdapter().getItem(i) + " " + lat + " " + lon);
-                    String id = Matching.checking((String) list.getAdapter().getItem(i), lat, lon);
-                    getActivity().stopService(getloc);
-
-
-                    Log.i(ARG_SECTION_NUMBER, "Successfully get the location");
-                    if (id == null) {
-                        Intent intent2 = new Intent(getActivity(), Map.class);
-                        intent2.putExtra("Interest", (String) list.getAdapter().getItem(i));
-                        intent2.putExtra("lat", lat);
-                        intent2.putExtra("lon", lon);
-                        intent2.putExtra(Constants.eventCode, 100);
-                        Log.i(ARG_SECTION_NUMBER, "Create new event");
-
-                        startActivity(intent2);
-
                     } else {
-                        Intent intent2 = new Intent(getActivity(), EventMenu.class);
-                        intent2.putExtra(Constants.eventId, id);
-                        Log.i(ARG_SECTION_NUMBER, "Go to the existing event");
-                        startActivity(intent2);
+
+
+                        double lat = SearchHelper.mCurrentLocation.getLatitude();
+                        double lon = SearchHelper.mCurrentLocation.getLongitude();
+                        Log.i("SearchFrag", (String) list.getAdapter().getItem(i) + " " + lat + " " + lon);
+                        String id = Matching.checking((String) list.getAdapter().getItem(i), lat, lon);
+                        getActivity().stopService(getloc);
+
+
+                        Log.i(ARG_SECTION_NUMBER, "Successfully get the location");
+                        if (id == null) {
+                            Intent intent2 = new Intent(getActivity(), Map.class);
+                            intent2.putExtra("Interest", (String) list.getAdapter().getItem(i));
+                            intent2.putExtra("lat", lat);
+                            intent2.putExtra("lon", lon);
+                            intent2.putExtra(Constants.eventCode, 100);
+                            Log.i(ARG_SECTION_NUMBER, "Create new event");
+
+                            startActivity(intent2);
+
+                        } else {
+                            Intent intent2 = new Intent(getActivity(), EventMenu.class);
+                            intent2.putExtra(Constants.eventId, id);
+                            Log.i(ARG_SECTION_NUMBER, "Go to the existing event");
+                            startActivity(intent2);
+                        }
                     }
                 }
             });
