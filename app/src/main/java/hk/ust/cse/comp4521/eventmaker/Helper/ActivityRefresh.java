@@ -3,6 +3,7 @@ package hk.ust.cse.comp4521.eventmaker.Helper;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,10 +23,11 @@ public class ActivityRefresh extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Timer timer = new Timer();
+        Timer timer = new Timer(true);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                Log.i("ActivityRefresh", "TimeTask");
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -35,12 +37,12 @@ public class ActivityRefresh extends Service {
                 thread.start();
 
             }
-        }, 1000, 30000);
+        }, 1000, 1000);
 
 
 
 
-        networkAccess();
+
         return super.onStartCommand(intent, flags, startId);
 
 
