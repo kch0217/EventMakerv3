@@ -97,31 +97,33 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
             if(mode==100){
                 interest=receive.getExtras().getString("Interest", null);
                 Log.i(TAG,"from search");
+                // 1. Instantiate an AlertDialog.Builder with its constructor
+                AlertDialog.Builder builder = new AlertDialog.Builder(Map.this);
+
+                // 2. Chain together various setter methods to set the dialog characteristics
+                builder.setMessage("A new event has been created for you. Please select a location for it by putting a marker on the map.")
+                        .setTitle("Instruction")
+                        .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+
+                            }
+                        });
+
+                // 3. Get the AlertDialog from create()
+                builder.create().show();
             }
             else if(mode==200){
-                Log.i(TAG,"receive from event");
+                Log.i(TAG, "receive from event");
+
             }
             else{
                 Log.i(TAG,"something goes wrong");
             }
         }
         click = false;
-        // 1. Instantiate an AlertDialog.Builder with its constructor
-        AlertDialog.Builder builder = new AlertDialog.Builder(Map.this);
 
-        // 2. Chain together various setter methods to set the dialog characteristics
-        builder.setMessage("A new event has been created for you. Please select a location for it by putting a marker on the map.")
-                .setTitle("Instruction")
-                .setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-
-                    }
-                });
-
-        // 3. Get the AlertDialog from create()
-        builder.create().show();
     }
 
     @Override

@@ -19,6 +19,10 @@ public class Relahelper {
     public static Relationship2 relcreated;
     public static Relationship returnrel;
 
+    public static Object lock;
+    public static boolean locker = false;
+
+
     public void createRelationship(final Relationship2 rel){
         restRelationship.get().addRelationship(rel, new Callback<Response>() {
             @Override
@@ -49,11 +53,24 @@ public class Relahelper {
                     relas = new ArrayList<Relationship>();
                 }
                 Log.i(TAG, "fetched all relationship");
+                if (locker){
+                    synchronized (lock){
+                        lock.notify();
+                    }
+                    locker = false;
+                }
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
                 Log.i(TAG, "why!" + retrofitError.getKind().name());
+                relas = new ArrayList<Relationship>();
+                if (locker){
+                    synchronized (lock){
+                        lock.notify();
+                    }
+                    locker = false;
+                }
             }
         });
     }
@@ -78,13 +95,13 @@ public class Relahelper {
         restRelationship.get().deleteRelationship(id, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
-                Log.i(TAG,"delete rel successfully");
+                Log.i(TAG, "delete rel successfully");
                 getAllRelationship();
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.i(TAG,"delete rel fail");
+                Log.i(TAG, "delete rel fail");
             }
         });
         getAllRelationship();
