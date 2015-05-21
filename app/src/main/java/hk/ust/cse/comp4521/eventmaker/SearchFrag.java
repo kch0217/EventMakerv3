@@ -176,6 +176,24 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
         mainloc.putExtra("Mode", "Voluntary");
         MainSearchFragment.getloc = mainloc;
         bindService(mainloc, serviceConnection, Context.BIND_AUTO_CREATE);
+        SharedPreferences pre = UserModel.getUserModel().getSharedPreferences();
+        if (pre.contains("Event")) {
+            final String eventId = pre.getString("Event", "");
+            new AlertDialog.Builder(SearchFrag.this)
+                    .setTitle("redirection")
+                    .setMessage("brining you back to the event")
+                    .setNeutralButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent back = new Intent(SearchFrag.this, EventMenu.class);
+                            back.putExtra(Constants.eventId, eventId);
+                            Log.i("SEARCH", "sending back to event menu");
+                            startActivity(back);
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
 
     }
 
@@ -360,24 +378,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                     if (!UserServer.connectionState) {
                         return;
                     }
-                    SharedPreferences pre = UserModel.getUserModel().getSharedPreferences();
-                    if (pre.contains("Event")) {
-                        final String eventId = pre.getString("Event", "");
-                        new AlertDialog.Builder(getActivity())
-                                .setTitle("redirection")
-                                .setMessage("brining you back to the event")
-                                .setNeutralButton("ok", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent back = new Intent(getActivity(), EventMenu.class);
-                                        back.putExtra(Constants.eventId, eventId);
-                                        Log.i(ARG_SECTION_NUMBER, "sending back to event menu");
-                                        startActivity(back);
-                                    }
-                                })
-                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                .show();
-                    } else {
+
 
 
                         double lat = SearchHelper.mCurrentLocation.getLatitude();
@@ -404,7 +405,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                             Log.i(ARG_SECTION_NUMBER, "Go to the existing event");
                             startActivity(intent2);
                         }
-                    }
+
                 }
             });
 
