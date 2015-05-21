@@ -18,7 +18,7 @@ public class Relahelper {
     public static List<Relationship> relas;
     public static Relationship relcreated;
 
-    public void createRelationship(Relationship rel){
+    public void createRelationship(final Relationship rel){
         restRelationship.get().addRelationship(rel, new Callback<Relationship>() {
             @Override
             public void success(Relationship relationship, Response response) {

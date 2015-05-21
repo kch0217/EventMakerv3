@@ -48,7 +48,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
     /**
      * The desired interval for location updates. Inexact. Updates may be more or less frequent.
      */
-    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 60000;
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
 
     /**
      * The fastest rate for active location updates. Exact. Updates will never be more frequent
@@ -448,6 +448,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
                 }
             }
             if (temp.size()>0){
+                Log.i("Help", "Going to push");
                 updateNotification(temp);
             }
 
