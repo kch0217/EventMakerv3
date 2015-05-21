@@ -23,21 +23,7 @@ public class ActivityRefresh extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Timer timer = new Timer(true);
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                Log.i("ActivityRefresh", "TimeTask");
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        networkAccess();
-                    }
-                });
-                thread.start();
 
-            }
-        }, 1000, 1000);
 
 
 
@@ -73,6 +59,21 @@ public class ActivityRefresh extends Service {
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
 //        throw new UnsupportedOperationException("Not yet implemented");
+        Timer timer = new Timer(true);
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Log.i("ActivityRefresh", "TimeTask");
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        networkAccess();
+                    }
+                });
+                thread.start();
+
+            }
+        }, 1000, 20000);
         return null;
     }
 
