@@ -252,7 +252,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
             Intent startEvent=new Intent(Map.this,EventMenu.class);
             getIntent().putExtra(Constants.eventId, _id);
             // put it to the relationship
-            Relationship rela=new Relationship(_id,eventToSubmit._ownerid);
 
 
             startActivity(startEvent);
