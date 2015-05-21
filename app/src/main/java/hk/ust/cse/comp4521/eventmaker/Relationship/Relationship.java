@@ -7,7 +7,6 @@ public class Relationship {
     public String userId;
     public String _Id;
     public String roomId;
-    public String you;
 
     public Relationship(Relationship rel){
         _Id=rel._Id;

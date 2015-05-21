@@ -10,7 +10,6 @@ public class Relationship2 extends Relationship{
         _Id="";
         roomId="";
         userId="";
-        you="12";
     }
 
     public Relationship2 (String _roomId, String _userId){
