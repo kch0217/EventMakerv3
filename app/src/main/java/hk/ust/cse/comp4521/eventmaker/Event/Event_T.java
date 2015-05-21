@@ -20,6 +20,8 @@ public class Event_T{
     public static String testid;
     public static Event2 eventCreated;
 
+    public static Object lock;
+    public static boolean locker = false;
 
 
     public static double locationDetection(Location one, Location two){
@@ -61,11 +63,19 @@ public class Event_T{
                     test=new ArrayList<Event>();
                 }
                 Log.i(TAG,"wellprogramworksidkwhy");
+                if (locker)
+                synchronized (lock){
+                    lock.notify();
+                }
             }
             @Override
             public void failure(RetrofitError retrofitError) {
                 Log.i(TAG, "youknowwhat"+retrofitError.getKind().name());
                 test=new ArrayList<Event>();
+                if (locker)
+                    synchronized (lock){
+                        lock.notify();
+                    }
             }
         });
     }

@@ -416,7 +416,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
         private static String [] activity;
         private ListAdapter adapter;
         private ArrayList<String> tempPassive;
-        private boolean enableButton;
+//        private boolean enableButton;
         private Button enablepassive;
         /**
          * Returns a new instance of this fragment for the given section
@@ -444,7 +444,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
 
             list.setAdapter(adapter);
             tempPassive = new ArrayList<>();
-            enableButton = false;
+//            enableButton = false;
 
 
 //            list.setSelection(((ArrayAdapter)list.getAdapter()).getPosition(UserModel.getUserModel().getInterest()));
@@ -462,21 +462,16 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                 }
 
             });
-
+            final Intent intent = new Intent(getActivity(), SearchHelper.class);
             enablepassive = (Button) rootView.findViewById(R.id.passiveSearchEnabler);
             enablepassive.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(getActivity(), SearchHelper.class);
-                    if (enableButton){
 
-                        Intent i = new Intent(Constants.closeNot).putExtra("Signal", Constants.closeNotification);
-                        getActivity().sendBroadcast(i);
-                        enableButton = false;
-                        getActivity().stopService(intent);
-
-                        return;
-                    }
+//                    if (enableButton){
+//
+//
+//                    }
                     String result = "Selected interests:";
                     for (int i= 0 ; i< tempPassive.size(); i++){
                         result = result +" "+ tempPassive.get(i);
@@ -487,9 +482,21 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                     intent.putStringArrayListExtra("Interest", tempPassive);
                     getActivity().startService(intent);
 
-                    enableButton = true;
+//                    enableButton = true;
+                    return;
 
+                }
+            });
+            Button disablepassive = (Button) rootView.findViewById(R.id.passiveSearchDisabler);
+            disablepassive.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(Constants.closeNot).putExtra("Signal", Constants.closeNotification);
+                    getActivity().sendBroadcast(i);
+//                    enableButton = false;
+                    getActivity().stopService(intent);
 
+                    return;
                 }
             });
 

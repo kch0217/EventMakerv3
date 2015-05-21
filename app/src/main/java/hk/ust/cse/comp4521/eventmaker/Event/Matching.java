@@ -38,7 +38,10 @@ public class Matching{
                         theone=potential.get(a);
                     }
                 }
-                return theone._id;
+                if (theone == null)
+                    return null;
+                else
+                    return theone._id;
             }
         }
         return null;

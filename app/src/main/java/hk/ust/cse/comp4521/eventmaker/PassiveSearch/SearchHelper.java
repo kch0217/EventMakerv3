@@ -179,7 +179,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
         Intent resultIntent = new Intent(this, SearchFrag.class);
 
         // create a pending intent that will be fired when notification is touched.
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, 0);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         mBuilder.setContentIntent(resultPendingIntent);
 
@@ -219,7 +219,8 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
         Intent resultIntent = new Intent(this, SearchFrag.class);
 //        resultIntent.putExtra(Constants.eventId, _id);
 
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, 0);
+
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         mBuilder.setContentIntent(resultPendingIntent);
 
@@ -232,6 +233,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
     private void cancelNotification() {
         mNotificationManager.cancel(noteId);
+        mode = "Voluntary";
         stopForeground(true);
         try {
             this.unregisterReceiver(this.mReceiver);
@@ -422,16 +424,29 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
         @Override
         public void run() {
+            Log.i("Helper", "running passive");
             Event_T eventdownloader = new Event_T();
             Event_T.test = null;
+            eventdownloader.locker = true;
+            Object lock = new Object();
+            eventdownloader.lock = lock;
+
             eventdownloader.getAllEvent();
             while (Event_T.test==null){
+                synchronized (lock){
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
 
             }
 
             ArrayList<Event> temp = new ArrayList<>();
             List<Event> all = Event_T.test;
             for (int i = 0 ; i< all.size(); i++){
+
                 float [] results = {0.0f,0.0f,0.0f};
                 boolean matchInterest = false;
                 for (int j = 0 ; j< interest.size(); j++)
