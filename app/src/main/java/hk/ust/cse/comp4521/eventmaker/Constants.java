@@ -12,11 +12,11 @@ public class Constants {
     public static final int MODIFY_REG = 0;
     public static final int DEFAULT_RANGE_DETECTION = 500;
 
-    public static final String SERVER_ID = "192.168.0.109";
+    public static final String SERVER_ID = "175.159.104.19";
     public static final String PORT_NUM = "3000";
     public static final String SERVER_URL = "http://"+SERVER_ID+":"+PORT_NUM;
 
-    public static final String KSERVER_ID="192.168.0.109";
+    public static final String KSERVER_ID="175.159.104.19";
     public static final String KPORT_NUM="3000";
     public static final String KSERVER_URL="http://"+KSERVER_ID+":"+KPORT_NUM;
 
