@@ -139,7 +139,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
             putNotification();
         }
         else
-        mode = "Voluntary";
+            mode = "Voluntary";
 
         IntentFilter intentFilter = new IntentFilter(Constants.closeNot);
 
@@ -155,7 +155,8 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
         this.registerReceiver(mReceiver, intentFilter);
 
-
+//        Thread helper = new Thread(new InternetHelper());
+//        helper.start();
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -197,9 +198,9 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
         String interests = "";
         for (int i = 0; i<temp.size()-1 ; i++){
-            interests = interests + temp.get(i) + ", ";
+            interests = interests + temp.get(i).interest + ", ";
         }
-        interests = interests + temp.get(temp.size()-1);
+        interests = interests + temp.get(temp.size()-1).interest;
 
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
@@ -252,6 +253,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
     @Override
     public IBinder onBind(Intent intent) {
+        mode = "Voluntary";
         // TODO: Return the communication channel to the service.
 //        throw new UnsupportedOperationException("Not yet implemented");
         return null;
@@ -430,11 +432,11 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
             ArrayList<Event> temp = new ArrayList<>();
             List<Event> all = Event_T.test;
             for (int i = 0 ; i< all.size(); i++){
-                float [] results={};
-                boolean matchInterest = true;
+                float [] results = {0.0f,0.0f,0.0f};
+                boolean matchInterest = false;
                 for (int j = 0 ; j< interest.size(); j++)
                     if (all.get(i).interest.equals(interest.get(j))){
-                        matchInterest = false;
+                        matchInterest = true;
                         break;
                     }
                 if (!matchInterest){
