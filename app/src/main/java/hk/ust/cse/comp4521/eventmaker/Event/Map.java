@@ -42,7 +42,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
     private Marker marker;
     private int num=0;
     Button but;
-
+    Button back;
     private double lat;
     private double lon;
     private double orilat;
@@ -69,7 +69,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG,"map starting");
+        Log.i(TAG, "map starting");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         GoogleMapOptions options=new GoogleMapOptions();
@@ -85,8 +85,10 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
         mMapFragment.getMapAsync(this);
         but= (Button) findViewById(R.id.submit);
         but.setVisibility(View.INVISIBLE);
-        Intent receive=getIntent();
+        back= (Button) findViewById(R.id.back);
+        back.setVisibility(View.INVISIBLE);
 
+        Intent receive=getIntent();
         if(receive!=null){
             mode=receive.getExtras().getInt(Constants.eventCode,0);
             orilat=receive.getExtras().getDouble("lat", 0);
@@ -137,9 +139,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -158,9 +157,11 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
                             .position(mylocation)
                             .title("destination")
             );
+            back.setVisibility(View.VISIBLE);
         }
 
         but.setOnClickListener(this);
+        back.setOnClickListener(this);
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -259,6 +260,9 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
 //            relhelp.createRelationship(relationtosubmit);
 //            Log.i(TAG,"created rela and event on server(should be)");
             startActivity(startEvent);
+            finish();
+        }
+        else if(v.getId()==R.id.back){
             finish();
         }
     }

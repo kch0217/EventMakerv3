@@ -19,6 +19,9 @@ public class UserModel {
     private static UserModel usermodel = new UserModel();
     private SharedPreferences prefs;
 
+    public SharedPreferences getSharedPreferences(){
+        return prefs;
+    }
 
     private UserModel(){
 
@@ -142,7 +145,11 @@ public class UserModel {
         SharedPreferences.Editor prefed =prefs.edit();
         prefed.clear();
         prefed.commit();
+    }
 
-
+    public void saveEventId(String id){
+        SharedPreferences.Editor pref=prefs.edit();
+        pref.putString("Event",id);
+        pref.commit();
     }
 }

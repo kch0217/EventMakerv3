@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -330,7 +331,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
 
-                    if (SearchHelper.mCurrentLocation == null) {
+                    if (SearchHelper.mCurrentLocation == null) { //to check if there is any location detection
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
                         //  Chain together various setter methods to set the dialog characteristics
@@ -349,7 +350,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                         return;
                     }
                     pd = ProgressDialog.show(getActivity(), "Network Access", "Connecting to the server", true);
-                    ServerConnection serverConn = new ServerConnection(getActivity(), handle);
+                    ServerConnection serverConn = new ServerConnection(getActivity(), handle); //check network connectivity
                     serverConn.run(); //test network connection
                     pd.dismiss();
 
@@ -358,6 +359,24 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                     }
                     if (!UserServer.connectionState) {
                         return;
+                    }
+                    SharedPreferences  pre=UserModel.getUserModel().getSharedPreferences();
+                    if(pre.contains("Event")){
+                        final String eventId=pre.getString("Event","");
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle("redirection")
+                                .setMessage("brining you back to the event")
+                                .setNeutralButton("ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent back=new Intent(getActivity(),EventMenu.class);
+                                        back.putExtra(Constants.eventId,eventId);
+                                        Log.i(ARG_SECTION_NUMBER,"sending back to event menu");
+                                        startActivity(back);
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
                     }
 
 

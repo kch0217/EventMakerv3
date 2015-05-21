@@ -24,6 +24,7 @@ import hk.ust.cse.comp4521.eventmaker.Relationship.Relahelper;
 import hk.ust.cse.comp4521.eventmaker.Relationship.Relationship;
 import hk.ust.cse.comp4521.eventmaker.Relationship.Relationship2;
 import hk.ust.cse.comp4521.eventmaker.User.UserInfo;
+import hk.ust.cse.comp4521.eventmaker.User.UserModel;
 import hk.ust.cse.comp4521.eventmaker.User.UserServer;
 
 /**
@@ -80,6 +81,8 @@ public class EventMenu extends Activity {
 
         Intent intent = getIntent();
         event_id = intent.getStringExtra(Constants.eventId);
+        UserModel usm=UserModel.getUserModel();
+        usm.saveEventId(event_id);
 
         Intent refresh = new Intent(EventMenu.this, ActivityRefresh.class);
         serverConnection = new ServiceConnection() {
