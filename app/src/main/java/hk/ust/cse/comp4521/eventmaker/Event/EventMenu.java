@@ -97,7 +97,10 @@ public class EventMenu extends Activity {
         //deal with relationship
         Relahelper relahelper=new Relahelper();
         relahelper.getAllRelationship();
-        Relationship2 newrela=new Relationship2(event_id,UserServer.returnInfo._id);
+        Relationship2 newrela=new Relationship2();
+        newrela.eventId=event_id;
+        newrela.userId=UserServer.returnInfo._id;
+
         relahelper.createRelationship(newrela);
 
         Thread get_event_thread=new get_my_event();

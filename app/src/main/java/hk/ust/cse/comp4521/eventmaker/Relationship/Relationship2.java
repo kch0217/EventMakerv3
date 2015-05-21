@@ -6,6 +6,12 @@ package hk.ust.cse.comp4521.eventmaker.Relationship;
 public class Relationship2 extends Relationship{
     transient String _Id;
 
+    public Relationship2(){
+        _Id="";
+        eventId="";
+        userId="";
+    }
+
     public Relationship2 (String _eventId, String _userId){
         eventId=_eventId;
         userId=_userId;
