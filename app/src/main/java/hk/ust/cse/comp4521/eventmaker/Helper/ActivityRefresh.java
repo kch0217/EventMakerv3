@@ -22,18 +22,22 @@ public class ActivityRefresh extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Thread thread = new Thread(new Runnable() {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask() {
+                Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         networkAccess();
                     }
-                }, 1000, 30000);
+                });
+                thread.start();
+
             }
-        });
+        }, 1000, 30000);
+
+
 
 
         networkAccess();
