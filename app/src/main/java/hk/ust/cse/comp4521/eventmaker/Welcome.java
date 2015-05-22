@@ -1,10 +1,7 @@
 package hk.ust.cse.comp4521.eventmaker;
 
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,14 +12,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 import android.widget.Button;
 
 import java.util.Map;
 
 import hk.ust.cse.comp4521.eventmaker.User.UserModel;
 import hk.ust.cse.comp4521.eventmaker.User.UserRegistration;
-import hk.ust.cse.comp4521.eventmaker.User.UserServer;
 
 public class Welcome extends Activity {
 
@@ -169,13 +164,13 @@ public class Welcome extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_welcome2, container, false);
-            Button start = (Button) rootView.findViewById(R.id.startButton);
+            Button start = (Button) rootView.findViewById(R.id.buttonStart);
             start.setOnClickListener(new View.OnClickListener(){
 
                 @Override
                 public void onClick(View view) {
                     Log.i(null, "Click is detected");
-                    if (view.getId() == R.id.startButton) {
+                    if (view.getId() == R.id.buttonStart) {
                         UserModel usermodel = UserModel.getUserModel(); //may simplify
                         usermodel.setContext(getActivity());
                         Map<String, Object> data = usermodel.getAllInfo();
