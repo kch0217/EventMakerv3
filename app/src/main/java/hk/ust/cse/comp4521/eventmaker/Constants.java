@@ -32,7 +32,7 @@ public class Constants {
     public static final String eventId="eventId";
     public static final String eventCode="eventCode";//100 from hin 200 from him
     public static final String reconnect="reconnect"; //100=existing 200=new user
-
+    public static final String eventSetting="eventSetting";
 
     //for broadcase receiver
     public static final int ConnectionError = 20;

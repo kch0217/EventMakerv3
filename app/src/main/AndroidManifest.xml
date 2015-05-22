@@ -113,6 +113,11 @@
             android:enabled="true"
             android:exported="true" >
         </service>
+
+        <activity
+            android:name=".PostEvent.eventSetting"
+            android:label="@string/title_activity_event_setting" >
+        </activity>
     </application>
 
 </manifest>
