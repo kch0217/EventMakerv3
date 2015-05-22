@@ -280,9 +280,9 @@ public class EventMenu extends Activity {
                     Relahelper relhelper=new Relahelper();
                     for(Relationship rel: Relahelper.relas){
                         if(rel.roomId.equals(event_id)){
-                            Log.i(TAG,"deleting"+rel._Id);
-                            relhelper.deleteRelationship(rel._Id);
-                            Log.i(TAG,"delete rel"+rel._Id);
+                            Log.i(TAG,"deleting"+rel._id);
+                            relhelper.deleteRelationship(rel._id);
+                            Log.i(TAG,"delete rel"+rel._id);
                         }
                     }
                     UserModel.getUserModel().deleteEventId();
@@ -298,8 +298,8 @@ public class EventMenu extends Activity {
                                 if(rel.roomId.equals(event_id)){
                                     if(rel.userId.equals(UserServer.returnInfo._id)){
                                         find=true;
-                                        relhelper.deleteRelationship(rel._Id);
-                                        Log.i(TAG,"find the relationship and delete"+rel._Id);
+                                        relhelper.deleteRelationship(rel._id);
+                                        Log.i(TAG,"find the relationship and delete"+rel._id);
                                         break;
                                     }
                                 }

@@ -47,7 +47,7 @@ public class Relahelper {
                 relas = relationships;
                 if (relas != null) {
                     for (int i = 0; i < relas.size(); i++) {
-                        Log.i(TAG, relas.get(i).roomId + " " + relas.get(i).userId+"curry"+relas.get(i)._Id);
+                        Log.i(TAG, relas.get(i).roomId + " " + relas.get(i).userId+"curry"+relas.get(i)._id);
                     }
                 } else {
                     relas = new ArrayList<Relationship>();
