@@ -59,7 +59,7 @@ public class eventSetting extends Activity implements View.OnClickListener{
             }
         }
         title= (TextView) findViewById(R.id.title);
-        title.setText(evt.interest+"event");
+        title.setText(evt.interest+" event");
         editText=new EditText(this);
         editText.setInputType(InputType.TYPE_CLASS_NUMBER);
         partno.setText(Integer.toString(evt.numOfPart));
