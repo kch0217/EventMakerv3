@@ -19,6 +19,7 @@ import java.util.List;
 
 import hk.ust.cse.comp4521.eventmaker.Constants;
 import hk.ust.cse.comp4521.eventmaker.Helper.ActivityRefresh;
+import hk.ust.cse.comp4521.eventmaker.Helper.ParticipantsReminder;
 import hk.ust.cse.comp4521.eventmaker.Helper.ServerConnection;
 import hk.ust.cse.comp4521.eventmaker.R;
 import hk.ust.cse.comp4521.eventmaker.Relationship.Relahelper;
@@ -52,6 +53,7 @@ public class EventMenu extends Activity {
 
     private BroadcastReceiver mReceiver;
     private ServiceConnection serverConnection;
+    private Intent ServiceParticipants;
 
 
     @Override
@@ -102,6 +104,11 @@ public class EventMenu extends Activity {
             }
         };
         bindService(refresh, serverConnection, Context.BIND_AUTO_CREATE);
+
+        ServiceParticipants = new Intent(EventMenu.this, ParticipantsReminder.class);
+        ServiceParticipants.putExtra(Constants.eventId, event_id);
+        startService(ServiceParticipants);
+
         //deal with relationship
         int existornew=getIntent().getIntExtra(Constants.reconnect,0);
         if(existornew==100) {
@@ -314,6 +321,7 @@ public class EventMenu extends Activity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent.getIntExtra("Signal", -1) ==Constants.ConnectionError){
+                    //stop participants service
                     finish();
                 }
                 else if (intent.getIntExtra("Signal", -1) ==Constants.EventDeleted){
