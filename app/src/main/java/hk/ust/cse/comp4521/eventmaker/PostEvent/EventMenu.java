@@ -9,12 +9,19 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.text.Editable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+
+import com.pubnub.api.Callback;
+import com.pubnub.api.Pubnub;
+import com.pubnub.api.PubnubError;
+import com.pubnub.api.PubnubException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +45,13 @@ import hk.ust.cse.comp4521.eventmaker.User.UserServer;
  * Created by LiLokHim on 14/5/15.
  */
 public class EventMenu extends Activity {
+    private boolean isOwner=false;
     private String TAG = "eventMenu";
     private Event event = null;
     private String event_id;
     private int check_interval=30000;
     private List<Relationship> roommemlist;
-
+    private String OwnerID;
     /*********UI***************/
     private TextView event_name;
     private Button user1_button;
@@ -60,10 +68,12 @@ public class EventMenu extends Activity {
     private ServiceConnection serverConnection;
     private Intent ServiceParticipants;
     private Intent refresh;
-
+    final Pubnub pubnub = new Pubnub("pub-c-f7c0ad94-cce2-49a3-abfb-0f414b2f8dc8", "sub-c-462fbb70-ff91-11e4-aa11-02ee2ddab7fe");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
 
@@ -95,6 +105,92 @@ public class EventMenu extends Activity {
 
         Intent intent = getIntent();
         event_id = intent.getStringExtra(Constants.eventId);
+        setOwnerId();
+        /********************chat**********/
+        final TextView text= (TextView) this.findViewById(R.id.chatBox);
+        final EditText send= (EditText) this.findViewById(R.id.TextToSend);
+        Button sendButton=(Button) this.findViewById(R.id.send);
+
+        try {
+            pubnub.subscribe(event_id, new Callback() {
+
+                public void successCallback(String channel, final Object message) {
+                    if(message.toString().contains("type:enter"))
+                    {
+                        String operation=message.toString().replace("type:enterid:","");
+                        String[] idandname=operation.split("Name:");
+                        System.out.print("enter: "+message.toString());
+                    }
+                    else if(message.toString().contains("type:post"))
+                    {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String operation=message.toString().replace("type:post:","");
+//                        if(isOwner){
+                                String currentText= (String) text.getText();
+
+                                String update=currentText+"///"+operation;
+                                String str = update.toString().replace("///", "\n");
+                                text.setText(str);
+
+                            }
+                        });
+//                        }
+                    }
+
+
+
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            String chatBox = (String) text.getText();
+//
+//                            String str = message.toString().replace("///", "\n");
+//                            chatBox = chatBox + "\n" + str;
+//                            text.setText(chatBox);
+//                        }
+//                    });
+                }
+                public void errorCallback(String channel, PubnubError error) {
+                    System.out.println(error.getErrorString());
+                }
+            });
+        } catch (PubnubException e) {
+            e.printStackTrace();
+        }
+        //userEnter
+        if(UserServer.returnInfo.NamePrivacy.equals("Uncheck")){
+            pubnub.publish(event_id, "type:enter+id:"+UserServer.returnInfo._id+"Name:"+UserServer.returnInfo.Name, new Callback() {});
+        }
+        else
+        {
+            pubnub.publish(event_id, "type:enter+id:"+UserServer.returnInfo._id+"Name:"+UserServer.returnInfo.Phone, new Callback() {});
+
+        }
+
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Editable textToSend=send.getText();
+                String current_text= textToSend.toString();
+                String temp;
+                if(UserServer.returnInfo.NamePrivacy.equals("Uncheck")){
+                    temp="type:post"+UserServer.returnInfo.Name+": "+current_text;      }
+                else
+                {
+                    temp="type:post"+UserServer.returnInfo.Phone+": "+current_text;
+                }
+                String current_text2=temp.replace("\n","///");
+
+                pubnub.publish(event_id, current_text2, new Callback() {
+                });
+
+            }
+        });
+        /********************chat**********/
+
+
         UserModel usm=UserModel.getUserModel();
         usm.saveEventId(event_id);
         Log.i(TAG, "Going to start service");
@@ -112,7 +208,12 @@ public class EventMenu extends Activity {
 
             }
         };
+        startService(refresh);
 
+
+        ServiceParticipants = new Intent(EventMenu.this, ParticipantsReminder.class);
+        ServiceParticipants.putExtra(Constants.eventId, event_id);
+        startService(ServiceParticipants);
 
         //deal with relationship
         //new user 200, exisiting user 100
@@ -133,16 +234,11 @@ public class EventMenu extends Activity {
         else{
             Log.i(TAG,"no intent with value from Constants.reconnect, something goes wrong");
         }
-        startService(refresh);
-
-
-        ServiceParticipants = new Intent(EventMenu.this, ParticipantsReminder.class);
-        ServiceParticipants.putExtra(Constants.eventId, event_id);
-        startService(ServiceParticipants);
         Thread get_event_thread=new get_my_event();
         get_event_thread.start();
 
     }
+
 
 
     //update the info of UI
@@ -223,7 +319,7 @@ public class EventMenu extends Activity {
             for(Event events:allEvents)
             {
                 if(events._id.equals(event_id)){
-                event=events;
+                    event=events;
                     update_info();
                     break;
                 }
@@ -310,7 +406,6 @@ public class EventMenu extends Activity {
                                 }
                             }
                         }
-                        UserModel.getUserModel().deleteEventId();
                         finish();
                         Log.i(TAG, "non admin leaving");
                     }
@@ -369,24 +464,38 @@ public class EventMenu extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        //unregister our receiver
-        this.unregisterReceiver(this.mReceiver);
-        Log.i(TAG,"Trying to unbind");
-        unbindService(serverConnection);
 
     }
 
     @Override
     protected void onStop() {
-
+        //unregister our receiver
+        this.unregisterReceiver(this.mReceiver);
+        Log.i(TAG,"Trying to unbind");
+        unbindService(serverConnection);
         super.onStop();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_setting, menu);
+        getMenuInflater().inflate(R.menu.menu_eventmenu, menu);
         return true;
+    }
+
+    public void setOwnerId()
+    {
+        for(Event event:Event_T.test)
+        {
+            if(event._id.equals(event_id))
+            {
+                OwnerID=event._ownerid;
+                if(OwnerID.equals(UserServer.returnInfo._id))
+                {
+                    isOwner=true;
+                }
+            }
+        }
     }
 
     @Override
