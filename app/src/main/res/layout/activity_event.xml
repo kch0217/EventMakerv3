@@ -140,21 +140,37 @@
                 android:layout_gravity="center_horizontal"
                 android:weightSum="1">
 
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="202dp"
-                    android:id="@+id/SV"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_weight="0.39"
-                    android:fillViewport="false">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.90"
+                    android:weightSum="1">
 
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/chatBox"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_weight="0.39" />
-                </ScrollView>
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="239dp"
+                    android:layout_gravity="center_horizontal">
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:id="@+id/SV"
+                        android:fillViewport="false"
+                        android:layout_weight="0.60"
+                        android:layout_gravity="bottom"
+                        android:layout_alignParentBottom="true">
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/chatBox"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_weight="0.39" />
+                    </ScrollView>
+                </RelativeLayout>
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -162,13 +178,14 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_weight="0.52"
-                    android:id="@+id/r">
+                    android:id="@+id/r"
+                    android:weightSum="1">
 
                     <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="163dp"
+                        android:layout_height="79dp"
                         android:id="@+id/TextToSend"
-                        android:layout_weight="0.78" />
+                        android:layout_weight="0.81" />
 
                     <Button
                         style="?android:attr/buttonStyleSmall"
@@ -177,6 +194,7 @@
                         android:text="send"
                         android:id="@+id/send" />
                 </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>

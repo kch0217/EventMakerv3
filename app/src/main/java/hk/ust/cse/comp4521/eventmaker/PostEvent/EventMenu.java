@@ -114,6 +114,21 @@ public class EventMenu extends Activity {
         final TextView text= (TextView) this.findViewById(R.id.chatBox);
         final EditText send= (EditText) this.findViewById(R.id.TextToSend);
         Button sendButton=(Button) this.findViewById(R.id.send);
+        send.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(view.getId()==send.getId()){
+                    if(b==true){
+                        text.setHeight(150);
+                    }
+                    else
+                    {
+                        text.setHeight(300);
+                    }
+                }
+            }
+        });
 
         try {
             pubnub.subscribe(event_id, new Callback() {
