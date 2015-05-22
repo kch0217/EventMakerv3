@@ -106,18 +106,6 @@ public class EventMenu extends Activity {
         event_id = intent.getStringExtra(Constants.eventId);
         setOwnerId();
         /********************chat**********/
-        for (Relationship ra : Relahelper.relas) {
-            if (ra.roomId.equals(event_id)) {
-                for (UserInfo ui : UserServer.UserInfoArrayList) {
-
-                    if(!ui._id.equals(UserServer.returnInfo._id))
-                    {
-                        name_array.add(ui.Name);
-                        id_array.add(ui._id);
-                    }
-                    }
-                }
-            }
 
 
         final TextView text= (TextView) this.findViewById(R.id.chatBox);
@@ -324,6 +312,20 @@ public class EventMenu extends Activity {
             e.printStackTrace();
         }
         Log.i(TAG, "rela size is "+ relahelper.relas.size());
+
+        for (Relationship ra : Relahelper.relas) {
+            if (ra.roomId.equals(event_id)) {
+                for (UserInfo ui : UserServer.UserInfoArrayList) {
+
+                    if(!ui._id.equals(UserServer.returnInfo._id))
+                    {
+                        name_array.add(ui.Name);
+                        id_array.add(ui._id);
+                    }
+                }
+            }
+        }
+
         Thread get_event_thread=new get_my_event();
         get_event_thread.start();
 
