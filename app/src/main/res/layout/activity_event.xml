@@ -7,9 +7,12 @@
     android:id="@+id/a">
 
     <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/scrollView" >
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/scrollView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <LinearLayout
             android:orientation="vertical"
@@ -20,148 +23,26 @@
             android:id="@+id/b">
 
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.06"
-                android:weightSum="1"
-                android:id="@+id/c">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="－"
-                    android:id="@+id/event_name"
-                    android:textSize="21dp"
-                    android:gravity="center|center_horizontal"
-                    android:layout_gravity="center" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:weightSum="1"
-                android:background="#fffdfff3">
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="34dp"
-                    android:text="leave"
-                    android:id="@+id/leave" />
-
-                <Button
-                    style="?android:attr/buttonStyleSmall"
-                    android:layout_width="48dp"
-                    android:layout_height="34dp"
-                    android:text="Setting"
-                    android:id="@+id/setting"
-                    android:layout_weight="0.09" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:weightSum="1"
-                android:background="#fffdfff3">
-
-                <Button
-                    android:layout_width="97dp"
-                    android:layout_height="wrap_content"
-                    android:text="-"
-                    android:id="@+id/user1_button" />
-
-                <Button
-                    android:layout_width="84dp"
-                    android:layout_height="match_parent"
-                    android:text="-"
-                    android:id="@+id/user2_button"
-                    android:layout_weight="0.63" />
-
-                <Button
-                    android:layout_width="92dp"
-                    android:layout_height="match_parent"
-                    android:text="-"
-                    android:id="@+id/user3_button" />
-
-                <Button
-                    android:layout_width="88dp"
-                    android:layout_height="match_parent"
-                    android:text="-"
-                    android:id="@+id/user4_button"
-                    android:layout_weight="0.24" />
-            </LinearLayout>
-
-            <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.17"
-                android:id="@+id/information_layout"
-                android:weightSum="1">
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Location:-"
-                    android:id="@+id/location_text"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center"
-                    android:layout_weight="0.39" />
-
-                <Button
-                    style="?android:attr/buttonStyleSmall"
-                    android:layout_width="fill_parent"
-                    android:layout_height="31dp"
-                    android:text="Location on map"
-                    android:id="@+id/location_button"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_weight="0.06" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="time:-"
-                    android:id="@+id/time_text"
-                    android:layout_gravity="right"
-                    android:gravity="center"
-                    android:layout_weight="0.56" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="358dp"
+                android:layout_height="407dp"
                 android:layout_gravity="center_horizontal"
                 android:weightSum="1">
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.90"
-                    android:weightSum="1">
-
-                </LinearLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="239dp"
+                    android:layout_height="369dp"
                     android:layout_gravity="center_horizontal">
 
                     <ScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="300dp"
+                        android:layout_height="fill_parent"
                         android:id="@+id/SV"
                         android:fillViewport="false"
                         android:layout_weight="0.60"
                         android:layout_gravity="bottom"
-                        android:layout_alignParentBottom="true">
+                        android:layout_toRightOf="@+id/listView"
+                        android:layout_toEndOf="@+id/listView">
 
                         <TextView
                             android:layout_width="fill_parent"
@@ -170,31 +51,39 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_weight="0.39" />
                     </ScrollView>
+
+                    <ListView
+                        android:layout_width="93dp"
+                        android:layout_height="fill_parent"
+                        android:id="@+id/listView"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true" />
                 </RelativeLayout>
 
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_weight="0.52"
-                    android:id="@+id/r"
-                    android:weightSum="1">
+            </LinearLayout>
 
-                    <EditText
-                        android:layout_width="163dp"
-                        android:layout_height="79dp"
-                        android:id="@+id/TextToSend"
-                        android:layout_weight="0.81" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="83dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/scrollView"
+                android:weightSum="1">
 
-                    <Button
-                        style="?android:attr/buttonStyleSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="send"
-                        android:id="@+id/send" />
-                </LinearLayout>
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/TextToSend"
+                    android:layout_weight="0.97" />
 
+                <Button
+                    android:layout_width="79dp"
+                    android:layout_height="37dp"
+                    android:text="send"
+                    android:id="@+id/send" />
             </LinearLayout>
 
         </LinearLayout>

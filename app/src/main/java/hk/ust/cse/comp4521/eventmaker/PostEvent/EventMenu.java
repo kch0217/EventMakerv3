@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -72,8 +73,9 @@ public class EventMenu extends Activity {
     private ServiceConnection serverConnection;
     private Intent ServiceParticipants;
     private Intent refresh;
-    final Pubnub pubnub = new Pubnub("pub-c-f7c0ad94-cce2-49a3-abfb-0f414b2f8dc8", "sub-c-462fbb70-ff91-11e4-aa11-02ee2ddab7fe");
 
+    final Pubnub pubnub = new Pubnub("pub-c-f7c0ad94-cce2-49a3-abfb-0f414b2f8dc8", "sub-c-462fbb70-ff91-11e4-aa11-02ee2ddab7fe");
+    private ListView lv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -81,30 +83,12 @@ public class EventMenu extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
-
+        
         /************************UI init*******************/
-        event_name =(TextView)findViewById(R.id.event_name);
-        location_text =(TextView)findViewById(R.id.location_text);
-        time_text =(TextView)findViewById(R.id.time_text);
-        user1_button=(Button)findViewById(R.id.user1_button);
-        user2_button=(Button)findViewById(R.id.user2_button);
-        user3_button=(Button)findViewById(R.id.user3_button);
-        user4_button=(Button)findViewById(R.id.user4_button);
-        location_button=(Button)findViewById(R.id.location_button);
-        SV=(ScrollView)findViewById(R.id.SV);
-        leave= (Button) findViewById(R.id.leave);
-        setting=(Button)findViewById(R.id.setting);
-        user2_button.setVisibility(View.INVISIBLE);
-        user3_button.setVisibility(View.INVISIBLE);
-        user4_button.setVisibility(View.INVISIBLE);
 
-        setting.setOnClickListener(new pressButton());
-        leave.setOnClickListener(new pressButton());
-        user1_button.setOnClickListener(new pressButton());
-        user2_button.setOnClickListener(new pressButton());
-        user3_button.setOnClickListener(new pressButton());
-        user4_button.setOnClickListener(new pressButton());
-        location_button.setOnClickListener(new pressButton());
+    ;
+        SV=(ScrollView)findViewById(R.id.SV);
+
         /************************UI init*******************/
 
 
@@ -116,23 +100,7 @@ public class EventMenu extends Activity {
         final TextView text= (TextView) this.findViewById(R.id.chatBox);
         final EditText send= (EditText) this.findViewById(R.id.TextToSend);
         Button sendButton=(Button) this.findViewById(R.id.send);
-        send.setOnFocusChangeListener(new View.OnFocusChangeListener()
-        {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                    if(b==true){
-                        text.setText("\n\n\n\n\n\n\n\n\n\n\n"+text.getText());
-                        SV.fullScroll(View.FOCUS_DOWN);
-                    }
-                    else
-                    {
-                        text.setText(text.getText().toString().replace("\n\n\n\n\n\n\n\n\n\n\n",""));
-                        SV.fullScroll(View.FOCUS_DOWN);
-                    System.out.println("fuckyou");
-                    }
 
-            }
-        });
 
         try {
             pubnub.subscribe(event_id, new Callback() {
@@ -143,6 +111,7 @@ public class EventMenu extends Activity {
                         String operation=message.toString().replace("type:enterid:","");
                         String[] idandname=operation.split("Name:");
                         System.out.print("enter: "+message.toString());
+
                     }
                     else if(message.toString().contains("type:post"))
                     {
@@ -197,9 +166,17 @@ public class EventMenu extends Activity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Editable textToSend=send.getText();
-                String current_text= textToSend.toString();
-                String temp;
+                Editable textToSend = send.getText();
+                String current_text = textToSend.toString();
+//               while(text.getText().toString().startsWith("\n"))
+//                {
+//                   text.setText(text.getText().toString().substring(1,text.getText().toString().length()));
+//                }
+//                for (int i = 0; i < 8-get_length(text.toString());i++)
+//                {
+//                    text.setText("\n"+text.getText().toString());
+//                }
+            String temp;
                 if(UserServer.returnInfo.NamePrivacy.equals("Uncheck")){
                     temp="type:post"+UserServer.returnInfo.Name+": "+current_text;      }
                 else
@@ -262,54 +239,60 @@ public class EventMenu extends Activity {
 
 
     //update the info of UI
-    public void update_info()  {
+//    public void update_info()  {
+//
+//        if(event!=null)
+//        {
+//            event_name.setText(event.interest);
+//            time_text.setText(event.starting+"-"+event.ending);
+//            location_text.setText(event.locationName);
+//            List<UserInfo> event_users=get_users_in_event();
+//
+//            for(int i=0;i<event_users.size();i++)
+//            {
+//                user1_button.setVisibility(View.INVISIBLE);
+//                user2_button.setVisibility(View.INVISIBLE);
+//                user3_button.setVisibility(View.INVISIBLE);
+//                user4_button.setVisibility(View.INVISIBLE);
+//
+//
+//                if(i==0)
+//                {
+//                    user1_button.setVisibility(View.VISIBLE);
+//                    user1_button.setText(event_users.get(i).Name);
+//                }
+//                else if(i==1)
+//                {
+//                    user2_button.setVisibility(View.VISIBLE);
+//
+//                    user2_button.setText(event_users.get(i).Name);
+//
+//                }
+//                else if(i==2)
+//                {
+//                    user3_button.setVisibility(View.VISIBLE);
+//
+//                    user3_button.setText(event_users.get(i).Name);
+//
+//                }
+//                else if(i==3)
+//                {
+//                    user4_button.setVisibility(View.VISIBLE);
+//
+//                    user4_button.setText(event_users.get(i).Name);
+//
+//                }
+//            }
+//        }
+//    }
 
-        if(event!=null)
-        {
-            event_name.setText(event.interest);
-            time_text.setText(event.starting+"-"+event.ending);
-            location_text.setText(event.locationName);
-            List<UserInfo> event_users=get_users_in_event();
-
-            for(int i=0;i<event_users.size();i++)
-            {
-                user1_button.setVisibility(View.INVISIBLE);
-                user2_button.setVisibility(View.INVISIBLE);
-                user3_button.setVisibility(View.INVISIBLE);
-                user4_button.setVisibility(View.INVISIBLE);
-
-
-                if(i==0)
-                {
-                    user1_button.setVisibility(View.VISIBLE);
-                    user1_button.setText(event_users.get(i).Name);
-                }
-                else if(i==1)
-                {
-                    user2_button.setVisibility(View.VISIBLE);
-
-                    user2_button.setText(event_users.get(i).Name);
-
-                }
-                else if(i==2)
-                {
-                    user3_button.setVisibility(View.VISIBLE);
-
-                    user3_button.setText(event_users.get(i).Name);
-
-                }
-                else if(i==3)
-                {
-                    user4_button.setVisibility(View.VISIBLE);
-
-                    user4_button.setText(event_users.get(i).Name);
-
-                }
-            }
-        }
+    public int get_length(String word)
+    {
+        String trim = word.trim();
+        if (trim.isEmpty())
+            return 0;
+        return trim.split("\\n+").length;
     }
-
-
     //Get all the users from the event
     public List<UserInfo> get_users_in_event()
     {
@@ -340,7 +323,7 @@ public class EventMenu extends Activity {
             {
                 if(events._id.equals(event_id)){
                     event=events;
-                    update_info();
+//                    update_info();
                     break;
                 }
 
@@ -363,95 +346,95 @@ public class EventMenu extends Activity {
     }
 
 
-    public class pressButton implements View.OnClickListener {
-
-        @Override
-        public void onClick(View view) {
-            if (view.getId() == R.id.user1_button) {
-            }
-            else if(view.getId()==R.id.user2_button){
-
-            }
-            else if(view.getId()==R.id.user3_button){
-
-            }
-            else if(view.getId()==R.id.user4_button){
-
-            }
-            else if(view.getId()==R.id.location_button){
-                Intent intent = new Intent(getApplicationContext(), Map.class);
-                intent.putExtra("lat",event.latitude);
-                intent.putExtra("lon",event.longitude);
-                intent.putExtra(Constants.eventCode,200);
-                startActivity(intent);
-
-            }
-            else if(view.getId()==R.id.leave){
-                boolean admin=false;
-                for(Event evt:Event_T.test){
-                    if(evt._id.equals(event_id)){
-                        if(evt._ownerid.equals(UserServer.returnInfo._id)){
-                            admin=true;
-                        }
-                    }
-                }
-                if(admin){
-                    Event_T helper=new Event_T();
-                    helper.deleteEvent(event_id);
-                    Relahelper relhelper=new Relahelper();
-                    for(Relationship rel: Relahelper.relas){
-                        if(rel.roomId.equals(event_id)){
-                            Log.i(TAG,"deleting"+rel._id);
-                            relhelper.deleteRelationship(rel._id);
-                            Log.i(TAG,"delete rel"+rel._id);
-                        }
-                    }
-                    UserModel.getUserModel().deleteEventId();
-                    finish();
-                    Log.i(TAG,"admin leaving");
-                }
-                else {
-                    if(!admin) {
-                        Relahelper relhelper=new Relahelper();
-                        boolean find=false;
-                        while(!find){
-                            for(Relationship rel:Relahelper.relas){
-                                if(rel.roomId.equals(event_id)){
-                                    if(rel.userId.equals(UserServer.returnInfo._id)){
-                                        find=true;
-                                        relhelper.deleteRelationship(rel._id);
-                                        Log.i(TAG,"find the relationship and delete"+rel._id);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        UserModel.getUserModel().deleteEventId();
-                        finish();
-                        Log.i(TAG, "non admin leaving");
-                    }
-                    else{
-                        Log.i(TAG,"well");
-                    }
-                }
-            }
-            else if(view.getId()==R.id.setting){
-                Intent tosetting=new Intent(EventMenu.this,eventSetting.class);
-                tosetting.putExtra(Constants.eventSetting, event_id);
-                for(Event evt: Event_T.test){
-                    if(evt._id.equals(event_id)){
-                        if(evt._ownerid.equals(UserServer.returnInfo._id)){
-                            tosetting.putExtra(Constants.eventSettingType,100);
-                        }
-                        else{
-                            tosetting.putExtra(Constants.eventSettingType,200);
-                        }
-                    }
-                }
-                startActivity(tosetting);
-            }
-        }
-    }
+//    public class pressButton implements View.OnClickListener {
+//
+//        @Override
+//        public void onClick(View view) {
+//            if (view.getId() == R.id.user1_button) {
+//            }
+//            else if(view.getId()==R.id.user2_button){
+//
+//            }
+//            else if(view.getId()==R.id.user3_button){
+//
+//            }
+//            else if(view.getId()==R.id.user4_button){
+//
+//            }
+//            else if(view.getId()==R.id.location_button){
+//                Intent intent = new Intent(getApplicationContext(), Map.class);
+//                intent.putExtra("lat",event.latitude);
+//                intent.putExtra("lon",event.longitude);
+//                intent.putExtra(Constants.eventCode,200);
+//                startActivity(intent);
+//
+//            }
+//            else if(view.getId()==R.id.leave){
+//                boolean admin=false;
+//                for(Event evt:Event_T.test){
+//                    if(evt._id.equals(event_id)){
+//                        if(evt._ownerid.equals(UserServer.returnInfo._id)){
+//                            admin=true;
+//                        }
+//                    }
+//                }
+//                if(admin){
+//                    Event_T helper=new Event_T();
+//                    helper.deleteEvent(event_id);
+//                    Relahelper relhelper=new Relahelper();
+//                    for(Relationship rel: Relahelper.relas){
+//                        if(rel.roomId.equals(event_id)){
+//                            Log.i(TAG,"deleting"+rel._id);
+//                            relhelper.deleteRelationship(rel._id);
+//                            Log.i(TAG,"delete rel"+rel._id);
+//                        }
+//                    }
+//                    UserModel.getUserModel().deleteEventId();
+//                    finish();
+//                    Log.i(TAG,"admin leaving");
+//                }
+//                else {
+//                    if(!admin) {
+//                        Relahelper relhelper=new Relahelper();
+//                        boolean find=false;
+//                        while(!find){
+//                            for(Relationship rel:Relahelper.relas){
+//                                if(rel.roomId.equals(event_id)){
+//                                    if(rel.userId.equals(UserServer.returnInfo._id)){
+//                                        find=true;
+//                                        relhelper.deleteRelationship(rel._id);
+//                                        Log.i(TAG,"find the relationship and delete"+rel._id);
+//                                        break;
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        UserModel.getUserModel().deleteEventId();
+//                        finish();
+//                        Log.i(TAG, "non admin leaving");
+//                    }
+//                    else{
+//                        Log.i(TAG,"well");
+//                    }
+//                }
+//            }
+//            else if(view.getId()==R.id.setting){
+//                Intent tosetting=new Intent(EventMenu.this,eventSetting.class);
+//                tosetting.putExtra(Constants.eventSetting, event_id);
+//                for(Event evt: Event_T.test){
+//                    if(evt._id.equals(event_id)){
+//                        if(evt._ownerid.equals(UserServer.returnInfo._id)){
+//                            tosetting.putExtra(Constants.eventSettingType,100);
+//                        }
+//                        else{
+//                            tosetting.putExtra(Constants.eventSettingType,200);
+//                        }
+//                    }
+//                }
+//                startActivity(tosetting);
+//            }
+//        }
+//    }
 
 
 
