@@ -59,4 +59,31 @@
         android:layout_alignLeft="@+id/endTime"
         android:layout_alignStart="@+id/endTime" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="participants no."
+        android:id="@+id/part"
+        android:layout_below="@+id/buttonEnd"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/partno"
+        android:layout_alignTop="@+id/part"
+        android:layout_alignRight="@+id/startTime"
+        android:layout_alignEnd="@+id/startTime" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="change"
+        android:id="@+id/buttonPart"
+        android:layout_below="@+id/buttonEnd"
+        android:layout_alignLeft="@+id/buttonEnd"
+        android:layout_alignStart="@+id/buttonEnd" />
+
 </RelativeLayout>

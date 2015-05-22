@@ -3,6 +3,7 @@ package hk.ust.cse.comp4521.eventmaker.PostEvent;
 import android.app.TimePickerDialog;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,7 @@ import java.util.Calendar;
 
 import hk.ust.cse.comp4521.eventmaker.Constants;
 import hk.ust.cse.comp4521.eventmaker.Event.Event;
+import hk.ust.cse.comp4521.eventmaker.Event.Event2;
 import hk.ust.cse.comp4521.eventmaker.Event.Event_T;
 import hk.ust.cse.comp4521.eventmaker.R;
 
@@ -22,10 +24,14 @@ public class eventSetting extends ActionBarActivity implements View.OnClickListe
     private TextView endText;
     private TextView startTimeToBeViewed;
     private TextView endTimeToBeViewed;
+    private TextView partText;
+    private TextView partno;
     private Button changeStart;
     private Button changeEnd;
+    private Button changePart;
     private Event evt;
     private String evt_id;
+    private String TAG="EVSTE";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +40,9 @@ public class eventSetting extends ActionBarActivity implements View.OnClickListe
         endText= (TextView) findViewById(R.id.endT);
         startTimeToBeViewed= (TextView) findViewById(R.id.startTime);
         endTimeToBeViewed= (TextView) findViewById(R.id.endTime);
+        partText= (TextView) findViewById(R.id.part);
+        partno= (TextView) findViewById(R.id.partno);
+        changePart= (Button) findViewById(R.id.buttonPart);
         //event menu has to send event id to this activity
         //suppose no nedd to check if event exists
         evt_id=getIntent().getExtras().getString(Constants.eventSetting);
@@ -42,6 +51,7 @@ public class eventSetting extends ActionBarActivity implements View.OnClickListe
                 evt=ev;
             }
         }
+        partno.setText(evt.numOfPart);
         startTimeToBeViewed.setText(evt.starting);
         endTimeToBeViewed.setText(evt.ending);
 
@@ -78,20 +88,49 @@ public class eventSetting extends ActionBarActivity implements View.OnClickListe
         Calendar mcurrentTime=Calendar.getInstance();
         int hour=mcurrentTime.get(Calendar.HOUR_OF_DAY);
         int minute=mcurrentTime.get(Calendar.MINUTE);
-        Event_T eventhelper=new Event_T();
+        final Event_T eventhelper=new Event_T();
         if(v.getId()==R.id.buttonStart){
             TimePickerDialog start=new TimePickerDialog(eventSetting.this, new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                     String texttobeset=hourOfDay+":"+minute;
                     startTimeToBeViewed.setText(hourOfDay+":"+minute);
-
+                    eventhelper.updateEvent(copyFromEvent(evt),evt_id);
                 }
             },hour,minute,false);
+            start.setTitle("starting time");
+            start.show();
         }
         else if(v.getId()==R.id.buttonEnd){
+            TimePickerDialog end=new TimePickerDialog(eventSetting.this, new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    String texttobeset=hourOfDay+":"+minute;
+                    endTimeToBeViewed.setText(texttobeset);
+                    eventhelper.updateEvent(copyFromEvent(evt),evt_id);
+                }
+            },hour,minute,false);
+            end.setTitle("ending time");
+            end.show();
+        }
+        else if(v.getId()==R.id.buttonPart){
 
         }
 
+    }
+
+    public Event2 copyFromEvent(Event evt){
+        Event2 et=new Event2();
+        et._ownerid=evt._ownerid;
+        et.interest=evt.interest;
+        et.longitude=evt.longitude;
+        et.latitude=evt.latitude;
+        et.numOfPart=evt.numOfPart;
+        et.currentTimestamp=evt.currentTimestamp;
+        et.locationName=evt.locationName;
+        et.starting=evt.starting;
+        et.ending=evt.ending;
+        Log.i(TAG, "copy all details to event2");
+        return et;
     }
 }
