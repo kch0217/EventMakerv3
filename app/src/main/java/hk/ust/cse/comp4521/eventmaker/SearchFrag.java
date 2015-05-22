@@ -194,7 +194,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
         bindService(mainloc, serviceConnection, Context.BIND_AUTO_CREATE);
         SharedPreferences pre = UserModel.getUserModel().getSharedPreferences();
         boolean find=false;
-        if (pre.contains("Event")) {
+        if (pre.contains("Event") && UserServer.connectionState ) {
             final String eventId = pre.getString("Event", "");
             for(Event evt:Event_T.test){
                 if(evt._id.equals(eventId)){
@@ -405,7 +405,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
 
                     }
                     if (!UserServer.connectionState) {
-                        return;
+                        return ;
                     }
 
                     Object lock = new Object();

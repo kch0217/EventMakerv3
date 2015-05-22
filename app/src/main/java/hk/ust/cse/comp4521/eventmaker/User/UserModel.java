@@ -63,7 +63,7 @@ public class UserModel {
     }
 
     public String getPhoneNumberFromSP(){
-        return prefs.getString("Phone", null);
+        return prefs.getString("Phone", "0000");
     }
 
     public void saveAllInfo(Map<String, Object> data, boolean modify){
