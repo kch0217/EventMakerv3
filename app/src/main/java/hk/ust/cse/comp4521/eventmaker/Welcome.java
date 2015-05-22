@@ -32,9 +32,7 @@ public class Welcome extends Activity {
 
         UserModel usermodel = UserModel.getUserModel();
         usermodel.setContext(Welcome.this);
-        //fetch user database
-//        UserServer myServer = new UserServer();
-//        myServer.updateInternalState();
+
         Map<String, Object> data = usermodel.getAllInfo();
 
         if (!((String) data.get("Name")).equals("")) {

@@ -437,6 +437,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                                             back.putExtra(Constants.eventId, eventId);
                                             back.putExtra(Constants.reconnect,100);
                                             Log.i("SEARCH", "sending back to event menu");
+                                            getActivity().stopService(getloc);
                                             startActivity(back);
                                         }
                                     })

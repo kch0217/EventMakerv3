@@ -41,7 +41,7 @@ public class ParticipantsReminder extends Service {
     private List<String> id_add;
     private boolean firstNotification ;
     private boolean foundEvent;
-    private String interest;
+
 
     private String TAG = "Participants Reminder Service";
 
@@ -228,7 +228,7 @@ public class ParticipantsReminder extends Service {
                         .setSmallIcon(R.drawable.playing)
                         .setLargeIcon(largeIcon.createScaledBitmap(largeIcon,72,72,false))
                         .setOngoing(false)
-                        .setContentTitle(interest)
+                        .setContentTitle("Event Maker")
                         .setContentText(textmessage)
                         .setSound(alarmSound);
 
@@ -279,7 +279,7 @@ public class ParticipantsReminder extends Service {
                         .setSmallIcon(R.drawable.playing)
                         .setLargeIcon(largeIcon.createScaledBitmap(largeIcon, 72, 72, false))
                         .setOngoing(false)
-                        .setContentTitle(interest)
+                        .setContentTitle("Event Maker")
                         .setContentText(textmessage)
                         .setSound(alarmSound);
 

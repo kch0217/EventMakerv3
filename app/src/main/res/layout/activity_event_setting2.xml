@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="start"
+        android:text="Start time"
         android:id="@+id/startT"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="end"
+        android:text="End time"
         android:id="@+id/endT"
         android:layout_alignTop="@+id/buttonEnd"
         android:layout_alignParentLeft="true"
@@ -62,7 +62,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="participants no."
+        android:text="Participants no."
         android:id="@+id/part"
         android:layout_below="@+id/buttonEnd"
         android:layout_alignParentLeft="true"

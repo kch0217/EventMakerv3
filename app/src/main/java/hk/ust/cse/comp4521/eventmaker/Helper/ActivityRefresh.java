@@ -68,6 +68,7 @@ public class ActivityRefresh extends Service {
             connected = false;
             Intent i = new Intent(Constants.signaling).putExtra("Signal", Constants.ConnectionError);
             this.sendBroadcast(i);
+            stopSelf();
         }
         else {
             connected = true;
@@ -105,9 +106,11 @@ public class ActivityRefresh extends Service {
                 break;
             }
         }
+        Log.i("ActivityRefresh", "Result is "+ foundEvent);
         if (!foundEvent){
 //            Intent i = new Intent(Constants.signaling).putExtra("Signal", Constants.EventDeleted);
 //            this.sendBroadcast(i);
+
             stopSelf();
         }
     }

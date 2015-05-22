@@ -1,9 +1,11 @@
 package hk.ust.cse.comp4521.eventmaker.PostEvent;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -231,12 +233,7 @@ public class EventMenu extends Activity {
 
             }
         };
-        startService(refresh);
 
-
-        ServiceParticipants = new Intent(EventMenu.this, ParticipantsReminder.class);
-        ServiceParticipants.putExtra(Constants.eventId, event_id);
-        startService(ServiceParticipants);
 
         //deal with relationship
         //new user 200, exisiting user 100
@@ -463,6 +460,12 @@ public class EventMenu extends Activity {
     protected void onResume() {
         super.onResume();
 
+        startService(refresh);
+
+
+        ServiceParticipants = new Intent(EventMenu.this, ParticipantsReminder.class);
+        ServiceParticipants.putExtra(Constants.eventId, event_id);
+        startService(ServiceParticipants);
         Log.i(TAG, "Trying to bind");
         bindService(refresh, serverConnection, Context.BIND_AUTO_CREATE);
         IntentFilter intentFilter = new IntentFilter(Constants.signaling);
@@ -476,7 +479,22 @@ public class EventMenu extends Activity {
                     finish();
                 }
                 else if (intent.getIntExtra("Signal", -1) ==Constants.EventDeleted){
-                    finish();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(EventMenu.this);
+
+                    //  Chain together various setter methods to set the dialog characteristics
+                    builder.setMessage("Owner has deleted the event!")
+                            .setTitle("Error")
+                            .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    finish();
+                                }
+
+                            });
+
+                    // Get the AlertDialog from create()
+                    builder.create().show();
+
                 }
 
             }
@@ -488,6 +506,8 @@ public class EventMenu extends Activity {
 
     @Override
     protected void onPause() {
+        Log.i(TAG,"Trying to unbind");
+        unbindService(serverConnection);
         super.onPause();
 
     }
@@ -495,10 +515,15 @@ public class EventMenu extends Activity {
     @Override
     protected void onStop() {
         //unregister our receiver
-        this.unregisterReceiver(this.mReceiver);
-        Log.i(TAG,"Trying to unbind");
-        unbindService(serverConnection);
+
+
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        this.unregisterReceiver(this.mReceiver);
+        super.onDestroy();
     }
 
     @Override
@@ -531,9 +556,79 @@ public class EventMenu extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_about) {
-            Intent intent = new Intent(this, About.class);
+        if (id == R.id.action_abandon) {
+            boolean admin=false;
+            for(Event evt:Event_T.test){
+                if(evt._id.equals(event_id)){
+                    if(evt._ownerid.equals(UserServer.returnInfo._id)){
+                        admin=true;
+                    }
+                }
+            }
+            if(admin){
+                Event_T helper=new Event_T();
+                helper.deleteEvent(event_id);
+                Relahelper relhelper=new Relahelper();
+                for(Relationship rel: Relahelper.relas){
+                    if(rel.roomId.equals(event_id)){
+                        Log.i(TAG,"deleting"+rel._id);
+                        relhelper.deleteRelationship(rel._id);
+                        Log.i(TAG,"delete rel"+rel._id);
+                    }
+                }
+                UserModel.getUserModel().deleteEventId();
+                finish();
+                Log.i(TAG,"admin leaving");
+            }
+            else {
+                if(!admin) {
+                    Relahelper relhelper=new Relahelper();
+                    boolean find=false;
+                    while(!find){
+                        for(Relationship rel:Relahelper.relas){
+                            if(rel.roomId.equals(event_id)){
+                                if(rel.userId.equals(UserServer.returnInfo._id)){
+                                    find=true;
+                                    relhelper.deleteRelationship(rel._id);
+                                    Log.i(TAG,"find the relationship and delete"+rel._id);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    UserModel.getUserModel().deleteEventId();
+                    finish();
+                    Log.i(TAG, "non admin leaving");
+                }
+                else{
+                    Log.i(TAG,"well");
+                }
+            }
+
+        }
+        if (id == R.id.action_locationEvent){
+            Intent intent = new Intent(getApplicationContext(), Map.class);
+            intent.putExtra("lat",event.latitude);
+            intent.putExtra("lon",event.longitude);
+            intent.putExtra(Constants.eventCode,200);
             startActivity(intent);
+
+        }
+
+        if (id == R.id.action_settings){
+            Intent tosetting=new Intent(EventMenu.this,eventSetting.class);
+            tosetting.putExtra(Constants.eventSetting, event_id);
+            for(Event evt: Event_T.test){
+                if(evt._id.equals(event_id)){
+                    if(evt._ownerid.equals(UserServer.returnInfo._id)){
+                        tosetting.putExtra(Constants.eventSettingType,100);
+                    }
+                    else{
+                        tosetting.putExtra(Constants.eventSettingType,200);
+                    }
+                }
+            }
+            startActivity(tosetting);
         }
 
         return super.onOptionsItemSelected(item);
