@@ -29,6 +29,7 @@ public class Relahelper {
             public void success(Response response, Response response2) {
                 Log.i(TAG,"create rel success");
                 relcreated=rel;
+                Log.i(TAG,rel._Id);
                 getAllRelationship();
             }
 
@@ -47,7 +48,7 @@ public class Relahelper {
                 relas = relationships;
                 if (relas != null) {
                     for (int i = 0; i < relas.size(); i++) {
-                        Log.i(TAG, relas.get(i).roomId + " " + relas.get(i).userId+"yo"+relas.get(i)._Id);
+                        Log.i(TAG, relas.get(i).roomId + " " + relas.get(i).userId+"curry"+relas.get(i)._Id);
                     }
                 } else {
                     relas = new ArrayList<Relationship>();
