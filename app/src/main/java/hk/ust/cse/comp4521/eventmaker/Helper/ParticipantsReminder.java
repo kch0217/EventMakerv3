@@ -57,6 +57,8 @@ public class ParticipantsReminder extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, "started");
+        if(intent ==null)
+            stopSelf();
         eventID = intent.getStringExtra(Constants.eventId);
         if (Relahelper.relas == null) {
             Object lock = new Object();
@@ -234,12 +236,8 @@ public class ParticipantsReminder extends Service {
         resultIntent.putExtra(Constants.eventId, eventID);
         resultIntent.putExtra(Constants.reconnect, 100);
 
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        // Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(SearchFrag.class);
-        // Adds the Intent that starts the Activity to the top of the stack
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
 
         mBuilder.setContentIntent(resultPendingIntent);
@@ -285,12 +283,7 @@ public class ParticipantsReminder extends Service {
         resultIntent.putExtra(Constants.eventId, eventID);
         resultIntent.putExtra(Constants.reconnect, 100);
 
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        // Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(SearchFrag.class);
-        // Adds the Intent that starts the Activity to the top of the stack
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         mBuilder.setContentIntent(resultPendingIntent);
 

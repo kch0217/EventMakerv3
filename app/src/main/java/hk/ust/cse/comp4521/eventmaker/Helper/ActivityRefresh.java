@@ -42,10 +42,9 @@ public class ActivityRefresh extends Service {
             }
         }, 3000, 10000);
 
-        eventID = intent.getStringExtra(Constants.eventId);
-        if (eventID == null){
+        if (intent == null)
             stopSelf();
-        }
+        eventID = intent.getStringExtra(Constants.eventId);
 
 
 

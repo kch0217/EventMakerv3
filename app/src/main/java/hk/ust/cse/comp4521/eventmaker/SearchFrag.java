@@ -41,6 +41,7 @@ import hk.ust.cse.comp4521.eventmaker.Event.Map;
 import hk.ust.cse.comp4521.eventmaker.Event.Matching;
 import hk.ust.cse.comp4521.eventmaker.PassiveSearch.SearchHelper;
 import hk.ust.cse.comp4521.eventmaker.Helper.ServerConnection;
+import hk.ust.cse.comp4521.eventmaker.Relationship.Relahelper;
 import hk.ust.cse.comp4521.eventmaker.User.UserInfo;
 import hk.ust.cse.comp4521.eventmaker.User.UserModel;
 import hk.ust.cse.comp4521.eventmaker.User.UserServer;
@@ -206,6 +207,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                                 Intent back = new Intent(SearchFrag.this, EventMenu.class);
                                 back.putExtra(Constants.eventId, eventId);
                                 back.putExtra(Constants.reconnect,100);
+                                back.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 Log.i("SEARCH", "sending back to event menu");
                                 startActivity(back);
                             }
@@ -404,10 +406,26 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
 
                     Object lock = new Object();
                     Event_T.lock = lock;
+                    Event_T.locker = true;
                     Event_T eventS = new Event_T();
                     eventS.test = null;
                     eventS.getAllEvent();
                     while (eventS.test ==null){
+                        synchronized (lock){
+                            try {
+                                lock.wait();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }
+                    Relahelper.lock = lock;
+                    Relahelper.locker = true;
+                    Relahelper relahelper = new Relahelper();
+                    relahelper.relas = null;
+                    relahelper.getAllRelationship();
+                    while (relahelper.relas ==null){
                         synchronized (lock){
                             try {
                                 lock.wait();
@@ -435,9 +453,10 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                                         public void onClick(DialogInterface dialog, int which) {
                                             Intent back = new Intent(getActivity(), EventMenu.class);
                                             back.putExtra(Constants.eventId, eventId);
-                                            back.putExtra(Constants.reconnect,100);
+                                            back.putExtra(Constants.reconnect, 100);
                                             Log.i("SEARCH", "sending back to event menu");
                                             getActivity().stopService(getloc);
+                                            back.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                             startActivity(back);
                                         }
                                     })
@@ -466,14 +485,15 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                             intent2.putExtra("lon", lon);
                             intent2.putExtra(Constants.eventCode, 100);
                             Log.i(ARG_SECTION_NUMBER, "Create new event");
-
+                            intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent2);
 
                         } else {
                             Intent intent2 = new Intent(getActivity(), EventMenu.class);
                             intent2.putExtra(Constants.eventId, id);
-                            intent2.putExtra(Constants.reconnect,200);
+                            intent2.putExtra(Constants.reconnect, 200);
                             Log.i(ARG_SECTION_NUMBER, "Go to the existing event");
+                            intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent2);
                         }
                     }
