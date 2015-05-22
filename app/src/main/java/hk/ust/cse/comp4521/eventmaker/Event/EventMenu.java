@@ -107,7 +107,7 @@ public class EventMenu extends Activity {
             }
         };
         startService(refresh);
-        bindService(refresh, serverConnection, Context.BIND_AUTO_CREATE);
+
 
         ServiceParticipants = new Intent(EventMenu.this, ParticipantsReminder.class);
         ServiceParticipants.putExtra(Constants.eventId, event_id);
@@ -321,6 +321,8 @@ public class EventMenu extends Activity {
     protected void onResume() {
         super.onResume();
 
+        Log.i(TAG, "Trying to bind");
+        bindService(refresh, serverConnection, Context.BIND_AUTO_CREATE);
         IntentFilter intentFilter = new IntentFilter(Constants.signaling);
 
         mReceiver = new BroadcastReceiver() {
@@ -351,6 +353,7 @@ public class EventMenu extends Activity {
     protected void onStop() {
         //unregister our receiver
         this.unregisterReceiver(this.mReceiver);
+        Log.i(TAG,"Trying to unbind");
         unbindService(serverConnection);
         super.onStop();
     }

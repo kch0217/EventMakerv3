@@ -96,6 +96,12 @@ public class ParticipantsReminder extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    @Override
+    public void onDestroy() {
+        Log.i(TAG, "Stoppping the service.");
+        super.onDestroy();
+    }
+
     private void checkeventExist() {
         foundEvent = false;
         for (int i = 0; i< Event_T.test.size(); i++){

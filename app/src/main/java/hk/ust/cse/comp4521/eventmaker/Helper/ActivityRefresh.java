@@ -53,6 +53,13 @@ public class ActivityRefresh extends Service {
 
     }
 
+    @Override
+    public void onDestroy() {
+        Log.i("ActivityRefresh", "Stopping Refreshing the network.");
+        super.onDestroy();
+
+    }
+
     public void networkAccess(){
         ServerConnection server = new ServerConnection(null, null);
         if (UserServer.connectionState == false){
