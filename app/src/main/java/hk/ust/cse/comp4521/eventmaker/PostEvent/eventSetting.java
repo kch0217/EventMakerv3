@@ -1,5 +1,6 @@
 package hk.ust.cse.comp4521.eventmaker.PostEvent;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
@@ -23,7 +24,7 @@ import hk.ust.cse.comp4521.eventmaker.Event.Event2;
 import hk.ust.cse.comp4521.eventmaker.Event.Event_T;
 import hk.ust.cse.comp4521.eventmaker.R;
 
-public class eventSetting extends ActionBarActivity implements View.OnClickListener{
+public class eventSetting extends Activity implements View.OnClickListener{
     private TextView startText;
     private TextView endText;
     private TextView startTimeToBeViewed;
