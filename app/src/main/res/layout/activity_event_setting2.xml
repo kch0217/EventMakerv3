@@ -6,84 +6,135 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="hk.ust.cse.comp4521.eventmaker.PostEvent.eventSetting">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Start time"
-        android:id="@+id/startT"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="End time"
-        android:id="@+id/endT"
-        android:layout_alignTop="@+id/buttonEnd"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:id="@+id/titlelayout">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="change"
-        android:id="@+id/buttonStart"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Large Text"
+                android:id="@+id/title"
+                android:layout_weight="0.94" />
+        </LinearLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="change"
-        android:id="@+id/buttonEnd"
-        android:layout_below="@+id/buttonStart"
-        android:layout_alignRight="@+id/buttonStart"
-        android:layout_alignEnd="@+id/buttonStart" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/startlayout">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TimeEnd"
-        android:id="@+id/endTime"
-        android:layout_alignTop="@+id/buttonEnd"
-        android:layout_centerHorizontal="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Start time"
+                android:id="@+id/startT"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TimeStart"
-        android:id="@+id/startTime"
-        android:layout_alignBottom="@+id/startT"
-        android:layout_alignLeft="@+id/endTime"
-        android:layout_alignStart="@+id/endTime" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TimeStart"
+                android:id="@+id/startTime"
+                android:layout_alignBottom="@+id/startT"
+                android:layout_alignLeft="@+id/endTime"
+                android:layout_alignStart="@+id/endTime"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="30dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Participants no."
-        android:id="@+id/part"
-        android:layout_below="@+id/buttonEnd"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="change"
+                android:id="@+id/buttonStart"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="30dp" />
+        </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/partno"
-        android:layout_alignTop="@+id/part"
-        android:layout_alignRight="@+id/startTime"
-        android:layout_alignEnd="@+id/startTime" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/endlayout">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="change"
-        android:id="@+id/buttonPart"
-        android:layout_below="@+id/buttonEnd"
-        android:layout_alignLeft="@+id/buttonEnd"
-        android:layout_alignStart="@+id/buttonEnd" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="End time"
+                android:id="@+id/endT"
+                android:layout_alignTop="@+id/buttonEnd"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TimeEnd"
+                android:id="@+id/endTime"
+                android:layout_alignTop="@+id/buttonEnd"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="30dp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="change"
+                android:id="@+id/buttonEnd"
+                android:layout_below="@+id/buttonStart"
+                android:layout_alignRight="@+id/buttonStart"
+                android:layout_alignEnd="@+id/buttonStart"
+                android:layout_marginLeft="30dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/partlayout">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Participants no."
+                android:id="@+id/part"
+                android:layout_below="@+id/buttonEnd"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/partno"
+                android:layout_alignTop="@+id/part"
+                android:layout_alignRight="@+id/startTime"
+                android:layout_alignEnd="@+id/startTime"
+                android:layout_marginLeft="30dp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="change"
+                android:id="@+id/buttonPart"
+                android:layout_below="@+id/buttonEnd"
+                android:layout_alignLeft="@+id/buttonEnd"
+                android:layout_alignStart="@+id/buttonEnd"
+                android:layout_marginLeft="30dp" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>

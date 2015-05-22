@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -38,6 +37,7 @@ public class eventSetting extends Activity implements View.OnClickListener{
     private String evt_id;
     private String TAG="EVSTE";
     private EditText editText;
+    private TextView title;
     private int mode;//100=owner 200=non
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +58,8 @@ public class eventSetting extends Activity implements View.OnClickListener{
                 evt=ev;
             }
         }
+        title= (TextView) findViewById(R.id.title);
+        title.setText(evt.interest+"event");
         editText=new EditText(this);
         editText.setInputType(InputType.TYPE_CLASS_NUMBER);
         partno.setText(Integer.toString(evt.numOfPart));
