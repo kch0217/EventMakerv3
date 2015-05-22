@@ -29,7 +29,6 @@ public class Relahelper {
             public void success(Response response, Response response2) {
                 Log.i(TAG,"create rel success");
                 relcreated=rel;
-                Log.i(TAG,rel._Id);
                 getAllRelationship();
             }
 
