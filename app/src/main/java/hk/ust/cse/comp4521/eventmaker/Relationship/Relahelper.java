@@ -91,7 +91,7 @@ public class Relahelper {
         getAllRelationship();
     }
 
-    public void deleteRelationship(String id){
+    public void deleteRelationship(final String id){
         restRelationship.get().deleteRelationship(id, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
@@ -101,7 +101,7 @@ public class Relahelper {
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.i(TAG, "delete rel fail");
+                Log.i(TAG, "delete rel fail"+retrofitError.getKind().name()+id);
             }
         });
         getAllRelationship();

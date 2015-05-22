@@ -278,6 +278,7 @@ public class EventMenu extends Activity {
                     Relahelper relhelper=new Relahelper();
                     for(Relationship rel: Relahelper.relas){
                         if(rel.roomId.equals(event_id)){
+                            Log.i(TAG,"deleting"+rel._Id);
                             relhelper.deleteRelationship(rel._Id);
                             Log.i(TAG,"delete rel"+rel._Id);
                         }
