@@ -82,6 +82,7 @@ public class EventMenu extends Activity {
         user3_button.setVisibility(View.INVISIBLE);
         user4_button.setVisibility(View.INVISIBLE);
 
+        setting.setOnClickListener(new pressButton());
         leave.setOnClickListener(new pressButton());
         user1_button.setOnClickListener(new pressButton());
         user2_button.setOnClickListener(new pressButton());
@@ -317,6 +318,21 @@ public class EventMenu extends Activity {
                         Log.i(TAG,"well");
                     }
                 }
+            }
+            else if(view.getId()==R.id.setting){
+                Intent tosetting=new Intent(EventMenu.this,eventSetting.class);
+                tosetting.putExtra(Constants.eventSetting, event_id);
+                for(Event evt: Event_T.test){
+                    if(evt._id.equals(event_id)){
+                        if(evt._ownerid.equals(UserServer.returnInfo._id)){
+                            tosetting.putExtra(Constants.eventSettingType,100);
+                        }
+                        else{
+                            tosetting.putExtra(Constants.eventSettingType,200);
+                        }
+                    }
+                }
+                startActivity(tosetting);
             }
         }
     }

@@ -1,13 +1,17 @@
 package hk.ust.cse.comp4521.eventmaker.PostEvent;
 
+import android.app.AlertDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -32,6 +36,8 @@ public class eventSetting extends ActionBarActivity implements View.OnClickListe
     private Event evt;
     private String evt_id;
     private String TAG="EVSTE";
+    private EditText editText;
+    private int mode;//100=owner 200=non
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +57,8 @@ public class eventSetting extends ActionBarActivity implements View.OnClickListe
                 evt=ev;
             }
         }
+        editText=new EditText(this);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
         partno.setText(evt.numOfPart);
         startTimeToBeViewed.setText(evt.starting);
         endTimeToBeViewed.setText(evt.ending);
@@ -59,6 +67,19 @@ public class eventSetting extends ActionBarActivity implements View.OnClickListe
         changeStart.setOnClickListener(this);
         changeEnd= (Button) findViewById(R.id.buttonEnd);
         changeEnd.setOnClickListener(this);
+        mode=getIntent().getExtras().getInt(Constants.eventSettingType,0);
+        if(mode==200){
+            changePart.setVisibility(View.INVISIBLE);
+            changeEnd.setVisibility(View.INVISIBLE);
+            changeStart.setVisibility(View.INVISIBLE);
+            Log.i(TAG,"hiding the buttons");
+        }
+        else if(mode==100){
+            Log.i(TAG,"ownertype");
+        }
+        else{
+            Log.i(TAG,"neither owner/non-owner, fail to fetch value");
+        }
     }
 
     @Override
@@ -95,7 +116,9 @@ public class eventSetting extends ActionBarActivity implements View.OnClickListe
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                     String texttobeset=hourOfDay+":"+minute;
                     startTimeToBeViewed.setText(hourOfDay+":"+minute);
-                    eventhelper.updateEvent(copyFromEvent(evt),evt_id);
+                    Event2 tobeupload=copyFromEvent(evt);
+                    tobeupload.starting=texttobeset;
+                    eventhelper.updateEvent(tobeupload,evt_id);
                 }
             },hour,minute,false);
             start.setTitle("starting time");
@@ -107,13 +130,36 @@ public class eventSetting extends ActionBarActivity implements View.OnClickListe
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                     String texttobeset=hourOfDay+":"+minute;
                     endTimeToBeViewed.setText(texttobeset);
-                    eventhelper.updateEvent(copyFromEvent(evt),evt_id);
+                    Event2 tobeupload=copyFromEvent(evt);
+                    tobeupload.ending=texttobeset;
+                    eventhelper.updateEvent(tobeupload,evt_id);
                 }
             },hour,minute,false);
             end.setTitle("ending time");
             end.show();
         }
         else if(v.getId()==R.id.buttonPart){
+            AlertDialog.Builder builder=new AlertDialog.Builder(eventSetting.this);
+            builder.setTitle("participants")
+                    .setView(editText)
+                    .setMessage("enter number of participants")
+                    .setPositiveButton("done", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            partno.setText(editText.getText().toString());
+                            Event2 et=copyFromEvent(evt);
+                            et.numOfPart=Integer.parseInt(editText.getText().toString());
+                            eventhelper.updateEvent(et,evt_id);
+
+                        }
+                    })
+                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+            builder.show();
 
         }
 
