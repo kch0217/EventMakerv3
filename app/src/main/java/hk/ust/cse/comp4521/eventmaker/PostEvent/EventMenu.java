@@ -126,7 +126,7 @@ public class EventMenu extends Activity {
                     {
                         text.setText(text.getText().toString().replace("\n\n\n\n\n\n\n\n\n\n\n",""));
                         SV.fullScroll(View.FOCUS_DOWN);
-
+                    System.out.println("fuckyou");
                     }
 
             }
