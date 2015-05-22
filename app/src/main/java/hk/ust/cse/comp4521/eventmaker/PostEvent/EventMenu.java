@@ -17,8 +17,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -73,9 +76,12 @@ public class EventMenu extends Activity {
     private ServiceConnection serverConnection;
     private Intent ServiceParticipants;
     private Intent refresh;
+    private ArrayList<String> name_array=new ArrayList<String>();
+    private ArrayList<String> id_array=new ArrayList<String>();
 
     final Pubnub pubnub = new Pubnub("pub-c-f7c0ad94-cce2-49a3-abfb-0f414b2f8dc8", "sub-c-462fbb70-ff91-11e4-aa11-02ee2ddab7fe");
-    private ListView lv;
+    private ListView LV;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -83,10 +89,10 @@ public class EventMenu extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
-        
+        LV=(ListView)findViewById(R.id.listView);
         /************************UI init*******************/
 
-    ;
+        ;
         SV=(ScrollView)findViewById(R.id.SV);
 
         /************************UI init*******************/
@@ -108,26 +114,56 @@ public class EventMenu extends Activity {
                 public void successCallback(String channel, final Object message) {
                     if(message.toString().contains("type:enter"))
                     {
-                        String operation=message.toString().replace("type:enterid:","");
+                        String operation=message.toString().replace("type:enter+id:", "");
                         String[] idandname=operation.split("Name:");
-                        System.out.print("enter: "+message.toString());
+                        System.out.println("1:"+idandname[0]);
+                        System.out.println("2:"+idandname[1]);
 
+                        name_array.add(idandname[1]);
+                        id_array.add(idandname[0]);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String[] array = name_array.toArray(new String[name_array.size()]);
+
+                                ListAdapter LA = new ArrayAdapter<String>(EventMenu.this, android.R.layout.simple_list_item_1, array);
+                                LV.setAdapter(LA);
+                                LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        for (Relationship ra : Relahelper.relas) {
+                                            if (ra.roomId.equals(event_id)) {
+                                                for (UserInfo ui : UserServer.UserInfoArrayList) {
+                                                    if (ui._id.equals(id_array.get(position))) {
+                                                        Intent intent = new Intent();
+                                                        intent.setClass(EventMenu.this, UserDisplay.class);
+                                                        intent.putExtra("User", ui);
+                                                        EventMenu.this.startActivity(intent);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+
+                            }
+                        });
                     }
                     else if(message.toString().contains("type:post"))
                     {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                String operation=message.toString().replace("type:post:","");
+
+                                String operation=message.toString().replace("type:post","");
 //                        if(isOwner){
+                                System.out.println("3:"+operation);
                                 String currentText= (String) text.getText();
 
                                 String update=currentText+"///"+operation;
                                 String str = update.toString().replace("///", "\n");
                                 text.setText(str);
                                 SV.fullScroll(View.FOCUS_DOWN);
-
-
                             }
                         });
 //                        }
@@ -176,7 +212,7 @@ public class EventMenu extends Activity {
 //                {
 //                    text.setText("\n"+text.getText().toString());
 //                }
-            String temp;
+                String temp;
                 if(UserServer.returnInfo.NamePrivacy.equals("Uncheck")){
                     temp="type:post"+UserServer.returnInfo.Name+": "+current_text;      }
                 else
