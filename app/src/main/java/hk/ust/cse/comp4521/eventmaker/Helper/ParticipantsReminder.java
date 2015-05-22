@@ -21,8 +21,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import hk.ust.cse.comp4521.eventmaker.Constants;
-import hk.ust.cse.comp4521.eventmaker.Event.Event;
-import hk.ust.cse.comp4521.eventmaker.Event.EventMenu;
+import hk.ust.cse.comp4521.eventmaker.PostEvent.EventMenu;
 import hk.ust.cse.comp4521.eventmaker.Event.Event_T;
 import hk.ust.cse.comp4521.eventmaker.R;
 import hk.ust.cse.comp4521.eventmaker.Relationship.Relahelper;
@@ -44,6 +43,7 @@ public class ParticipantsReminder extends Service {
 
     private NotificationManager mNotificationManager;
     private int noteId = 2;
+    private Timer timer;
 
     public ParticipantsReminder() {
 
@@ -72,7 +72,7 @@ public class ParticipantsReminder extends Service {
         copyList(oldlist, Relahelper.relas);
         firstNotification = true;
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Timer timer = new Timer(true);
+        timer = new Timer(true);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -99,6 +99,7 @@ public class ParticipantsReminder extends Service {
     @Override
     public void onDestroy() {
         Log.i(TAG, "Stoppping the service.");
+        timer.cancel();
         super.onDestroy();
     }
 
@@ -126,6 +127,8 @@ public class ParticipantsReminder extends Service {
     private void checkNewParticipants(){
         LinkedList<Relationship> newRelate = new LinkedList<>();
         copyList(newRelate, Relahelper.relas);
+        Log.i("Checkingparticipants", "New size: "+newRelate.size());
+        Log.i("Checkingparticipants+",  "Old size: " + oldlist.size());
         boolean doneChecking = false;
         id_add = new ArrayList<>();
         id_delete = new ArrayList<>();

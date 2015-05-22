@@ -1,4 +1,4 @@
-package hk.ust.cse.comp4521.eventmaker.User;
+package hk.ust.cse.comp4521.eventmaker.PostEvent;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import hk.ust.cse.comp4521.eventmaker.R;
+import hk.ust.cse.comp4521.eventmaker.User.UserInfo;
 
 public class UserDisplay extends Activity {
     ImageView user_pic;

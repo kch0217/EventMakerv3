@@ -77,7 +77,7 @@
 >
         </activity>
         <activity
-            android:name=".Event.EventMenu"
+            android:name=".PostEvent.EventMenu"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_eventMenu"
             android:screenOrientation="portrait" >
@@ -91,7 +91,7 @@
 >
         </activity>
         <activity
-            android:name=".User.UserDisplay"
+            android:name=".PostEvent.UserDisplay"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_user_display"
             android:screenOrientation="portrait" >

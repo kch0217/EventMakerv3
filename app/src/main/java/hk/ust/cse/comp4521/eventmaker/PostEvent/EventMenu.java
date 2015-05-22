@@ -1,4 +1,4 @@
-package hk.ust.cse.comp4521.eventmaker.Event;
+package hk.ust.cse.comp4521.eventmaker.PostEvent;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -18,9 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import hk.ust.cse.comp4521.eventmaker.Constants;
+import hk.ust.cse.comp4521.eventmaker.Event.Event;
+import hk.ust.cse.comp4521.eventmaker.Event.Event_T;
+import hk.ust.cse.comp4521.eventmaker.Event.Map;
 import hk.ust.cse.comp4521.eventmaker.Helper.ActivityRefresh;
 import hk.ust.cse.comp4521.eventmaker.Helper.ParticipantsReminder;
-import hk.ust.cse.comp4521.eventmaker.Helper.ServerConnection;
 import hk.ust.cse.comp4521.eventmaker.R;
 import hk.ust.cse.comp4521.eventmaker.Relationship.Relahelper;
 import hk.ust.cse.comp4521.eventmaker.Relationship.Relationship;
@@ -211,7 +213,7 @@ public class EventMenu extends Activity {
     //check the event from test and update the event periodically, also call update_info every time
     public class get_my_event extends Thread {
         public void run() {
-            List<Event> allEvents=Event_T.test;
+            List<Event> allEvents= Event_T.test;
 
             for(Event events:allEvents)
             {

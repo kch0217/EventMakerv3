@@ -19,6 +19,7 @@ public class ActivityRefresh extends Service {
     private boolean connected;
     private boolean binded;
     private String eventID;
+    private Timer timer;
 
     public ActivityRefresh() {
         connected = false;
@@ -26,7 +27,7 @@ public class ActivityRefresh extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Timer timer = new Timer(true);
+        timer = new Timer(true);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -56,6 +57,7 @@ public class ActivityRefresh extends Service {
     @Override
     public void onDestroy() {
         Log.i("ActivityRefresh", "Stopping Refreshing the network.");
+        timer.cancel();
         super.onDestroy();
 
     }

@@ -1,7 +1,6 @@
 package hk.ust.cse.comp4521.eventmaker;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import android.app.AlertDialog;
@@ -36,7 +35,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import hk.ust.cse.comp4521.eventmaker.Event.Event;
-import hk.ust.cse.comp4521.eventmaker.Event.EventMenu;
+import hk.ust.cse.comp4521.eventmaker.PostEvent.EventMenu;
 import hk.ust.cse.comp4521.eventmaker.Event.Event_T;
 import hk.ust.cse.comp4521.eventmaker.Event.Map;
 import hk.ust.cse.comp4521.eventmaker.Event.Matching;

@@ -29,10 +29,8 @@ import java.sql.Timestamp;
 
 import hk.ust.cse.comp4521.eventmaker.Constants;
 import hk.ust.cse.comp4521.eventmaker.Helper.ServerConnection;
+import hk.ust.cse.comp4521.eventmaker.PostEvent.EventMenu;
 import hk.ust.cse.comp4521.eventmaker.R;
-import hk.ust.cse.comp4521.eventmaker.Relationship.Relahelper;
-import hk.ust.cse.comp4521.eventmaker.Relationship.Relationship;
-import hk.ust.cse.comp4521.eventmaker.Relationship.Relationship2;
 import hk.ust.cse.comp4521.eventmaker.User.UserServer;
 
 public class Map extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener{
