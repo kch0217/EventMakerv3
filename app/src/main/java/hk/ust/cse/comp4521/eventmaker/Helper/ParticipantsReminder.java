@@ -92,7 +92,7 @@ public class ParticipantsReminder extends Service {
                 thread.start();
 
             }
-        }, 3000, 5000);
+        }, 3000, 2066000);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -226,7 +226,7 @@ public class ParticipantsReminder extends Service {
 
         // noteId allows you to update the notification later on.
         // set the service as a foreground service
-        startForeground(noteId, mBuilder.build());
+        mNotificationManager.notify(noteId, mBuilder.build());
 
     }
 

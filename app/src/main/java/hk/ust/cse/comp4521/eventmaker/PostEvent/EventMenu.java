@@ -353,15 +353,16 @@ public class EventMenu extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        //unregister our receiver
+        this.unregisterReceiver(this.mReceiver);
+        Log.i(TAG,"Trying to unbind");
+        unbindService(serverConnection);
 
     }
 
     @Override
     protected void onStop() {
-        //unregister our receiver
-        this.unregisterReceiver(this.mReceiver);
-        Log.i(TAG,"Trying to unbind");
-        unbindService(serverConnection);
+
         super.onStop();
     }
 
