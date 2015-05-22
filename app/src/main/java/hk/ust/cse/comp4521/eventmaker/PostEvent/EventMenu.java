@@ -111,12 +111,7 @@ public class EventMenu extends Activity {
 
             }
         };
-        startService(refresh);
 
-
-        ServiceParticipants = new Intent(EventMenu.this, ParticipantsReminder.class);
-        ServiceParticipants.putExtra(Constants.eventId, event_id);
-        startService(ServiceParticipants);
 
         //deal with relationship
         //new user 200, exisiting user 100
@@ -137,6 +132,12 @@ public class EventMenu extends Activity {
         else{
             Log.i(TAG,"no intent with value from Constants.reconnect, something goes wrong");
         }
+        startService(refresh);
+
+
+        ServiceParticipants = new Intent(EventMenu.this, ParticipantsReminder.class);
+        ServiceParticipants.putExtra(Constants.eventId, event_id);
+        startService(ServiceParticipants);
         Thread get_event_thread=new get_my_event();
         get_event_thread.start();
 

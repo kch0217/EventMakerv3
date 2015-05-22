@@ -120,9 +120,15 @@ public class ParticipantsReminder extends Service {
 
     private void copyList(LinkedList<Relationship> newList, List<Relationship> origin) {
         for (int i = 0 ; i<origin.size(); i++){
-            newList.add(origin.get(i));
+            Relationship newRe = new Relationship();
+            newRe.roomId = origin.get(i).roomId;
+            newRe.userId = origin.get(i).userId;
+            newRe._id = origin.get(i)._id;
+            newList.add(newRe);
         }
     }
+
+
 
     private void checkNewParticipants(){
         LinkedList<Relationship> newRelate = new LinkedList<>();
@@ -190,15 +196,16 @@ public class ParticipantsReminder extends Service {
         else
             textmessage = "Some people have left the event.";
 
-
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         Notification.Builder mBuilder =
                 new Notification.Builder(this)
                         .setSmallIcon(R.drawable.playing)
                         .setLargeIcon(largeIcon.createScaledBitmap(largeIcon,72,72,false))
-                        .setOngoing(true)
+                        .setOngoing(false)
                         .setContentTitle(interest)
-                        .setContentText(textmessage);
+                        .setContentText(textmessage)
+                        .setSound(alarmSound);
 
         // Creates an explicit intent for the Activity
         Intent resultIntent = new Intent(this, EventMenu.class);
@@ -210,7 +217,7 @@ public class ParticipantsReminder extends Service {
         stackBuilder.addParentStack(SearchFrag.class);
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT);
 
 
         mBuilder.setContentIntent(resultPendingIntent);
@@ -246,7 +253,7 @@ public class ParticipantsReminder extends Service {
                 new Notification.Builder(this)
                         .setSmallIcon(R.drawable.playing)
                         .setLargeIcon(largeIcon.createScaledBitmap(largeIcon, 72, 72, false))
-                        .setOngoing(true)
+                        .setOngoing(false)
                         .setContentTitle(interest)
                         .setContentText(textmessage)
                         .setSound(alarmSound);
@@ -261,7 +268,7 @@ public class ParticipantsReminder extends Service {
         stackBuilder.addParentStack(SearchFrag.class);
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT);
 
         mBuilder.setContentIntent(resultPendingIntent);
 
