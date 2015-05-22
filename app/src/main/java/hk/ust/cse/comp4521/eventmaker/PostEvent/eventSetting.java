@@ -117,6 +117,7 @@ public class eventSetting extends Activity implements View.OnClickListener{
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                     String texttobeset=hourOfDay+":"+minute;
                     startTimeToBeViewed.setText(hourOfDay+":"+minute);
+                    evt.starting=texttobeset;
                     Event2 tobeupload=copyFromEvent(evt);
                     tobeupload.starting=texttobeset;
                     eventhelper.updateEvent(tobeupload,evt_id);
@@ -131,6 +132,7 @@ public class eventSetting extends Activity implements View.OnClickListener{
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                     String texttobeset=hourOfDay+":"+minute;
                     endTimeToBeViewed.setText(texttobeset);
+                    evt.ending=texttobeset;
                     Event2 tobeupload=copyFromEvent(evt);
                     tobeupload.ending=texttobeset;
                     eventhelper.updateEvent(tobeupload,evt_id);
@@ -141,6 +143,7 @@ public class eventSetting extends Activity implements View.OnClickListener{
         }
         else if(v.getId()==R.id.buttonPart){
             AlertDialog.Builder builder=new AlertDialog.Builder(eventSetting.this);
+            Log.i(TAG,"trying to set the builder");
             builder.setTitle("participants")
                     .setView(editText)
                     .setMessage("enter number of participants")
@@ -148,6 +151,7 @@ public class eventSetting extends Activity implements View.OnClickListener{
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             partno.setText(editText.getText().toString());
+                            evt.numOfPart=Integer.parseInt(editText.getText().toString());
                             Event2 et=copyFromEvent(evt);
                             et.numOfPart=Integer.parseInt(editText.getText().toString());
                             eventhelper.updateEvent(et,evt_id);
@@ -159,8 +163,9 @@ public class eventSetting extends Activity implements View.OnClickListener{
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
                         }
-                    });
-            builder.show();
+                    })
+                    .show();
+//            builder.show();
 
         }
 
