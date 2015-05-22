@@ -14,8 +14,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.pubnub.api.Callback;
@@ -63,7 +65,7 @@ public class EventMenu extends Activity {
     private Button location_button;
     private Button setting;
     private Button leave;
-
+    private ScrollView SV;
     private BroadcastReceiver mReceiver;
     private ServiceConnection serverConnection;
     private Intent ServiceParticipants;
@@ -72,6 +74,7 @@ public class EventMenu extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
 
         super.onCreate(savedInstanceState);
@@ -86,6 +89,7 @@ public class EventMenu extends Activity {
         user3_button=(Button)findViewById(R.id.user3_button);
         user4_button=(Button)findViewById(R.id.user4_button);
         location_button=(Button)findViewById(R.id.location_button);
+        SV=(ScrollView)findViewById(R.id.SV);
         leave= (Button) findViewById(R.id.leave);
         setting=(Button)findViewById(R.id.setting);
         user2_button.setVisibility(View.INVISIBLE);
@@ -133,6 +137,8 @@ public class EventMenu extends Activity {
                                 String update=currentText+"///"+operation;
                                 String str = update.toString().replace("///", "\n");
                                 text.setText(str);
+                                SV.fullScroll(View.FOCUS_DOWN);
+
 
                             }
                         });
