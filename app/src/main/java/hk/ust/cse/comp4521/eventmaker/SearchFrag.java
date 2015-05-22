@@ -401,6 +401,22 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                     if (!UserServer.connectionState) {
                         return;
                     }
+
+                    Object lock = new Object();
+                    Event_T.lock = lock;
+                    Event_T eventS = new Event_T();
+                    eventS.test = null;
+                    eventS.getAllEvent();
+                    while (eventS ==null){
+                        synchronized (lock){
+                            try {
+                                lock.wait();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }
                     SharedPreferences pre = UserModel.getUserModel().getSharedPreferences();
                     boolean find=false;
                     if (pre.contains("Event")) {
