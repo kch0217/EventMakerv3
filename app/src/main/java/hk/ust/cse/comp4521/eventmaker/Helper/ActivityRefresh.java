@@ -41,7 +41,7 @@ public class ActivityRefresh extends Service {
                 thread.start();
 
             }
-        }, 1000, 20000);
+        }, 1000, 5000);
 
         eventID = intent.getStringExtra(Constants.eventId);
 

@@ -190,38 +190,73 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
         largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.playing);
 
-        String interests = "";
-        for (int i = 0; i<temp.size()-1 ; i++){
-            interests = interests + temp.get(i).interest + ", ";
-        }
-        interests = interests + temp.get(temp.size()-1).interest;
+        if (temp!=null) {
+            String interests = "";
+            for (int i = 0; i < temp.size() - 1; i++) {
+                interests = interests + temp.get(i).interest + ", ";
+            }
+            interests = interests + temp.get(temp.size() - 1).interest;
 
-        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        Notification.Builder mBuilder =
-                new Notification.Builder(this)
-                        .setSmallIcon(R.drawable.playing)
-                        .setLargeIcon(largeIcon.createScaledBitmap(largeIcon,72,72,false))
-                        .setOngoing(true)
-                        .setContentTitle("Found matched event(s).")
-                        .setContentText(interests)
-                        .setSound(alarmSound);
-
-        // Creates an explicit intent for the Activity
+            Notification.Builder mBuilder =
+                    new Notification.Builder(this)
+                            .setSmallIcon(R.drawable.playing)
+                            .setLargeIcon(largeIcon.createScaledBitmap(largeIcon, 72, 72, false))
+                            .setOngoing(true)
+                            .setContentTitle("Found matched event(s).")
+                            .setContentText(interests)
+                            .setSound(alarmSound);
+            // Creates an explicit intent for the Activity
 //        Intent resultIntent = new Intent(this, EventMenu.class);
 //        resultIntent.putExtra(Constants.eventId, _id);
-        Intent resultIntent = new Intent(this, SearchFrag.class);
+            Intent resultIntent = new Intent(this, SearchFrag.class);
 //        resultIntent.putExtra(Constants.eventId, _id);
 
 
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        mBuilder.setContentIntent(resultPendingIntent);
+            mBuilder.setContentIntent(resultPendingIntent);
 
-        Log.i(TAG, "Service: updateNotification()");
+            Log.i(TAG, "Service: updateNotification()");
 
-        // noteId allows you to update the notification later on.
-        mNotificationManager.notify(noteId, mBuilder.build());
+            // noteId allows you to update the notification later on.
+            mNotificationManager.notify(noteId, mBuilder.build());
+
+        }
+        else
+        {
+            Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+            Notification.Builder mBuilder =
+                    new Notification.Builder(this)
+                            .setSmallIcon(R.drawable.playing)
+                            .setLargeIcon(largeIcon.createScaledBitmap(largeIcon, 72, 72, false))
+                            .setOngoing(true)
+                            .setContentTitle("Searching...")
+                            .setContentText("")
+                            .setSound(alarmSound);
+            // Creates an explicit intent for the Activity
+//        Intent resultIntent = new Intent(this, EventMenu.class);
+//        resultIntent.putExtra(Constants.eventId, _id);
+            Intent resultIntent = new Intent(this, SearchFrag.class);
+//        resultIntent.putExtra(Constants.eventId, _id);
+
+
+            PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+            mBuilder.setContentIntent(resultPendingIntent);
+
+            Log.i(TAG, "Service: updateNotification()");
+
+            // noteId allows you to update the notification later on.
+            mNotificationManager.notify(noteId, mBuilder.build());
+
+
+        }
+
+
+
 
     }
 
@@ -460,6 +495,8 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
                 Log.i("Help", "Going to push");
                 updateNotification(temp);
             }
+            else
+                updateNotification(null);
 
 
 

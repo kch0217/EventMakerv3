@@ -92,7 +92,7 @@ public class ParticipantsReminder extends Service {
                 thread.start();
 
             }
-        }, 3000, 20000);
+        }, 3000, 5000);
         return super.onStartCommand(intent, flags, startId);
     }
 
