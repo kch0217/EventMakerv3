@@ -406,6 +406,7 @@ public class EventMenu extends Activity {
                                 }
                             }
                         }
+                        UserModel.getUserModel().deleteEventId();
                         finish();
                         Log.i(TAG, "non admin leaving");
                     }

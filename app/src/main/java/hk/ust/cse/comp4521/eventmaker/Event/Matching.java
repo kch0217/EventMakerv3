@@ -1,6 +1,7 @@
 package hk.ust.cse.comp4521.eventmaker.Event;
 
 import android.location.Location;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ import hk.ust.cse.comp4521.eventmaker.Constants;
  * Created by User on 5/14/2015.
  */
 public class Matching{
+    private String TAG="matching";
     public void Matching(){ }
 
     //return eventid/null
