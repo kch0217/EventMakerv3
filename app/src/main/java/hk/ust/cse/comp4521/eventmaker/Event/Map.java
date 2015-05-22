@@ -262,6 +262,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
 //            Relationship2 relationtosubmit=new Relationship2(_id,UserServer.returnInfo._id);
 //            relhelp.createRelationship(relationtosubmit);
 //            Log.i(TAG,"created rela and event on server(should be)");
+            Log.i(TAG, "Going to event menu");
             startActivity(startEvent);
             finish();
         }

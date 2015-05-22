@@ -91,6 +91,7 @@ public class EventMenu extends Activity {
         event_id = intent.getStringExtra(Constants.eventId);
         UserModel usm=UserModel.getUserModel();
         usm.saveEventId(event_id);
+        Log.i(TAG, "Going to start service");
 
         refresh = new Intent(EventMenu.this, ActivityRefresh.class);
         refresh.putExtra(Constants.eventId, event_id);
@@ -106,7 +107,7 @@ public class EventMenu extends Activity {
             }
         };
         startService(refresh);
-//        bindService(refresh, serverConnection, Context.BIND_AUTO_CREATE);
+        bindService(refresh, serverConnection, Context.BIND_AUTO_CREATE);
 
         ServiceParticipants = new Intent(EventMenu.this, ParticipantsReminder.class);
         ServiceParticipants.putExtra(Constants.eventId, event_id);
@@ -334,15 +335,22 @@ public class EventMenu extends Activity {
             }
         };
 
+
         this.registerReceiver(mReceiver, intentFilter);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+
+    }
+
+    @Override
+    protected void onStop() {
         //unregister our receiver
         this.unregisterReceiver(this.mReceiver);
         unbindService(serverConnection);
+        super.onStop();
     }
 
 

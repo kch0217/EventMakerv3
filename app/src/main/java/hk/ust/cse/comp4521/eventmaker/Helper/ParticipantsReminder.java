@@ -51,13 +51,21 @@ public class ParticipantsReminder extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.i(TAG, "started");
         eventID = intent.getStringExtra(Constants.eventId);
-//        Object lock = new Object();
-//        Relahelper.lock = lock;
-//        Relahelper.locker = true;
+        Object lock = new Object();
+        Relahelper.lock = lock;
+        Relahelper.locker = true;
 
         while (Relahelper.relas == null){
-
+            synchronized (lock) {
+                Log.i("TAG", "Waiting");
+                try {
+                    lock.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         oldlist = new LinkedList<>();
