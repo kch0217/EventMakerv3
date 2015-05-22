@@ -106,6 +106,20 @@ public class EventMenu extends Activity {
         event_id = intent.getStringExtra(Constants.eventId);
         setOwnerId();
         /********************chat**********/
+        for (Relationship ra : Relahelper.relas) {
+            if (ra.roomId.equals(event_id)) {
+                for (UserInfo ui : UserServer.UserInfoArrayList) {
+
+                    if(!ui._id.equals(UserServer.returnInfo._id))
+                    {
+                        name_array.add(ui.Name);
+                        id_array.add(ui._id);
+                    }
+                    }
+                }
+            }
+
+
         final TextView text= (TextView) this.findViewById(R.id.chatBox);
         final EditText send= (EditText) this.findViewById(R.id.TextToSend);
         Button sendButton=(Button) this.findViewById(R.id.send);
@@ -129,18 +143,18 @@ public class EventMenu extends Activity {
                             public void run() {
                                 String[] array = name_array.toArray(new String[name_array.size()]);
 
-                                ListAdapter LA = new ArrayAdapter<String>(EventMenu.this, android.R.layout.simple_list_item_1, array);
-                                LV.setAdapter(LA);
-                                LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        for (Relationship ra : Relahelper.relas) {
-                                            if (ra.roomId.equals(event_id)) {
-                                                for (UserInfo ui : UserServer.UserInfoArrayList) {
-                                                    if (ui._id.equals(id_array.get(position))) {
-                                                        Intent intent = new Intent();
-                                                        intent.setClass(EventMenu.this, UserDisplay.class);
-                                                        intent.putExtra("User", ui);
+                                                        ListAdapter LA = new ArrayAdapter<String>(EventMenu.this, android.R.layout.simple_list_item_1, array);
+                                                        LV.setAdapter(LA);
+                                                        LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                                            @Override
+                                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                                                for (Relationship ra : Relahelper.relas) {
+                                                                    if (ra.roomId.equals(event_id)) {
+                                                                        for (UserInfo ui : UserServer.UserInfoArrayList) {
+                                                                            if (ui._id.equals(id_array.get(position))) {
+                                                                                Intent intent = new Intent();
+                                                                                intent.setClass(EventMenu.this, UserDisplay.class);
+                                                                                intent.putExtra("User", ui);
                                                         EventMenu.this.startActivity(intent);
                                                     }
                                                 }
