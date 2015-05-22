@@ -20,7 +20,7 @@ public class Constants {
     public static final String KPORT_NUM="3000";
     public static final String KSERVER_URL="http://"+KSERVER_ID+":"+KPORT_NUM;
 
-    public static final String MAP_KEY="AIzaSyBJGM6O9Wrllxp2_4l_RWkp9KvHusUNjl4";
+    public static final String MAP_KEY="AIzaSyCP9l_atibNsB7jmMxV2bPC_Olrn34ihx0";
 
     public static final String PACKAGE_NAME = "hk.ust.cse.comp4521.eventmaker";
     public static final String RECEIVER = PACKAGE_NAME + ".RECEIVER";
