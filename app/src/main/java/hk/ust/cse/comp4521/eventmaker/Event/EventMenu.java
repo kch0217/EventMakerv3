@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -47,6 +48,7 @@ public class EventMenu extends Activity {
     private TextView time_text;
     private Button location_button;
     private Button setting;
+    private Button leave;
 
     private BroadcastReceiver mReceiver;
     private ServiceConnection serverConnection;
@@ -66,10 +68,13 @@ public class EventMenu extends Activity {
         user3_button=(Button)findViewById(R.id.user3_button);
         user4_button=(Button)findViewById(R.id.user4_button);
         location_button=(Button)findViewById(R.id.location_button);
+        leave= (Button) findViewById(R.id.leave);
         setting=(Button)findViewById(R.id.setting);
         user2_button.setVisibility(View.INVISIBLE);
         user3_button.setVisibility(View.INVISIBLE);
         user4_button.setVisibility(View.INVISIBLE);
+
+        leave.setOnClickListener(new pressButton());
         user1_button.setOnClickListener(new pressButton());
         user2_button.setOnClickListener(new pressButton());
         user3_button.setOnClickListener(new pressButton());
@@ -98,14 +103,23 @@ public class EventMenu extends Activity {
         };
         bindService(refresh, serverConnection, Context.BIND_AUTO_CREATE);
         //deal with relationship
-        Relahelper relahelper=new Relahelper();
-        relahelper.getAllRelationship();
-        Relationship2 newrela=new Relationship2();
-        newrela.roomId=event_id;
-        newrela.userId=UserServer.returnInfo._id;
+        int existornew=getIntent().getIntExtra(Constants.reconnect,0);
+        if(existornew==100) {
+            Relahelper relahelper = new Relahelper();
+            relahelper.getAllRelationship();
+            Relationship2 newrela = new Relationship2();
+            newrela.roomId = event_id;
+            newrela.userId = UserServer.returnInfo._id;
 
-        relahelper.createRelationship(newrela);
-
+            relahelper.createRelationship(newrela);
+            Log.i(TAG,"new user entering");
+        }
+        else if(existornew==200){
+            Log.i(TAG,"existing user coming back");
+        }
+        else{
+            Log.i(TAG,"no intent with value from Constants.reconnect, something goes wrong");
+        }
         Thread get_event_thread=new get_my_event();
         get_event_thread.start();
 
@@ -236,6 +250,53 @@ public class EventMenu extends Activity {
                 intent.putExtra(Constants.eventCode,200);
                 startActivity(intent);
 
+            }
+            else if(view.getId()==R.id.leave){
+                boolean admin=false;
+                for(Event evt:Event_T.test){
+                    if(evt._id.equals(event_id)){
+                        if(evt._ownerid.equals(UserServer.returnInfo._id)){
+                            admin=true;
+                        }
+                    }
+                }
+                if(admin){
+                    Event_T helper=new Event_T();
+                    helper.deleteEvent(event_id);
+                    Relahelper relhelper=new Relahelper();
+                    for(Relationship rel: Relahelper.relas){
+                        if(rel.roomId.equals(event_id)){
+                            relhelper.deleteRelationship(rel._Id);
+                            Log.i(TAG,"delete rel"+rel._Id);
+                        }
+                    }
+                    UserModel.getUserModel().deleteEventId();
+                    finish();
+                    Log.i(TAG,"admin leaving");
+                }
+                else {
+                    if(!admin) {
+                        Relahelper relhelper=new Relahelper();
+                        boolean find=true;
+                        while(!find){
+                            for(Relationship rel:Relahelper.relas){
+                                if(rel.roomId.equals(event_id)){
+                                    if(rel.userId.equals(UserServer.returnInfo._id)){
+                                        find=true;
+                                        relhelper.deleteRelationship(rel._Id);
+                                        Log.i(TAG,"find the relationship and delete"+rel._Id);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        finish();
+                        Log.i(TAG, "non admin leaving");
+                    }
+                    else{
+                        Log.i(TAG,"well");
+                    }
+                }
             }
         }
     }

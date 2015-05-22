@@ -31,6 +31,7 @@ public class Constants {
 
     public static final String eventId="eventId";
     public static final String eventCode="eventCode";//100 from hin 200 from him
+    public static final String reconnect="reconnect"; //100=existing 200=new user
 
 
     //for broadcase receiver

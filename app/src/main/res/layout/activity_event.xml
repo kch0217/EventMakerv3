@@ -41,6 +41,12 @@
             android:background="#fffdfff3">
 
             <Button
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:text="leave"
+                android:id="@+id/leave" />
+
+            <Button
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="48dp"
                 android:layout_height="34dp"

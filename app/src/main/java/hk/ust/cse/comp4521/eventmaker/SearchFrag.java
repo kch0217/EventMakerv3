@@ -1,6 +1,7 @@
 package hk.ust.cse.comp4521.eventmaker;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import android.app.AlertDialog;
@@ -34,6 +35,7 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import hk.ust.cse.comp4521.eventmaker.Event.Event;
 import hk.ust.cse.comp4521.eventmaker.Event.EventMenu;
 import hk.ust.cse.comp4521.eventmaker.Event.Event_T;
 import hk.ust.cse.comp4521.eventmaker.Event.Map;
@@ -177,22 +179,34 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
         MainSearchFragment.getloc = mainloc;
         bindService(mainloc, serviceConnection, Context.BIND_AUTO_CREATE);
         SharedPreferences pre = UserModel.getUserModel().getSharedPreferences();
+        boolean find=false;
         if (pre.contains("Event")) {
             final String eventId = pre.getString("Event", "");
-            new AlertDialog.Builder(SearchFrag.this)
-                    .setTitle("redirection")
-                    .setMessage("brining you back to the event")
-                    .setNeutralButton("ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent back = new Intent(SearchFrag.this, EventMenu.class);
-                            back.putExtra(Constants.eventId, eventId);
-                            Log.i("SEARCH", "sending back to event menu");
-                            startActivity(back);
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
+            for(Event evt:Event_T.test){
+                if(evt._id.equals(eventId)){
+                    find=true;
+                }
+            }
+            if(find) {
+                new AlertDialog.Builder(SearchFrag.this)
+                        .setTitle("redirection")
+                        .setMessage("brining you back to the event")
+                        .setNeutralButton("ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent back = new Intent(SearchFrag.this, EventMenu.class);
+                                back.putExtra(Constants.eventId, eventId);
+                                back.putExtra(Constants.reconnect,100);
+                                Log.i("SEARCH", "sending back to event menu");
+                                startActivity(back);
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }//event already disappeared
+            else{
+                UserModel.getUserModel().deleteEventId();
+            }
         }
 
     }
@@ -378,7 +392,37 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                     if (!UserServer.connectionState) {
                         return;
                     }
-
+                    SharedPreferences pre = UserModel.getUserModel().getSharedPreferences();
+                    boolean find=false;
+                    if (pre.contains("Event")) {
+                        final String eventId = pre.getString("Event", "");
+                        for(Event evt:Event_T.test){
+                            if(evt._id.equals(eventId)){
+                                find=true;
+                            }
+                        }
+                        if(find) {
+                            new AlertDialog.Builder(getActivity())
+                                    .setTitle("redirection")
+                                    .setMessage("brining you back to the event")
+                                    .setNeutralButton("ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent back = new Intent(getActivity(), EventMenu.class);
+                                            back.putExtra(Constants.eventId, eventId);
+                                            back.putExtra(Constants.reconnect,100);
+                                            Log.i("SEARCH", "sending back to event menu");
+                                            startActivity(back);
+                                        }
+                                    })
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
+                        }
+                        else{
+                            UserModel.getUserModel().deleteEventId();
+                        }
+                    }
+                    else {
 
 
                         double lat = SearchHelper.mCurrentLocation.getLatitude();
@@ -402,10 +446,11 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                         } else {
                             Intent intent2 = new Intent(getActivity(), EventMenu.class);
                             intent2.putExtra(Constants.eventId, id);
+                            intent2.putExtra(Constants.reconnect,200);
                             Log.i(ARG_SECTION_NUMBER, "Go to the existing event");
                             startActivity(intent2);
                         }
-
+                    }
                 }
             });
 
