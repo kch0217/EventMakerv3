@@ -41,7 +41,7 @@ public class ActivityRefresh extends Service {
                 thread.start();
 
             }
-        }, 3000, 20000);
+        }, 3000, 5000);
 
         eventID = intent.getStringExtra(Constants.eventId);
 
@@ -74,9 +74,23 @@ public class ActivityRefresh extends Service {
 
             Event_T eventserver = new Event_T();
             eventserver.getAllEvent();
+            Object lock = new Object();
+            Relahelper.relas = null;
+            Relahelper.locker = true;
+            Relahelper.lock = lock;
+
 
             Relahelper relationshiphelper = new Relahelper();
             relationshiphelper.getAllRelationship();
+            while (Relahelper.relas == null){
+                synchronized (lock){
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
 
             checkeventExist();
         }
@@ -85,10 +99,10 @@ public class ActivityRefresh extends Service {
 
     private void checkeventExist() {
         boolean foundEvent = false;
-        for (int i = 0; i< Event_T.test.size(); i++){
-            if (Event_T.test.get(i)._id.equals(eventID)){
+        for (int i = 0; i< Relahelper.relas.size(); i++){
+            if (Relahelper.relas.get(i).userId.equals(UserServer.returnInfo._id)){
                 foundEvent = true;
-
+                break;
             }
         }
         if (!foundEvent){

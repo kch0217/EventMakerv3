@@ -455,6 +455,7 @@ public class EventMenu extends Activity {
             public void onReceive(Context context, Intent intent) {
                 if (intent.getIntExtra("Signal", -1) ==Constants.ConnectionError){
                     //stop participants service
+
                     finish();
                 }
                 else if (intent.getIntExtra("Signal", -1) ==Constants.EventDeleted){

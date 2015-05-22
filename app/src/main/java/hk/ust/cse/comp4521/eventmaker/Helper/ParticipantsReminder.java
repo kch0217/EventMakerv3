@@ -4,8 +4,10 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
@@ -46,6 +48,7 @@ public class ParticipantsReminder extends Service {
     private NotificationManager mNotificationManager;
     private int noteId = 2;
     private Timer timer;
+    private BroadcastReceiver mReceiver;
 
     public ParticipantsReminder() {
 
@@ -94,7 +97,25 @@ public class ParticipantsReminder extends Service {
                 thread.start();
 
             }
-        }, 5000, 20000);
+        }, 6000, 5000);
+
+
+        IntentFilter intentFilter = new IntentFilter(Constants.signaling);
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getIntExtra("Signal", -1) ==Constants.ConnectionError){
+                    //stop participants service
+
+                    stopSelf();
+                }
+
+
+            }
+        };
+
+
+        this.registerReceiver(mReceiver, intentFilter);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -103,6 +124,7 @@ public class ParticipantsReminder extends Service {
         Log.i(TAG, "Stopping the service.");
         timer.cancel();
         mNotificationManager.cancel(noteId);
+        this.unregisterReceiver(this.mReceiver);
         super.onDestroy();
     }
 
