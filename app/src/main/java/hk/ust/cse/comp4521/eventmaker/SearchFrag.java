@@ -164,9 +164,19 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
 
             Event_T event_t = new Event_T();
             event_t.getAllEvent();
+            event_t.locker= true;
+            event_t.lock = lock;
 
 
             while (Event_T.test == null) {
+                synchronized (lock){
+                    Log.i("SearchFrag", "Loading Events");
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
 
 
             }
