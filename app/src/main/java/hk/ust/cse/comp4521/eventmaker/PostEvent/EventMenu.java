@@ -118,15 +118,17 @@ public class EventMenu extends Activity {
         {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(view.getId()==send.getId()){
                     if(b==true){
-                        text.setHeight(150);
+                        text.setText("\n\n\n\n\n\n\n\n\n\n\n"+text.getText());
+                        SV.fullScroll(View.FOCUS_DOWN);
                     }
                     else
                     {
-                        text.setHeight(300);
+                        text.setText(text.getText().toString().replace("\n\n\n\n\n\n\n\n\n\n\n",""));
+                        SV.fullScroll(View.FOCUS_DOWN);
+
                     }
-                }
+
             }
         });
 
