@@ -23,7 +23,7 @@ public class Welcome extends Activity {
 
     private GestureDetector mDetector;
     private int page;
-
+    //
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

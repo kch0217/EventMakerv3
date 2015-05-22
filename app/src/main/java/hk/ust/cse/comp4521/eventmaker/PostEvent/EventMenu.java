@@ -393,7 +393,7 @@ public class EventMenu extends Activity {
                 else {
                     if(!admin) {
                         Relahelper relhelper=new Relahelper();
-                        boolean find=true;
+                        boolean find=false;
                         while(!find){
                             for(Relationship rel:Relahelper.relas){
                                 if(rel.roomId.equals(event_id)){
