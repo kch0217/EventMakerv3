@@ -68,6 +68,7 @@ public class eventSetting extends Activity implements View.OnClickListener{
         changeStart.setOnClickListener(this);
         changeEnd= (Button) findViewById(R.id.buttonEnd);
         changeEnd.setOnClickListener(this);
+        changePart.setOnClickListener(this);
         mode=getIntent().getExtras().getInt(Constants.eventSettingType,0);
         if(mode==200){
             changePart.setVisibility(View.INVISIBLE);
@@ -118,6 +119,9 @@ public class eventSetting extends Activity implements View.OnClickListener{
                     String texttobeset=hourOfDay+":"+minute;
                     startTimeToBeViewed.setText(hourOfDay+":"+minute);
                     evt.starting=texttobeset;
+                    Log.i(TAG, "start" + evt.starting);
+                    Log.i(TAG,"end"+evt.ending);
+                    Log.i(TAG,"part"+evt.numOfPart);
                     Event2 tobeupload=copyFromEvent(evt);
                     tobeupload.starting=texttobeset;
                     eventhelper.updateEvent(tobeupload,evt_id);
@@ -133,6 +137,9 @@ public class eventSetting extends Activity implements View.OnClickListener{
                     String texttobeset=hourOfDay+":"+minute;
                     endTimeToBeViewed.setText(texttobeset);
                     evt.ending=texttobeset;
+                    Log.i(TAG,"start"+evt.starting);
+                    Log.i(TAG,"end"+evt.ending);
+                    Log.i(TAG,"part"+evt.numOfPart);
                     Event2 tobeupload=copyFromEvent(evt);
                     tobeupload.ending=texttobeset;
                     eventhelper.updateEvent(tobeupload,evt_id);
@@ -152,6 +159,9 @@ public class eventSetting extends Activity implements View.OnClickListener{
                         public void onClick(DialogInterface dialog, int which) {
                             partno.setText(editText.getText().toString());
                             evt.numOfPart=Integer.parseInt(editText.getText().toString());
+                            Log.i(TAG,"start"+evt.starting);
+                            Log.i(TAG, "end" + evt.ending);
+                            Log.i(TAG,"part"+evt.numOfPart);
                             Event2 et=copyFromEvent(evt);
                             et.numOfPart=Integer.parseInt(editText.getText().toString());
                             eventhelper.updateEvent(et,evt_id);
