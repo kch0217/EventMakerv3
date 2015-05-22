@@ -17,13 +17,32 @@ public class ActivityRefresh extends Service {
 
     //use new threads to execute
     private boolean connected;
+    private boolean binded;
+    private String eventID;
+
     public ActivityRefresh() {
         connected = false;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Timer timer = new Timer(true);
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Log.i("ActivityRefresh", "TimeTask");
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        networkAccess();
+                    }
+                });
+                thread.start();
 
+            }
+        }, 1000, 20000);
+
+        eventID = intent.getStringExtra(Constants.eventId);
 
 
 
@@ -49,32 +68,55 @@ public class ActivityRefresh extends Service {
 
             Relahelper relationshiphelper = new Relahelper();
             relationshiphelper.getAllRelationship();
+
+            checkeventExist();
         }
 
     }
 
+    private void checkeventExist() {
+        boolean foundEvent = false;
+        for (int i = 0; i< Event_T.test.size(); i++){
+            if (Event_T.test.get(i)._id.equals(eventID)){
+                foundEvent = true;
+
+            }
+        }
+        if (!foundEvent){
+//            Intent i = new Intent(Constants.signaling).putExtra("Signal", Constants.EventDeleted);
+//            this.sendBroadcast(i);
+            stopSelf();
+        }
+    }
 
 
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
 //        throw new UnsupportedOperationException("Not yet implemented");
-        Timer timer = new Timer(true);
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                Log.i("ActivityRefresh", "TimeTask");
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        networkAccess();
-                    }
-                });
-                thread.start();
-
-            }
-        }, 1000, 20000);
+//        Timer timer = new Timer(true);
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                Log.i("ActivityRefresh", "TimeTask");
+//                Thread thread = new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        networkAccess();
+//                    }
+//                });
+//                thread.start();
+//
+//            }
+//        }, 1000, 20000);
+        binded = true;
         return null;
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        binded = false;
+        return super.onUnbind(intent);
     }
 
 

@@ -99,6 +99,7 @@ public class ParticipantsReminder extends Service {
         if (!foundEvent){
             Intent i = new Intent(Constants.signaling).putExtra("Signal", Constants.EventDeleted);
             this.sendBroadcast(i);
+            stopSelf();
         }
     }
 

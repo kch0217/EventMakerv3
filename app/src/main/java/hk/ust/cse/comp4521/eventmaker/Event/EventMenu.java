@@ -54,6 +54,7 @@ public class EventMenu extends Activity {
     private BroadcastReceiver mReceiver;
     private ServiceConnection serverConnection;
     private Intent ServiceParticipants;
+    private Intent refresh;
 
 
     @Override
@@ -91,7 +92,8 @@ public class EventMenu extends Activity {
         UserModel usm=UserModel.getUserModel();
         usm.saveEventId(event_id);
 
-        Intent refresh = new Intent(EventMenu.this, ActivityRefresh.class);
+        refresh = new Intent(EventMenu.this, ActivityRefresh.class);
+        refresh.putExtra(Constants.eventId, event_id);
         serverConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
@@ -103,7 +105,8 @@ public class EventMenu extends Activity {
 
             }
         };
-        bindService(refresh, serverConnection, Context.BIND_AUTO_CREATE);
+        startService(refresh);
+//        bindService(refresh, serverConnection, Context.BIND_AUTO_CREATE);
 
         ServiceParticipants = new Intent(EventMenu.this, ParticipantsReminder.class);
         ServiceParticipants.putExtra(Constants.eventId, event_id);
