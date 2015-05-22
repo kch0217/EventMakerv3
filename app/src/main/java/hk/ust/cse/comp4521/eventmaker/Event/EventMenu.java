@@ -114,8 +114,9 @@ public class EventMenu extends Activity {
         startService(ServiceParticipants);
 
         //deal with relationship
+        //new user 200, exisiting user 100
         int existornew=getIntent().getIntExtra(Constants.reconnect,0);
-        if(existornew==100) {
+        if(existornew==200) {
             Relahelper relahelper = new Relahelper();
             relahelper.getAllRelationship();
             Relationship2 newrela = new Relationship2();
@@ -125,7 +126,7 @@ public class EventMenu extends Activity {
             relahelper.createRelationship(newrela);
             Log.i(TAG,"new user entering");
         }
-        else if(existornew==200){
+        else if(existornew==100){
             Log.i(TAG,"existing user coming back");
         }
         else{
