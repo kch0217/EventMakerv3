@@ -138,6 +138,7 @@ public class EventMenu extends Activity {
                                                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                                                 for (Relationship ra : Relahelper.relas) {
                                                                     if (ra.roomId.equals(event_id)) {
+
                                                                         for (UserInfo ui : UserServer.UserInfoArrayList) {
                                                                             if (ui._id.equals(id_array.get(position))) {
                                                                                 Intent intent = new Intent();
@@ -146,6 +147,8 @@ public class EventMenu extends Activity {
                                                         EventMenu.this.startActivity(intent);
                                                     }
                                                 }
+
+
                                             }
                                         }
                                     }
@@ -315,14 +318,17 @@ public class EventMenu extends Activity {
 
         for (Relationship ra : Relahelper.relas) {
             if (ra.roomId.equals(event_id)) {
-                for (UserInfo ui : UserServer.UserInfoArrayList) {
 
-                    if(!ui._id.equals(UserServer.returnInfo._id))
+
+                    if(!ra.userId.equals(UserServer.returnInfo._id))
                     {
+
+                        for(UserInfo ui:UserServer.UserInfoArrayList)
+                        if(ui._id.equals(ra.userId)){
                         name_array.add(ui.Name);
-                        id_array.add(ui._id);
+                        id_array.add(ui._id);}
                     }
-                }
+
             }
         }
 
