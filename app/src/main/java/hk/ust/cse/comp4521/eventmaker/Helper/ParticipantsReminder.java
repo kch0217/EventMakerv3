@@ -92,14 +92,15 @@ public class ParticipantsReminder extends Service {
                 thread.start();
 
             }
-        }, 3000, 2066000);
+        }, 3000, 20000);
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
-        Log.i(TAG, "Stoppping the service.");
+        Log.i(TAG, "Stopping the service.");
         timer.cancel();
+        mNotificationManager.cancel(noteId);
         super.onDestroy();
     }
 
