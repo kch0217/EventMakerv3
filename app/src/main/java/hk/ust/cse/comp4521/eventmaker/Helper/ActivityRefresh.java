@@ -44,6 +44,9 @@ public class ActivityRefresh extends Service {
         }, 3000, 5000);
 
         eventID = intent.getStringExtra(Constants.eventId);
+        if (eventID == null){
+            stopSelf();
+        }
 
 
 

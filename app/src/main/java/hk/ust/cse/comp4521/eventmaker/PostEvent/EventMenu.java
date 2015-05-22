@@ -467,7 +467,7 @@ public class EventMenu extends Activity {
         ServiceParticipants.putExtra(Constants.eventId, event_id);
         startService(ServiceParticipants);
         Log.i(TAG, "Trying to bind");
-        bindService(refresh, serverConnection, Context.BIND_AUTO_CREATE);
+//        bindService(refresh, serverConnection, Context.BIND_AUTO_CREATE);
         IntentFilter intentFilter = new IntentFilter(Constants.signaling);
 
         mReceiver = new BroadcastReceiver() {
@@ -507,7 +507,7 @@ public class EventMenu extends Activity {
     @Override
     protected void onPause() {
         Log.i(TAG,"Trying to unbind");
-        unbindService(serverConnection);
+//        unbindService(serverConnection);
         super.onPause();
 
     }
