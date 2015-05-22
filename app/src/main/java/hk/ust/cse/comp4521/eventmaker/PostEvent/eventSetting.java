@@ -60,7 +60,7 @@ public class eventSetting extends Activity implements View.OnClickListener{
         }
         editText=new EditText(this);
         editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-        partno.setText(evt.numOfPart);
+        partno.setText(Integer.toString(evt.numOfPart));
         startTimeToBeViewed.setText(evt.starting);
         endTimeToBeViewed.setText(evt.ending);
 
