@@ -20,6 +20,7 @@ public class ActivityRefresh extends Service {
     private boolean binded;
     private String eventID;
     private Timer timer;
+    private int counter;
 
     public ActivityRefresh() {
         connected = false;
@@ -28,20 +29,18 @@ public class ActivityRefresh extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         timer = new Timer(true);
+
+
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+
                 Log.i("ActivityRefresh", "TimeTask");
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        networkAccess();
-                    }
-                });
-                thread.start();
+                networkAccess();
+
 
             }
-        }, 3000, 5000);
+        }, 3000, 10000);
 
         eventID = intent.getStringExtra(Constants.eventId);
         if (eventID == null){

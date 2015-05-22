@@ -58,17 +58,21 @@ public class ParticipantsReminder extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, "started");
         eventID = intent.getStringExtra(Constants.eventId);
-        Object lock = new Object();
-        Relahelper.lock = lock;
-        Relahelper.locker = true;
+        if (Relahelper.relas == null) {
+            Object lock = new Object();
+            Relahelper.lock = lock;
+            Relahelper.locker = true;
+            Relahelper helper = new Relahelper();
+            helper.getAllRelationship();
 
-        while (Relahelper.relas == null){
-            synchronized (lock) {
-                Log.i("TAG", "Waiting");
-                try {
-                    lock.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            while (Relahelper.relas == null) {
+                synchronized (lock) {
+                    Log.i("TAG", "Waiting");
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -82,22 +86,15 @@ public class ParticipantsReminder extends Service {
             @Override
             public void run() {
                 Log.i("ParticipantReminder", "TimeTask");
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        checkeventUserExist();
-                        if (foundEvent) {
-                            checkNewParticipants();
-                            notifyMenu();
-                        }
+                checkeventUserExist();
+                if (foundEvent) {
+                    checkNewParticipants();
+                    notifyMenu();
+                }
 
-
-                    }
-                });
-                thread.start();
 
             }
-        }, 6000, 5000);
+        }, 6000, 10000);
 
 
         IntentFilter intentFilter = new IntentFilter(Constants.signaling);

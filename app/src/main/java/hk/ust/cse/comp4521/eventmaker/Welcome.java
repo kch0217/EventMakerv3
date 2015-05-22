@@ -30,12 +30,12 @@ public class Welcome extends Activity {
         setContentView(R.layout.activity_welcome);
         page = 0;
 
-        UserModel usermodel = UserModel.getUserModel();
+        UserModel usermodel = UserModel.getUserModel(); //get ready for the user model for handling user data
         usermodel.setContext(Welcome.this);
 
-        Map<String, Object> data = usermodel.getAllInfo();
+        Map<String, Object> data = usermodel.getAllInfo(); //retrieve the user data on the device
 
-        if (!((String) data.get("Name")).equals("")) {
+        if (!((String) data.get("Name")).equals("")) { //check if the user has registered
             Intent intent = new Intent(this, SearchFrag.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);

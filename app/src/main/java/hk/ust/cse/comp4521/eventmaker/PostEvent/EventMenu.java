@@ -443,12 +443,25 @@ public class EventMenu extends Activity {
     protected void onResume() {
         super.onResume();
 
-        startService(refresh);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                startService(refresh);
+            }
+        }).start();
+
 
 
         ServiceParticipants = new Intent(EventMenu.this, ParticipantsReminder.class);
         ServiceParticipants.putExtra(Constants.eventId, event_id);
-        startService(ServiceParticipants);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                startService(ServiceParticipants);
+            }
+        }).start();
+
+
         Log.i(TAG, "Trying to bind");
 //        bindService(refresh, serverConnection, Context.BIND_AUTO_CREATE);
         IntentFilter intentFilter = new IntentFilter(Constants.signaling);
@@ -489,7 +502,7 @@ public class EventMenu extends Activity {
 
     @Override
     protected void onPause() {
-        Log.i(TAG,"Trying to unbind");
+//        Log.i(TAG,"Trying to unbind");
 //        unbindService(serverConnection);
         super.onPause();
 

@@ -35,6 +35,7 @@ public class RestClient {
     }
 
     private static void setupRestClient() {
+
         // create client
         OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setReadTimeout(2, TimeUnit.SECONDS);
