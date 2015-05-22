@@ -62,7 +62,7 @@ public class Event_T{
                 else{
                     test=new ArrayList<Event>();
                 }
-                Log.i(TAG,"wellprogramworksidkwhy");
+                Log.i(TAG,test.size()+"");
                 if (locker)
                 synchronized (lock){
                     lock.notify();

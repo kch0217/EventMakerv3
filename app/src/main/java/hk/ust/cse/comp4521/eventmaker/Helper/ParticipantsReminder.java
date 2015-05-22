@@ -27,6 +27,8 @@ import hk.ust.cse.comp4521.eventmaker.R;
 import hk.ust.cse.comp4521.eventmaker.Relationship.Relahelper;
 import hk.ust.cse.comp4521.eventmaker.Relationship.Relationship;
 import hk.ust.cse.comp4521.eventmaker.SearchFrag;
+import hk.ust.cse.comp4521.eventmaker.User.UserModel;
+import hk.ust.cse.comp4521.eventmaker.User.UserServer;
 
 public class ParticipantsReminder extends Service {
 
@@ -80,7 +82,7 @@ public class ParticipantsReminder extends Service {
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        checkeventExist();
+                        checkeventUserExist();
                         if (foundEvent) {
                             checkNewParticipants();
                             notifyMenu();
@@ -92,7 +94,7 @@ public class ParticipantsReminder extends Service {
                 thread.start();
 
             }
-        }, 3000, 20000);
+        }, 5000, 20000);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -104,12 +106,12 @@ public class ParticipantsReminder extends Service {
         super.onDestroy();
     }
 
-    private void checkeventExist() {
+    private void checkeventUserExist() {
         foundEvent = false;
-        for (int i = 0; i< Event_T.test.size(); i++){
-            if (Event_T.test.get(i)._id.equals(eventID)){
+        for (int i = 0; i< Relahelper.relas.size(); i++){
+            if (Relahelper.relas.get(i).userId.equals(UserServer.returnInfo._id)){
                 foundEvent = true;
-                interest = Event_T.test.get(i).interest;
+                break;
             }
         }
         if (!foundEvent){
