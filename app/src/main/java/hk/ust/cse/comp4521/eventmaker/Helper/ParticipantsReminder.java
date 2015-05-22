@@ -55,6 +55,28 @@ public class ParticipantsReminder extends Service {
     }
 
     @Override
+    public void onCreate() {
+        IntentFilter intentFilter = new IntentFilter(Constants.signaling);
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getIntExtra("Signal", -1) ==Constants.ConnectionError){
+                    //stop participants service
+
+                    stopSelf();
+                }
+                if (intent.getIntExtra("Signal", -1) == Constants.allserviceStopped)
+                    stopSelf();
+
+            }
+        };
+
+
+        this.registerReceiver(mReceiver, intentFilter);
+        super.onCreate();
+    }
+
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, "started");
         if(intent ==null)
@@ -96,25 +118,10 @@ public class ParticipantsReminder extends Service {
 
 
             }
-        }, 6000, 10000);
+        }, 5000, 10000);
 
 
-        IntentFilter intentFilter = new IntentFilter(Constants.signaling);
-        mReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getIntExtra("Signal", -1) ==Constants.ConnectionError){
-                    //stop participants service
 
-                    stopSelf();
-                }
-
-
-            }
-        };
-
-
-        this.registerReceiver(mReceiver, intentFilter);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -136,7 +143,18 @@ public class ParticipantsReminder extends Service {
             }
         }
         if (!foundEvent){
-            Intent i = new Intent(Constants.signaling).putExtra("Signal", Constants.EventDeleted);
+            Intent i;
+            try {
+                Thread.currentThread().sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(ActivityRefresh.connected){
+                i = new Intent(Constants.signaling).putExtra("Signal", Constants.ConnectionError);
+
+            }
+            else
+                i = new Intent(Constants.signaling).putExtra("Signal", Constants.EventDeleted);
             this.sendBroadcast(i);
             stopSelf();
         }
@@ -237,7 +255,7 @@ public class ParticipantsReminder extends Service {
         resultIntent.putExtra(Constants.reconnect, 100);
 
 
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
         mBuilder.setContentIntent(resultPendingIntent);
@@ -283,7 +301,7 @@ public class ParticipantsReminder extends Service {
         resultIntent.putExtra(Constants.eventId, eventID);
         resultIntent.putExtra(Constants.reconnect, 100);
 
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         mBuilder.setContentIntent(resultPendingIntent);
 

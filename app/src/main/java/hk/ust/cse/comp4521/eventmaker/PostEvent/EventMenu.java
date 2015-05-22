@@ -85,6 +85,9 @@ public class EventMenu extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        Intent i = new Intent(Constants.signaling).putExtra("Signal", Constants.allserviceStopped);
+        this.sendBroadcast(i);
+
 
 
         super.onCreate(savedInstanceState);
@@ -235,17 +238,35 @@ public class EventMenu extends Activity {
 
         refresh = new Intent(EventMenu.this, ActivityRefresh.class);
         refresh.putExtra(Constants.eventId, event_id);
-        serverConnection = new ServiceConnection() {
+//        serverConnection = new ServiceConnection() {
+//            @Override
+//            public void onServiceConnected(ComponentName name, IBinder service) {
+//
+//            }
+//
+//            @Override
+//            public void onServiceDisconnected(ComponentName name) {
+//
+//            }
+//        };
+
+        new Thread(new Runnable() {
             @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-
+            public void run() {
+                startService(refresh);
             }
+        }).start();
 
+
+
+        ServiceParticipants = new Intent(EventMenu.this, ParticipantsReminder.class);
+        ServiceParticipants.putExtra(Constants.eventId, event_id);
+        new Thread(new Runnable() {
             @Override
-            public void onServiceDisconnected(ComponentName name) {
-
+            public void run() {
+                startService(ServiceParticipants);
             }
-        };
+        }).start();
 
 
         //deal with relationship
@@ -267,9 +288,77 @@ public class EventMenu extends Activity {
         else{
             Log.i(TAG,"no intent with value from Constants.reconnect, something goes wrong");
         }
+        Object lock = new Object();
+        Relahelper.lock = lock;
+        Relahelper.locker = true;
+        Relahelper relahelper = new Relahelper();
+        relahelper.relas = null;
+        relahelper.getAllRelationship();
+        while (relahelper.relas ==null){
+            synchronized (lock){
+                try {
+                    lock.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+        try {
+            Thread.currentThread().sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Log.i(TAG, "rela size is "+ relahelper.relas.size());
         Thread get_event_thread=new get_my_event();
         get_event_thread.start();
 
+        IntentFilter intentFilter = new IntentFilter(Constants.signaling);
+
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getIntExtra("Signal", -1) ==Constants.ConnectionError){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(EventMenu.this);
+
+                    //  Chain together various setter methods to set the dialog characteristics
+                    builder.setMessage("Connection Problem!")
+                            .setTitle("Error")
+                            .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    finish();
+                                }
+
+                            });
+
+                    // Get the AlertDialog from create()
+                    builder.create().show();
+                }
+                else if (intent.getIntExtra("Signal", -1) ==Constants.EventDeleted){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(EventMenu.this);
+
+                    //  Chain together various setter methods to set the dialog characteristics
+                    builder.setMessage("Owner has deleted the event!")
+                            .setTitle("Error")
+                            .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    finish();
+                                }
+
+                            });
+
+                    // Get the AlertDialog from create()
+                    builder.create().show();
+
+                }
+
+            }
+        };
+
+
+        this.registerReceiver(mReceiver, intentFilter);
     }
 
 
@@ -479,61 +568,11 @@ public class EventMenu extends Activity {
     protected void onResume() {
         super.onResume();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                startService(refresh);
-            }
-        }).start();
 
 
-
-        ServiceParticipants = new Intent(EventMenu.this, ParticipantsReminder.class);
-        ServiceParticipants.putExtra(Constants.eventId, event_id);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                startService(ServiceParticipants);
-            }
-        }).start();
-
-
-        Log.i(TAG, "Trying to bind");
+//        Log.i(TAG, "Trying to bind");
 //        bindService(refresh, serverConnection, Context.BIND_AUTO_CREATE);
-        IntentFilter intentFilter = new IntentFilter(Constants.signaling);
 
-        mReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getIntExtra("Signal", -1) ==Constants.ConnectionError){
-                    //stop participants service
-
-                    finish();
-                }
-                else if (intent.getIntExtra("Signal", -1) ==Constants.EventDeleted){
-                    AlertDialog.Builder builder = new AlertDialog.Builder(EventMenu.this);
-
-                    //  Chain together various setter methods to set the dialog characteristics
-                    builder.setMessage("Owner has deleted the event!")
-                            .setTitle("Error")
-                            .setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    finish();
-                                }
-
-                            });
-
-                    // Get the AlertDialog from create()
-                    builder.create().show();
-
-                }
-
-            }
-        };
-
-
-        this.registerReceiver(mReceiver, intentFilter);
     }
 
     @Override

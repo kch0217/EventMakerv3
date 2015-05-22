@@ -80,7 +80,8 @@
             android:name=".PostEvent.EventMenu"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_eventMenu"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask">
 >
         </activity>
         <activity

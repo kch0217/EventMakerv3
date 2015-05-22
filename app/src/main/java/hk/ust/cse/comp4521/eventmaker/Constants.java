@@ -40,8 +40,10 @@ public class Constants {
     public static final int EventDeleted = 21;
     public static final int closeNotification = 40;
     public static final int personnelChanges = 22;
+    public static final int allserviceStopped = 30;
 
     public static final String signaling = "android.intent.action.monitor";
     public static final String closeNot = "android.intent.action.CloNot";
+
 
 }

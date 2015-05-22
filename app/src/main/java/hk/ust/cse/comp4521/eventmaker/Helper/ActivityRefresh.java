@@ -1,7 +1,10 @@
 package hk.ust.cse.comp4521.eventmaker.Helper;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -16,14 +19,41 @@ import hk.ust.cse.comp4521.eventmaker.User.UserServer;
 public class ActivityRefresh extends Service {
 
     //use new threads to execute
-    private boolean connected;
+    public static boolean connected;
     private boolean binded;
     private String eventID;
     private Timer timer;
     private int counter;
+    private BroadcastReceiver mReceiver;
+
 
     public ActivityRefresh() {
         connected = false;
+    }
+
+    @Override
+    public void onCreate() {
+
+        IntentFilter intentFilter = new IntentFilter(Constants.signaling);
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getIntExtra("Signal", -1) ==Constants.ConnectionError){
+                    //stop participants service
+
+                    stopSelf();
+                }
+                if (intent.getIntExtra("Signal", -1) == Constants.allserviceStopped) {
+                    Log.i("ActivityRefresh", "Received force close");
+                    stopSelf();
+                }
+
+            }
+        };
+
+
+        this.registerReceiver(mReceiver, intentFilter);
+        super.onCreate();
     }
 
     @Override
@@ -49,7 +79,6 @@ public class ActivityRefresh extends Service {
 
 
 
-
         return super.onStartCommand(intent, flags, startId);
 
 
@@ -59,6 +88,7 @@ public class ActivityRefresh extends Service {
     public void onDestroy() {
         Log.i("ActivityRefresh", "Stopping Refreshing the network.");
         timer.cancel();
+        this.unregisterReceiver(this.mReceiver);
         super.onDestroy();
 
     }

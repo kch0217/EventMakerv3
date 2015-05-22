@@ -127,6 +127,8 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                             .setTabListener(this));
         }
         pd2= ProgressDialog.show(SearchFrag.this, "Loading", "Downloading important info from the Internet.", true);
+        Intent i = new Intent(Constants.signaling).putExtra("Signal", Constants.allserviceStopped);
+        this.sendBroadcast(i);
     }
 
     @Override
@@ -139,6 +141,8 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
     protected void onResume() {
 
         super.onResume();
+        Intent i = new Intent(Constants.signaling).putExtra("Signal", Constants.allserviceStopped);
+        this.sendBroadcast(i);
         UserServer userServer = new UserServer();
 
 
@@ -420,21 +424,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                         }
 
                     }
-                    Relahelper.lock = lock;
-                    Relahelper.locker = true;
-                    Relahelper relahelper = new Relahelper();
-                    relahelper.relas = null;
-                    relahelper.getAllRelationship();
-                    while (relahelper.relas ==null){
-                        synchronized (lock){
-                            try {
-                                lock.wait();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
 
-                    }
                     SharedPreferences pre = UserModel.getUserModel().getSharedPreferences();
                     boolean find=false;
                     if (pre.contains("Event")) {
