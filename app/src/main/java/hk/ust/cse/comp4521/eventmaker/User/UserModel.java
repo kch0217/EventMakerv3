@@ -39,7 +39,7 @@ public class UserModel {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public Map<String, Object> getAllInfo(){
+    public Map<String, Object> getAllInfo(){ // retrieve user data from the device
 
         Map<String, Object> allInfo = new HashMap<>();
         allInfo.put("Name", prefs.getString("Name", ""));
@@ -56,20 +56,20 @@ public class UserModel {
         return allInfo;
     }
 
-    public String getPhoneNumber(){
+    public String getPhoneNumber(){ // get phone number from the device
         TelephonyManager tel = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         Log.i(null, "TEL Number is " + tel.getLine1Number());
         return tel.getLine1Number();
     }
 
-    public String getPhoneNumberFromSP(){
+    public String getPhoneNumberFromSP(){ // get phone number from shared preference
         return prefs.getString("Phone", "0000");
     }
 
-    public void saveAllInfo(Map<String, Object> data, boolean modify){
+    public void saveAllInfo(Map<String, Object> data, boolean modify){ //save user data to device
 
         String _id = null;
-        if (modify){
+        if (modify){ //if it is to modify, update the records on the server
             UserServer myserver = new UserServer();
             UserInfo userInfo = myserver.UserInfoArrayList.get(myserver.calcID(prefs.getString("Phone", null)));
 
@@ -81,7 +81,7 @@ public class UserModel {
                 modify = false;
         }
 
-        SharedPreferences.Editor prefed = prefs.edit();
+        SharedPreferences.Editor prefed = prefs.edit(); //update the shared preference
         prefed.putString("Name", (String)data.get("Name"));
         prefed.putInt("Age", (Integer) data.get("Age"));
         prefed.putString("Gender", (String) data.get("Gender"));
@@ -104,12 +104,12 @@ public class UserModel {
         newInfo.AgePrivacy = (String) data.get("AgePrivacy");
         newInfo.GenderPrivacy = (String) data.get("GenderPrivacy");
         UserServer myserver = new UserServer();
-        if (modify){
+        if (modify){ //if modify, update
             Log.i(TAG,"Modifying");
             newInfo._id = _id;
             myserver.updateUser(newInfo);
         }
-        else {
+        else { //if it is a new record, insert it
             Log.i(TAG, "Adding");
             myserver.addAUser(newInfo);
         }
@@ -124,21 +124,21 @@ public class UserModel {
     }
 
 // save the setting of enabling the notification of passive searching
-    public void saveSetting(boolean allowed){
-        SharedPreferences.Editor prefed = prefs.edit();
-        prefed.putBoolean("allowPassiveSearching", allowed);
-        prefed.commit();
-    }
+//    public void saveSetting(boolean allowed){
+//        SharedPreferences.Editor prefed = prefs.edit();
+//        prefed.putBoolean("allowPassiveSearching", allowed);
+//        prefed.commit();
+//    }
 
     // load the setting of enabling the notification of passive searching
-    public Map<String, Object> getSetting(){
-        Map<String, Object> data= new HashMap<>();
-        data.put("allowPassiveSearching", prefs.getBoolean("allowPassiveSearching", false));
-        return data;
-    }
+//    public Map<String, Object> getSetting(){
+//        Map<String, Object> data= new HashMap<>();
+//        data.put("allowPassiveSearching", prefs.getBoolean("allowPassiveSearching", false));
+//        return data;
+//    }
 
 
-    public void wipeAlldata(){
+    public void wipeAlldata(){ //clear all data inside the device and the server (only the owner)
 
         UserServer myServer = new UserServer();
         myServer.deleteUser(prefs.getString("Phone", null));

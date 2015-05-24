@@ -13,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import hk.ust.cse.comp4521.eventmaker.Helper.ServerConnection;
 import hk.ust.cse.comp4521.eventmaker.User.UserModel;
 import hk.ust.cse.comp4521.eventmaker.User.UserRegistration;
 import hk.ust.cse.comp4521.eventmaker.User.UserServer;
@@ -78,6 +79,11 @@ public class Setting extends Activity {
 
             }
             if (view.getId() ==R.id.SettingClearButton){ //remove the user data on the device
+                ServerConnection serverConnection = new ServerConnection(Setting.this, null);
+                serverConnection.run();
+
+                
+
                 Log.i(null, "Press Clear");
                 UserModel.getUserModel().wipeAlldata();
                 Toast.makeText(getApplicationContext(), "All Data are removed", Toast.LENGTH_SHORT).show();

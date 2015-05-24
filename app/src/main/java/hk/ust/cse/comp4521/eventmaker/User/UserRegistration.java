@@ -41,6 +41,9 @@ public class UserRegistration extends Activity {
         setContentView(R.layout.activity_user_registration);
 
 // reference to all the UI components
+
+        // add a list of items to the spinner
+
         Spinner spinner = (Spinner) findViewById(R.id.RegInterestGroup1);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.interest_array, R.layout.spinner_layout);
@@ -67,7 +70,7 @@ public class UserRegistration extends Activity {
         ismodify = false;
         Log.i(null, "onCreate of UserRegistration");
 
-        if (getIntent().getIntExtra("Context", -1) == Constants.MODIFY_REG){
+        if (getIntent().getIntExtra("Context", -1) == Constants.MODIFY_REG){ //check if it is create a new user or modify its data
             ismodify = true;
             loadInfo();
 
@@ -78,31 +81,17 @@ public class UserRegistration extends Activity {
         pd = ProgressDialog.show(UserRegistration.this,"Network Access", "Connecting to the server", true);
 
 
-
-//        myserver.updateInternalState();
-//        while (myserver.connectionState == null){
-//
-//        }
-//        pd.dismiss();
-//        if (myserver.connectionState == false){
-//
-//        }
-
     }
 
     @Override
     protected void onStart() {
-
-
         super.onStart();
-
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        ServerConnection serverConn = new ServerConnection(UserRegistration.this, handle);
+        ServerConnection serverConn = new ServerConnection(UserRegistration.this, handle); //check connection
         serverConn.run();
         pd.dismiss();
     }
@@ -110,12 +99,10 @@ public class UserRegistration extends Activity {
     public Handler handle = new Handler(){
         @Override
         public void handleMessage(Message inputMessage) {
-            if (inputMessage.what == Constants.ConnectionError) {
+            if (inputMessage.what == Constants.ConnectionError) {//if connection fails, terminate the current activity
                 finish();
                 pd.dismiss();
             }
-
-
 
         }
     };
@@ -138,7 +125,7 @@ public class UserRegistration extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_about) {
+        if (id == R.id.action_about) { //direct to about page
             Intent intent = new Intent(this, About.class);
             startActivity(intent);
         }
@@ -147,7 +134,7 @@ public class UserRegistration extends Activity {
     }
 
 
-    public void loadInfo(){
+    public void loadInfo(){ //retrieve data from UserModel and reflect the changes to UI
         Map<String, Object> data = UserModel.getUserModel().getAllInfo();
         ((EditText) findViewById(R.id.RegNameText)).setText((String)data.get("Name"));
         ((EditText) findViewById(R.id.RegAgeText)).setText(Integer.toString((Integer) data.get("Age")));
@@ -175,7 +162,7 @@ public class UserRegistration extends Activity {
         }
     }
 
-    public void saveInfo(){
+    public void saveInfo(){ //save the user data by passing it to UserModel through HashMap
         Map<String,Object> data = new HashMap<>();
         data.put("Name", ((EditText) findViewById(R.id.RegNameText)).getText().toString());
         data.put("Age", Integer.parseInt(((EditText) findViewById(R.id.RegAgeText)).getText().toString()));
@@ -194,7 +181,7 @@ public class UserRegistration extends Activity {
         UserModel.getUserModel().saveAllInfo(data, ismodify);
     }
 
-    public void clearInfo(){
+    public void clearInfo(){ //clear all the contents in the fields
         EditText nameField = (EditText) findViewById(R.id.RegNameText);
         nameField.setText("");
         EditText ageField = (EditText) findViewById(R.id.RegAgeText);
@@ -213,7 +200,7 @@ public class UserRegistration extends Activity {
         ((CheckBox) findViewById(R.id.RegGenderBox)).setChecked(false);
     }
 
-    public boolean validation(){
+    public boolean validation(){ //check if every field is filled properly
         EditText nameField = (EditText) findViewById(R.id.RegNameText);
 
         if (nameField.getText().toString().equals("")){
@@ -247,31 +234,31 @@ public class UserRegistration extends Activity {
 
         @Override
         public void onClick(View view) {
-            if (view.getId() == R.id.RegConfirmButton){
-                if (!validation()){
+            if (view.getId() == R.id.RegConfirmButton){ //if confirm button is pressed
+                if (!validation()){ //data validation
                     return;
                 }
                 pd = ProgressDialog.show(UserRegistration.this,"Network Access", "Connecting to the server", true);
                 ServerConnection serverConn = new ServerConnection(UserRegistration.this, handle);
                 serverConn.run(); //test network connection
-                saveInfo();
+                saveInfo(); //store data to device
                 pd.dismiss();
-                UserModel.getUserModel().saveSetting(true);
+//                UserModel.getUserModel().saveSetting(true);
                 Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
-                if (getIntent().getIntExtra("Context", -1) ==Constants.NEW_REGISTRATION) {
+                if (getIntent().getIntExtra("Context", -1) ==Constants.NEW_REGISTRATION) { //if it is in registration stage
 
                     Intent intent = new Intent(getApplicationContext(), SearchFrag.class);
                     startActivity(intent);
                     finish();
                 }
-                else if (getIntent().getIntExtra("Context",-1)==Constants.MODIFY_REG){
+                else if (getIntent().getIntExtra("Context",-1)==Constants.MODIFY_REG){ // if it is in modification stage
                     Intent intent = new Intent(getApplicationContext(), SearchFrag.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP ); //clear back stack
                     startActivity(intent);
                     finish();
                 }
             }
-            else if (view.getId() == R.id.RegResetButton){
+            else if (view.getId() == R.id.RegResetButton){ //if clear button is selected
                 clearInfo();
                 Toast.makeText(getApplicationContext(), "Reset", Toast.LENGTH_SHORT).show();
             }
