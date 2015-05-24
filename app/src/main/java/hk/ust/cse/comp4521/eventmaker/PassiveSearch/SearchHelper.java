@@ -98,7 +98,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
         //get access to the notification manager
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Toast.makeText(this, "Service starts", Toast.LENGTH_SHORT).show();
+       Log.i(TAG, "Service starts");
 
         // Build the Google API client so that connections can be established
         buildGoogleApiClient();
@@ -261,7 +261,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
     @Override
     public void onDestroy() {
         cancelNotification();
-        Toast.makeText(this, "Service ends", Toast.LENGTH_SHORT).show();
+        Log.i(TAG, "Service ends");
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }

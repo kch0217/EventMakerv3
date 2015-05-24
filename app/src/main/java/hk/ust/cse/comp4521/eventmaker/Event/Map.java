@@ -56,12 +56,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
             if (inputMessage.what == Constants.ConnectionError) {
                 finish();
             }
-            else {
-//                    pd2.dismiss();
-//                    if (pd != null)
-//                        pd.dismiss();
 
-            }
         }
     };
     //make use of Google Map v.2 for implementation of map
