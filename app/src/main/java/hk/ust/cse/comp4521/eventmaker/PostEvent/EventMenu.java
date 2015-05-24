@@ -3,14 +3,12 @@ package hk.ust.cse.comp4521.eventmaker.PostEvent;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.text.Editable;
 import android.util.Log;
 import android.view.Menu;
@@ -25,6 +23,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
@@ -34,7 +33,6 @@ import com.pubnub.api.PubnubException;
 import java.util.ArrayList;
 import java.util.List;
 
-import hk.ust.cse.comp4521.eventmaker.About;
 import hk.ust.cse.comp4521.eventmaker.Constants;
 import hk.ust.cse.comp4521.eventmaker.Event.Event;
 import hk.ust.cse.comp4521.eventmaker.Event.Event_T;
@@ -95,7 +93,7 @@ public class EventMenu extends Activity {
         LV=(ListView)findViewById(R.id.listView);
         /************************UI init*******************/
 
-        ;
+
         SV=(ScrollView)findViewById(R.id.SV);
 
         /************************UI init*******************/
@@ -123,9 +121,10 @@ public class EventMenu extends Activity {
                         String[] idandname=operation.split("Name:");
                         System.out.println("1:"+idandname[0]);
                         System.out.println("2:"+idandname[1]);
-
+                        Toast.makeText(EventMenu.this,idandname[1]+" added",Toast.LENGTH_SHORT);
                         name_array.add(idandname[1]);
                         id_array.add(idandname[0]);
+                        
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -133,26 +132,7 @@ public class EventMenu extends Activity {
 
                                                         ListAdapter LA = new ArrayAdapter<String>(EventMenu.this, android.R.layout.simple_list_item_1, array);
                                                         LV.setAdapter(LA);
-                                                        LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                                            @Override
-                                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                                for (Relationship ra : Relahelper.relas) {
-                                                                    if (ra.roomId.equals(event_id)) {
 
-                                                                        for (UserInfo ui : UserServer.UserInfoArrayList) {
-                                                                            if (ui._id.equals(id_array.get(position))) {
-                                                                                Intent intent = new Intent();
-                                                                                intent.setClass(EventMenu.this, UserDisplay.class);
-                                                                                intent.putExtra("User", ui);
-                                                        EventMenu.this.startActivity(intent);
-                                                    }
-                                                }
-
-
-                                            }
-                                        }
-                                    }
-                                });
 
                             }
                         });
@@ -197,15 +177,7 @@ public class EventMenu extends Activity {
         } catch (PubnubException e) {
             e.printStackTrace();
         }
-        //userEnter
-        if(UserServer.returnInfo.NamePrivacy.equals("Uncheck")){
-            pubnub.publish(event_id, "type:enter+id:"+UserServer.returnInfo._id+"Name:"+UserServer.returnInfo.Name, new Callback() {});
-        }
-        else
-        {
-            pubnub.publish(event_id, "type:enter+id:"+UserServer.returnInfo._id+"Name:"+UserServer.returnInfo.Phone, new Callback() {});
 
-        }
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,6 +206,7 @@ public class EventMenu extends Activity {
 
             }
         });
+
         /********************chat**********/
 
 
@@ -315,7 +288,7 @@ public class EventMenu extends Activity {
             e.printStackTrace();
         }
         Log.i(TAG, "rela size is "+ relahelper.relas.size());
-
+/***************init the list View***********************/
         for (Relationship ra : Relahelper.relas) {
             if (ra.roomId.equals(event_id)) {
 
@@ -331,7 +304,38 @@ public class EventMenu extends Activity {
 
             }
         }
+/*****************init the List View********************/
+        //userEntergvhb
+        if(UserServer.returnInfo.NamePrivacy.equals("Uncheck")){
+            pubnub.publish(event_id, "type:enter+id:"+UserServer.returnInfo._id+"Name:"+UserServer.returnInfo.Name, new Callback() {});
+        }
+        else
+        {
+            pubnub.publish(event_id, "type:enter+id:"+UserServer.returnInfo._id+"Name:"+UserServer.returnInfo.Phone, new Callback() {});
 
+        }
+/*****************set adapter**************************/
+        LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                for (Relationship ra : Relahelper.relas) {
+                    if (ra.roomId.equals(event_id)) {
+
+                        for (UserInfo ui : UserServer.UserInfoArrayList) {
+                            if (ui._id.equals(id_array.get(position))) {
+                                Intent intent = new Intent();
+                                intent.setClass(EventMenu.this, UserDisplay.class);
+                                intent.putExtra("User", ui);
+                                EventMenu.this.startActivity(intent);
+                            }
+                        }
+
+
+                    }
+                }
+            }
+        });
+/****************************************************/
         Thread get_event_thread=new get_my_event();
         get_event_thread.start();
 
