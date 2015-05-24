@@ -149,7 +149,7 @@ public class UserModel {
         myServer.deleteUser(prefs.getString("Phone", null));
         SharedPreferences.Editor prefed =prefs.edit();
         prefed.clear();
-        Event_T evhelper=new Event_T();
+        Event_T evhelper=new Event_T(); //delete the corresponding events and relationship
         Relahelper relhelper=new Relahelper();
         for(Event evt: Event_T.test){
             if(evt._ownerid.equals(UserServer.returnInfo._id)){

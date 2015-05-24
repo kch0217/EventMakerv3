@@ -25,6 +25,8 @@ public class Setting extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+
+
         EditText DetectionRange = (EditText) findViewById(R.id.DetectionRange);
 
         DetectionRange.setText(Constants.DEFAULT_RANGE_DETECTION+"");
@@ -82,7 +84,9 @@ public class Setting extends Activity {
                 ServerConnection serverConnection = new ServerConnection(Setting.this, null);
                 serverConnection.run();
 
-                
+                if (UserServer.connectionState != null & UserServer.connectionState ==false){
+                    return;
+                }
 
                 Log.i(null, "Press Clear");
                 UserModel.getUserModel().wipeAlldata();
