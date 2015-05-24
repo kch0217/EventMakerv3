@@ -13,6 +13,7 @@ import android.text.Editable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -105,7 +106,27 @@ public class EventMenu extends Activity {
         setOwnerId();
         /********************chat**********/
 
+        SV.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disallow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
 
+                    case MotionEvent.ACTION_UP:
+                        // Allow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+
+                // Handle ListView touch events.
+                v.onTouchEvent(event);
+                return true;
+            }
+        });
         final TextView text= (TextView) this.findViewById(R.id.chatBox);
         final EditText send= (EditText) this.findViewById(R.id.TextToSend);
         Button sendButton=(Button) this.findViewById(R.id.send);
@@ -154,7 +175,9 @@ public class EventMenu extends Activity {
                                 String update=currentText+"///"+operation;
                                 String str = update.toString().replace("///", "\n");
                                 text.setText(str);
-                                SV.fullScroll(View.FOCUS_DOWN);
+                                SV.scrollTo(0, SV.getBottom());
+
+
                             }
                         });
 //                        }
@@ -230,10 +253,12 @@ public class EventMenu extends Activity {
 //                }
                 String temp;
                 if(UserServer.returnInfo.NamePrivacy.equals("Uncheck")){
-                    temp="type:post"+UserServer.returnInfo.Name+": "+current_text;      }
+                    temp="type:post"+UserServer.returnInfo.Name+": "+current_text;
+                send.setText("");}
                 else
                 {
                     temp="type:post"+UserServer.returnInfo.Phone+": "+current_text;
+                    send.setText("");
                 }
                 String current_text2=temp.replace("\n","///");
 
