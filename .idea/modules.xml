@@ -2,16 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MyEventMakerv3.iml" filepath="$PROJECT_DIR$/MyEventMakerv3.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyEventMakerv3.iml" filepath="$PROJECT_DIR$/MyEventMakerv3.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyEventMakerv3.iml" filepath="$PROJECT_DIR$/MyEventMakerv3.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyEventMakerv3.iml" filepath="$PROJECT_DIR$/MyEventMakerv3.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyEventMakerv3.iml" filepath="$PROJECT_DIR$/MyEventMakerv3.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyEventMakerv4.iml" filepath="$PROJECT_DIR$/MyEventMakerv4.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyEventMakerv5.iml" filepath="$PROJECT_DIR$/MyEventMakerv5.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyEventMakerv6.iml" filepath="$PROJECT_DIR$/MyEventMakerv6.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyEventMakerv7.iml" filepath="$PROJECT_DIR$/MyEventMakerv7.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyEventMakervOn9.iml" filepath="$PROJECT_DIR$/MyEventMakervOn9.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MyEventMakerFinal.iml" filepath="$PROJECT_DIR$/MyEventMakerFinal.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
