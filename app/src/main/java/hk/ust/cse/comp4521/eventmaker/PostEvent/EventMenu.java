@@ -57,22 +57,11 @@ public class EventMenu extends Activity {
     private Event event = null;
     private String event_id;
     private int check_interval=30000;
-    private List<Relationship> roommemlist;
     private String OwnerID;
     /*********UI***************/
-    private TextView event_name;
-    private Button user1_button;
-    private Button user2_button;
-    private Button user3_button;
-    private Button user4_button;
-    private TextView location_text;
-    private TextView time_text;
-    private Button location_button;
-    private Button setting;
-    private Button leave;
+
     private ScrollView SV;
     private BroadcastReceiver mReceiver;
-    private ServiceConnection serverConnection;
     private Intent ServiceParticipants;
     private Intent refresh;
     private ArrayList<String> name_array=new ArrayList<String>();
@@ -83,29 +72,26 @@ public class EventMenu extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         Intent i = new Intent(Constants.signaling).putExtra("Signal", Constants.allserviceStopped);
         this.sendBroadcast(i);
-
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
+    //UI init
         LV=(ListView)findViewById(R.id.listView);
-        /************************UI init*******************/
-
-
         SV=(ScrollView)findViewById(R.id.SV);
+        final TextView text= (TextView) this.findViewById(R.id.chatBox);
+        final EditText send= (EditText) this.findViewById(R.id.TextToSend);
+        Button sendButton=(Button) this.findViewById(R.id.send);
 
-        /************************UI init*******************/
 
-
-
+        //get the event id and set own if he/she is owner
         Intent intent = getIntent();
         event_id = intent.getStringExtra(Constants.eventId);
         setOwnerId();
-        /********************chat**********/
 
+        //to allow a scroll view inside another scoll view scoll
         SV.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -127,14 +113,15 @@ public class EventMenu extends Activity {
                 return true;
             }
         });
-        final TextView text= (TextView) this.findViewById(R.id.chatBox);
-        final EditText send= (EditText) this.findViewById(R.id.TextToSend);
-        Button sendButton=(Button) this.findViewById(R.id.send);
 
         try {
+            //subscribe pubnub channel using event_id as channel key
+
             pubnub.subscribe(event_id, new Callback() {
 
+                //set up call back
                 public void successCallback(String channel, final Object message) {
+                    //deal with the case when a new user enther the room
                     if(message.toString().contains("type:enter"))
                     {
                         String operation=message.toString().replace("type:enter+id:", "");
@@ -161,6 +148,8 @@ public class EventMenu extends Activity {
                             }
                         });}
                     }
+
+                    //deal with the case when a user post a chat on chat room
                     else if(message.toString().contains("type:post"))
                     {
                         runOnUiThread(new Runnable() {
@@ -168,7 +157,6 @@ public class EventMenu extends Activity {
                             public void run() {
 
                                 String operation=message.toString().replace("type:post","");
-//                        if(isOwner){
                                 System.out.println("3:"+operation);
                                 String currentText= (String) text.getText();
 
@@ -180,8 +168,9 @@ public class EventMenu extends Activity {
 
                             }
                         });
-//                        }
                     }
+
+                    //deal with the case that a user leave
                     else if(message.toString().contains("type:leave")){
                         String operation=message.toString().replace("type:leave+id:", "");
                         String[] idandname=operation.split("Name:");
@@ -216,18 +205,8 @@ public class EventMenu extends Activity {
                     }
 
 
-
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            String chatBox = (String) text.getText();
-//
-//                            String str = message.toString().replace("///", "\n");
-//                            chatBox = chatBox + "\n" + str;
-//                            text.setText(chatBox);
-//                        }
-//                    });
                 }
+                // deal with the case that error occurs
                 public void errorCallback(String channel, PubnubError error) {
                     System.out.println(error.getErrorString());
                 }
@@ -237,20 +216,12 @@ public class EventMenu extends Activity {
         }
 
 
-
+//
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Editable textToSend = send.getText();
                 String current_text = textToSend.toString();
-//               while(text.getText().toString().startsWith("\n"))
-//                {
-//                   text.setText(text.getText().toString().substring(1,text.getText().toString().length()));
-//                }
-//                for (int i = 0; i < 8-get_length(text.toString());i++)
-//                {
-//                    text.setText("\n"+text.getText().toString());
-//                }
                 String temp;
                 if(UserServer.returnInfo.NamePrivacy.equals("Uncheck")){
                     temp="type:post"+UserServer.returnInfo.Name+": "+current_text;
@@ -359,7 +330,12 @@ public class EventMenu extends Activity {
 
                         for(UserInfo ui:UserServer.UserInfoArrayList)
                         if(ui._id.equals(ra.userId)){
-                        name_array.add(ui.Name);
+                            if(ui.NamePrivacy.equals("Uncheck")) {
+                                name_array.add(ui.Name);
+                            }
+                            else{
+                                name_array.add(ui.Phone);
+                            }
                         id_array.add(ui._id);}
                     }
 
