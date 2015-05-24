@@ -1,3 +1,6 @@
+//COMP4521  Kwok Chung Hin   20111831   chkwokad@ust.hk
+//COMP4521  Kwok Tsz Ting 20119118  ttkwok@ust.hk
+//COMP4521  Li Lok Him  20103470    lhliab@ust.hk
 package hk.ust.cse.comp4521.eventmaker.PostEvent;
 
 import android.app.Activity;
@@ -596,14 +599,29 @@ public class EventMenu extends Activity {
         }
         if (id == R.id.action_locationEvent){
             Intent intent = new Intent(getApplicationContext(), Map.class);
-            intent.putExtra("lat",event.latitude);
-            intent.putExtra("lon",event.longitude);
+            intent.putExtra("lat", event.latitude);
+            intent.putExtra("lon", event.longitude);
             intent.putExtra(Constants.eventCode,200);
             startActivity(intent);
 
         }
 
         if (id == R.id.action_settings){
+            Intent tosetting=new Intent(EventMenu.this,eventSetting.class);
+            tosetting.putExtra(Constants.eventSetting, event_id);
+            for(Event evt: Event_T.test){
+                if(evt._id.equals(event_id)){
+                    if(evt._ownerid.equals(UserServer.returnInfo._id)){
+                        tosetting.putExtra(Constants.eventSettingType,100);
+                    }
+                    else{
+                        tosetting.putExtra(Constants.eventSettingType,200);
+                    }
+                }
+            }
+            startActivity(tosetting);
+        }
+        if (id == R.id.action_ic_settings){
             Intent tosetting=new Intent(EventMenu.this,eventSetting.class);
             tosetting.putExtra(Constants.eventSetting, event_id);
             for(Event evt: Event_T.test){
