@@ -110,7 +110,6 @@ public class EventMenu extends Activity {
         final EditText send= (EditText) this.findViewById(R.id.TextToSend);
         Button sendButton=(Button) this.findViewById(R.id.send);
 
-
         try {
             pubnub.subscribe(event_id, new Callback() {
 
@@ -120,22 +119,26 @@ public class EventMenu extends Activity {
                         String operation=message.toString().replace("type:enter+id:", "");
                         String[] idandname=operation.split("Name:");
                         System.out.println("1:"+idandname[0]);
-                        System.out.println("2:"+idandname[1]);
-                        Toast.makeText(EventMenu.this,idandname[1]+" added",Toast.LENGTH_SHORT);
-                        name_array.add(idandname[1]);
+                        System.out.println("2:" + idandname[1]);
+                        if(!name_array.contains(idandname[1]))
+                        {
+
+
+                            name_array.add(idandname[1]);
                         id_array.add(idandname[0]);
-                        
+
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                Toast.makeText(EventMenu.this,name_array.get(name_array.size()-1)+" added",Toast.LENGTH_SHORT);
                                 String[] array = name_array.toArray(new String[name_array.size()]);
 
-                                                        ListAdapter LA = new ArrayAdapter<String>(EventMenu.this, android.R.layout.simple_list_item_1, array);
-                                                        LV.setAdapter(LA);
+                                ListAdapter LA = new ArrayAdapter<String>(EventMenu.this, android.R.layout.simple_list_item_1, array);
+                                LV.setAdapter(LA);
 
 
                             }
-                        });
+                        });}
                     }
                     else if(message.toString().contains("type:post"))
                     {
@@ -155,6 +158,37 @@ public class EventMenu extends Activity {
                             }
                         });
 //                        }
+                    }
+                    else if(message.toString().contains("type:leave")){
+                        String operation=message.toString().replace("type:leave+id:", "");
+                        String[] idandname=operation.split("Name:");
+                        System.out.println("1:"+idandname[0]);
+                        System.out.println("2:" + idandname[1]);
+                        if(name_array.contains(idandname[1]))
+                        {
+                            for(int i=0;i<id_array.size()-1;i++)
+                            {
+                                if(id_array.get(i).equals(idandname[0]))
+                                {
+                                    id_array.remove(i);
+                                    name_array.remove(i);
+                                }
+                            }
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(EventMenu.this,name_array.get(name_array.size()-1)+" removed",Toast.LENGTH_SHORT).show();
+
+                                    String[] array = name_array.toArray(new String[name_array.size()]);
+
+                                    ListAdapter LA = new ArrayAdapter<String>(EventMenu.this, android.R.layout.simple_list_item_1, array);
+                                    LV.setAdapter(LA);
+
+
+                                }
+                            });
+
+                        }
                     }
 
 
@@ -177,6 +211,7 @@ public class EventMenu extends Activity {
         } catch (PubnubException e) {
             e.printStackTrace();
         }
+
 
 
         sendButton.setOnClickListener(new View.OnClickListener() {
@@ -654,11 +689,15 @@ public class EventMenu extends Activity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_abandon) {
+            pubnub.publish(event_id, "type:leave+id:"+UserServer.returnInfo._id+"Name:"+UserServer.returnInfo.Name, new Callback() {});
+
+
             boolean admin=false;
             for(Event evt:Event_T.test){
                 if(evt._id.equals(event_id)){
                     if(evt._ownerid.equals(UserServer.returnInfo._id)){
                         admin=true;
+
                     }
                 }
             }
