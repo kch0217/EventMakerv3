@@ -7,6 +7,9 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.pubnub.api.Callback;
+import com.pubnub.api.Pubnub;
+import com.pubnub.api.PubnubError;
+import com.pubnub.api.PubnubException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -156,6 +159,7 @@ public class UserModel {
         Relahelper relhelper=new Relahelper();
         boolean flag=false;
         boolean admin=false;
+        String roomtemp;
         for(Event evt: Event_T.test){
             if(evt._ownerid.equals(UserServer.returnInfo._id)){
                 evhelper.deleteEvent(evt._id);
@@ -164,6 +168,7 @@ public class UserModel {
                 for(Relationship rel: Relahelper.relas){
                     if(rel.roomId.equals(evt._id)){
                         relhelper.deleteRelationship(rel._id);
+
                     }
                 }
                 break;
@@ -173,13 +178,26 @@ public class UserModel {
         if(!admin) {
             for (Relationship rel : Relahelper.relas) {
                 if (rel.userId.equals(UserServer.returnInfo._id)) {
+                    roomtemp=rel.roomId;
                     relhelper.deleteRelationship(rel._id);
                     if (flag == false) {
+                        //use pubnub to issue the signals that someone has left
+                        Pubnub pubnub = new Pubnub("pub-c-f7c0ad94-cce2-49a3-abfb-0f414b2f8dc8", "sub-c-462fbb70-ff91-11e4-aa11-02ee2ddab7fe");
+                        try {
+                            pubnub.subscribe(roomtemp, new Callback(){
+                                public void successCallback(String channel, final Object message) {
 
-                        EventMenu.pubnub.publish(EventMenu.event_id, "type:leave+id:" + UserServer.returnInfo._id + "Name:" + UserServer.returnInfo.Name, new Callback() {
-                        });
-                        EventMenu.name_array.clear();
-                        EventMenu.id_array.clear();
+                                }
+
+                                public void errorCallback(String channel, PubnubError error) {
+                                    System.out.println(error.getErrorString());
+                                }
+                            });
+                        } catch (PubnubException e) {
+                            e.printStackTrace();
+                        }
+                        pubnub.publish(roomtemp, "type:leave+id:"+UserServer.returnInfo._id+"Name:"+UserServer.returnInfo.Name, new Callback() {});
+                        pubnub.unsubscribe(roomtemp);
 
                     }
 

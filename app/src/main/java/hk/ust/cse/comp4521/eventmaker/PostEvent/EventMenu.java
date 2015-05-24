@@ -55,7 +55,7 @@ public class EventMenu extends Activity {
     private boolean isOwner=false;
     private String TAG = "eventMenu";
     private Event event = null;
-    public static String event_id;
+    private String event_id;
     private int check_interval=30000;
     private List<Relationship> roommemlist;
     private String OwnerID;
@@ -75,10 +75,10 @@ public class EventMenu extends Activity {
     private ServiceConnection serverConnection;
     private Intent ServiceParticipants;
     private Intent refresh;
-    public static ArrayList<String> name_array=new ArrayList<String>();
-    public static ArrayList<String> id_array=new ArrayList<String>();
+    private ArrayList<String> name_array=new ArrayList<String>();
+    private ArrayList<String> id_array=new ArrayList<String>();
 
-    final public static Pubnub pubnub = new Pubnub("pub-c-f7c0ad94-cce2-49a3-abfb-0f414b2f8dc8", "sub-c-462fbb70-ff91-11e4-aa11-02ee2ddab7fe");
+    private Pubnub pubnub = new Pubnub("pub-c-f7c0ad94-cce2-49a3-abfb-0f414b2f8dc8", "sub-c-462fbb70-ff91-11e4-aa11-02ee2ddab7fe");
     private ListView LV;
 
     @Override
