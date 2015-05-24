@@ -22,12 +22,12 @@ public class Constants {
 
     public static final String MAP_KEY="AIzaSyCP9l_atibNsB7jmMxV2bPC_Olrn34ihx0";
 
-    public static final String PACKAGE_NAME = "hk.ust.cse.comp4521.eventmaker";
-    public static final String RECEIVER = PACKAGE_NAME + ".RECEIVER";
-    public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
-    public static final int SUCCESS_RESULT = 0;
-    public static final int FAILURE_RESULT = 1;
-    public static final String RESULT_DATA_KEY = PACKAGE_NAME + ".RESULT_DATA_KEY";
+//    public static final String PACKAGE_NAME = "hk.ust.cse.comp4521.eventmaker";
+//    public static final String RECEIVER = PACKAGE_NAME + ".RECEIVER";
+//    public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
+//    public static final int SUCCESS_RESULT = 0;
+//    public static final int FAILURE_RESULT = 1;
+//    public static final String RESULT_DATA_KEY = PACKAGE_NAME + ".RESULT_DATA_KEY";
 
     public static final String eventId="eventId";
     public static final String eventCode="eventCode";//100 from hin 200 from him
