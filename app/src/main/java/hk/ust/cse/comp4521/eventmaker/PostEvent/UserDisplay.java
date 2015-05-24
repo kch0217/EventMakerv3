@@ -40,6 +40,7 @@ public class UserDisplay extends Activity {
 
     }
     public void update_UI(UserInfo user){
+        // update the corresponding UI
         if(!user.NamePrivacy.equals("Check"))
         name.setText(user.Name);
         if(!user.AgePrivacy.equals("Check"))
