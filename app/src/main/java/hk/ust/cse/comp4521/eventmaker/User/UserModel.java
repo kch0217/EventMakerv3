@@ -9,6 +9,11 @@ import android.util.Log;
 import java.util.HashMap;
 import java.util.Map;
 
+import hk.ust.cse.comp4521.eventmaker.Event.Event;
+import hk.ust.cse.comp4521.eventmaker.Event.Event_T;
+import hk.ust.cse.comp4521.eventmaker.Relationship.Relahelper;
+import hk.ust.cse.comp4521.eventmaker.Relationship.Relationship;
+
 /**
  * Created by Ken on 7/4/2015.
  */
@@ -144,6 +149,19 @@ public class UserModel {
         myServer.deleteUser(prefs.getString("Phone", null));
         SharedPreferences.Editor prefed =prefs.edit();
         prefed.clear();
+        Event_T evhelper=new Event_T();
+        Relahelper relhelper=new Relahelper();
+        for(Event evt: Event_T.test){
+            if(evt._ownerid.equals(UserServer.returnInfo._id)){
+                evhelper.deleteEvent(evt._id);
+                break;
+            }
+        }
+        for(Relationship rel: Relahelper.relas){
+            if(rel.userId.equals(UserServer.returnInfo._id)){
+                relhelper.deleteRelationship(rel._id);
+            }
+        }
         prefed.commit();
     }
 
