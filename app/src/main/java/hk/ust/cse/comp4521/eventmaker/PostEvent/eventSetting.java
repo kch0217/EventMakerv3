@@ -186,8 +186,9 @@ public class eventSetting extends Activity implements View.OnClickListener{
                             dialog.cancel();
                             dialog.dismiss();
                         }
-                    })
-                    .show();
+                    });
+            final AlertDialog alertDialog=builder.create();
+            alertDialog.show();
 //            builder.show();
 
         }
