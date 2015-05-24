@@ -6,11 +6,14 @@ import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.pubnub.api.Callback;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import hk.ust.cse.comp4521.eventmaker.Event.Event;
 import hk.ust.cse.comp4521.eventmaker.Event.Event_T;
+import hk.ust.cse.comp4521.eventmaker.PostEvent.EventMenu;
 import hk.ust.cse.comp4521.eventmaker.Relationship.Relahelper;
 import hk.ust.cse.comp4521.eventmaker.Relationship.Relationship;
 
@@ -144,22 +147,33 @@ public class UserModel {
 
 
     public void wipeAlldata(){ //clear all data inside the device and the server (only the owner)
-
         UserServer myServer = new UserServer();
         myServer.deleteUser(prefs.getString("Phone", null));
         SharedPreferences.Editor prefed =prefs.edit();
         prefed.clear();
         Event_T evhelper=new Event_T(); //delete the corresponding events and relationship
         Relahelper relhelper=new Relahelper();
+        boolean flag=false;
         for(Event evt: Event_T.test){
             if(evt._ownerid.equals(UserServer.returnInfo._id)){
                 evhelper.deleteEvent(evt._id);
+                flag=true;
+
                 break;
             }
+
         }
         for(Relationship rel: Relahelper.relas){
-            if(rel.userId.equals(UserServer.returnInfo._id)){
+            if(rel.userId.equals(UserServer.returnInfo._id)) {
                 relhelper.deleteRelationship(rel._id);
+                if (flag == false)
+                {
+
+                    EventMenu.pubnub.publish(EventMenu.event_id, "type:leave+id:" + UserServer.returnInfo._id + "Name:" + UserServer.returnInfo.Name, new Callback() {
+                    });
+
+                }
+
             }
         }
         prefed.commit();
