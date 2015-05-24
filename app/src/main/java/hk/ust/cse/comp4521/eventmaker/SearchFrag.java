@@ -184,6 +184,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
 
             if (pre.contains("Event")  ) {
                 final String eventId = pre.getString("Event", "");
+                Log.i("SEARCH","finding event"+eventId);
                 //find the event
                 for(Event evt:Event_T.test){
                     if(evt._id.equals(eventId)){

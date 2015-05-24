@@ -247,9 +247,11 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
                     int date = eventtime.getDate();
                     int hour = eventtime.getHours();
                     int min = eventtime.getMinutes();
+                    int second=eventtime.getSeconds();
                     if (year==Event_T.test.get(i).currentTimestamp.getYear() && month == Event_T.test.get(i).currentTimestamp.getMonth()&&
                             date == Event_T.test.get(i).currentTimestamp.getDate()&& hour==Event_T.test.get(i).currentTimestamp.getHours()&&
-                            min==Event_T.test.get(i).currentTimestamp.getMinutes()){
+                            min==Event_T.test.get(i).currentTimestamp.getMinutes() && (second==Event_T.test.get(i).currentTimestamp.getSeconds()
+                    ||second==Event_T.test.get(i).currentTimestamp.getSeconds()+1 ||second==Event_T.test.get(i).currentTimestamp.getSeconds()-1)){
                         find=true;
                         dialog.dismiss();
                         _id=Event_T.test.get(i)._id;
