@@ -75,8 +75,8 @@ public class EventMenu extends Activity {
     private ServiceConnection serverConnection;
     private Intent ServiceParticipants;
     private Intent refresh;
-    private ArrayList<String> name_array=new ArrayList<String>();
-    private ArrayList<String> id_array=new ArrayList<String>();
+    public static ArrayList<String> name_array=new ArrayList<String>();
+    public static ArrayList<String> id_array=new ArrayList<String>();
 
     final public static Pubnub pubnub = new Pubnub("pub-c-f7c0ad94-cce2-49a3-abfb-0f414b2f8dc8", "sub-c-462fbb70-ff91-11e4-aa11-02ee2ddab7fe");
     private ListView LV;
@@ -715,8 +715,10 @@ public class EventMenu extends Activity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_abandon) {
-            pubnub.publish(event_id, "type:leave+id:"+UserServer.returnInfo._id+"Name:"+UserServer.returnInfo.Name, new Callback() {});
 
+            pubnub.publish(event_id, "type:leave+id:"+UserServer.returnInfo._id+"Name:"+UserServer.returnInfo.Name, new Callback() {});
+            name_array.clear();
+            id_array.clear();
 
             boolean admin=false;
             for(Event evt:Event_T.test){

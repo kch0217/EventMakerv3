@@ -171,6 +171,8 @@ public class UserModel {
 
                     EventMenu.pubnub.publish(EventMenu.event_id, "type:leave+id:" + UserServer.returnInfo._id + "Name:" + UserServer.returnInfo.Name, new Callback() {
                     });
+                    EventMenu.name_array.clear();
+                    EventMenu.id_array.clear();
 
                 }
 
