@@ -160,6 +160,38 @@ public class UserModel {
         boolean flag=false;
         boolean admin=false;
         String roomtemp;
+        Log.i("UserModel", "Downloading events and relationship");
+        Object lock = new Object();
+        Event_T eventT = new Event_T();
+        Event_T.lock = lock;
+        Event_T.locker = true;
+        Event_T.test = null;
+        eventT.getAllEvent();
+        while (Event_T.test ==null){
+            synchronized (lock){
+                try {
+                    lock.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        Log.i("UserModel", "Finish downloading events");
+        Relahelper helper = new Relahelper();
+        Relahelper.locker = true;
+        Relahelper.lock= lock;
+        Relahelper.relas = null;
+        helper.getAllRelationship();
+        while(Relahelper.relas ==null){
+            synchronized (lock){
+                try {
+                    lock.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        Log.i("UserModel", "Passing through wait");
         for(Event evt: Event_T.test){
             if(evt._ownerid.equals(UserServer.returnInfo._id)){
                 evhelper.deleteEvent(evt._id);
