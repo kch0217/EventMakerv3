@@ -269,7 +269,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
             Intent startEvent=new Intent(Map.this,EventMenu.class);
             startEvent.putExtra(Constants.eventId, _id);
             startEvent.putExtra(Constants.reconnect,200);
-            //used for reconnection only
+            //used uckor reconnection only
             Log.i(TAG, "Going to event menu");
             startEvent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(startEvent);
