@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -162,21 +163,24 @@ public class eventSetting extends Activity implements View.OnClickListener{
             //create an alertdialog which uses an edittext as view
             AlertDialog.Builder builder=new AlertDialog.Builder(eventSetting.this);
             Log.i(TAG,"trying to set the builder");
+            final EditText edt=new EditText(this);
+            edt.setInputType(InputType.TYPE_CLASS_NUMBER);
             builder.setTitle("participants")
-                    .setView(editText)
+                    .setView(edt)
                     .setMessage("enter number of participants")
                     .setPositiveButton("done", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            partno.setText(editText.getText().toString());
-                            evt.numOfPart=Integer.parseInt(editText.getText().toString());
+                            partno.setText(edt.getText().toString());
+                            evt.numOfPart=Integer.parseInt(edt.getText().toString());
                             Log.i(TAG,"start"+evt.starting);
                             Log.i(TAG, "end" + evt.ending);
                             Log.i(TAG,"part"+evt.numOfPart);
                             Event2 et=copyFromEvent(evt);
-                            et.numOfPart=Integer.parseInt(editText.getText().toString());
+                            et.numOfPart=Integer.parseInt(edt.getText().toString());
                             eventhelper.updateEvent(et,evt_id);
                             //update the event on database whenever changes are made
+                            dialog.dismiss();
 
                         }
                     })
@@ -185,6 +189,9 @@ public class eventSetting extends Activity implements View.OnClickListener{
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
                             dialog.dismiss();
+                            ViewGroup test= (ViewGroup) edt.getParent();
+                            test.removeView(edt);
+
                         }
                     });
             final AlertDialog alertDialog=builder.create();
