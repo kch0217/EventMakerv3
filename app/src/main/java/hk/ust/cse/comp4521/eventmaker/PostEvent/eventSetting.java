@@ -184,6 +184,7 @@ public class eventSetting extends Activity implements View.OnClickListener{
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
+                            dialog.dismiss();
                         }
                     })
                     .show();

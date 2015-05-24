@@ -9,7 +9,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:id="@+id/">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -24,14 +25,17 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Large Text"
                 android:id="@+id/title"
-                android:layout_weight="0.94" />
+                android:layout_weight="0.94"
+                android:gravity="center_horizontal" />
         </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/startlayout">
+            android:id="@+id/startlayout"
+            android:focusable="false"
+            android:gravity="start">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -67,7 +71,8 @@
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/endlayout">
+            android:id="@+id/endlayout"
+            android:gravity="start">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -103,7 +108,8 @@
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/partlayout">
+            android:id="@+id/partlayout"
+            android:gravity="start">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -112,7 +118,8 @@
                 android:id="@+id/part"
                 android:layout_below="@+id/buttonEnd"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
                 android:layout_width="wrap_content"
