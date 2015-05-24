@@ -63,7 +63,7 @@ public class ServerConnection implements Runnable{
                 }
             }
         }
-        if (userServer.connectionState != null && userServer.connectionState == false){
+        if (userServer.connectionState != null && userServer.connectionState == false && currentStage !=null){
             // 1. Instantiate an AlertDialog.Builder with its constructor
             AlertDialog.Builder builder = new AlertDialog.Builder(currentStage);
 

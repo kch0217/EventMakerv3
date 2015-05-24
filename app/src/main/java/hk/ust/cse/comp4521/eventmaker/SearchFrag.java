@@ -70,17 +70,11 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
     private static Boolean networkIO;
     public static Handler handle = new Handler(){
         @Override
-        public void handleMessage(Message inputMessage) {
+        public void handleMessage(Message inputMessage) { //handler to receive the connection state from server connection
             if (inputMessage.what == Constants.ConnectionError) {
-//                    pd2.dismiss();
-//                    if (pd != null)
-//                        pd.dismiss();
                 networkIO = false;
             }
             else {
-//                    pd2.dismiss();
-//                    if (pd != null)
-//                        pd.dismiss();
                 networkIO = true;
             }
         }
@@ -126,14 +120,14 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                             .setTabListener(this));
         }
         pd2= ProgressDialog.show(SearchFrag.this, "Loading", "Downloading important info from the Internet.", true);
-        Intent i = new Intent(Constants.signaling).putExtra("Signal", Constants.allserviceStopped);
-        this.sendBroadcast(i);
+        Intent i = new Intent(Constants.signaling).putExtra("Signal", Constants.allserviceStopped); //before allowing user to choose their interest, all background services related to this application have to be stopped
+        this.sendBroadcast(i); //send a broadcast message to others
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unbindService(serviceConnection);
+        unbindService(serviceConnection); //unbind location detection service
     }
 
     @Override
@@ -141,15 +135,15 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
 
         super.onResume();
         Intent i = new Intent(Constants.signaling).putExtra("Signal", Constants.allserviceStopped);
-        this.sendBroadcast(i);
+        this.sendBroadcast(i); //send a broadcast message to others to indicate all serivces have to be stopped
         UserServer userServer = new UserServer();
 
 
-        ServerConnection serverConn = new ServerConnection(SearchFrag.this, handle);
+        ServerConnection serverConn = new ServerConnection(SearchFrag.this, handle); //update all the user data from service and check the connection
         serverConn.run();
 
 
-        if (userServer.connectionState ==true) {
+        if (userServer.connectionState ==true) { //if the connection is successful
             lock = new Object();
             userServer.lock = lock;
             UserInfo user = userServer.getAUser(UserModel.getUserModel().getPhoneNumberFromSP());
@@ -183,6 +177,44 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
 
 
             }
+            SharedPreferences pre = UserModel.getUserModel().getSharedPreferences();
+            boolean find=false;
+            //for reconnection
+            //check if the event id exists in sharedpreference
+
+            if (pre.contains("Event")  ) {
+                final String eventId = pre.getString("Event", "");
+                //find the event
+                for(Event evt:Event_T.test){
+                    if(evt._id.equals(eventId)){
+                        find=true;
+                    }
+                }
+                if(find) {
+                    //if the event is found, the user would be directed back to the event.
+                    new AlertDialog.Builder(SearchFrag.this)
+                            .setTitle("redirection")
+                            .setMessage("brining you back to the event")
+                            .setNeutralButton("ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent back = new Intent(SearchFrag.this, EventMenu.class);
+                                    back.putExtra(Constants.eventId, eventId);
+                                    back.putExtra(Constants.reconnect,100);
+                                    back.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    Log.i("SEARCH", "sending back to event menu");
+                                    startActivity(back);
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }//event already disappeared
+                else{
+                    //delete the eventid from sharedpreference
+                    UserModel.getUserModel().deleteEventId();
+                }
+            }
+
 
         }
         pd2.dismiss();
@@ -191,42 +223,6 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
         mainloc.putExtra("Mode", "Voluntary");
         MainSearchFragment.getloc = mainloc;
         bindService(mainloc, serviceConnection, Context.BIND_AUTO_CREATE);
-        SharedPreferences pre = UserModel.getUserModel().getSharedPreferences();
-        boolean find=false;
-        //for reconnection
-        //check if the event id exists in sharedpreference
-        if (pre.contains("Event") && UserServer.connectionState ) {
-            final String eventId = pre.getString("Event", "");
-            //find the event
-            for(Event evt:Event_T.test){
-                if(evt._id.equals(eventId)){
-                    find=true;
-                }
-            }
-            if(find) {
-                //if the event is found, the user would be directed back to the event.
-                new AlertDialog.Builder(SearchFrag.this)
-                        .setTitle("redirection")
-                        .setMessage("brining you back to the event")
-                        .setNeutralButton("ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent back = new Intent(SearchFrag.this, EventMenu.class);
-                                back.putExtra(Constants.eventId, eventId);
-                                back.putExtra(Constants.reconnect,100);
-                                back.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                Log.i("SEARCH", "sending back to event menu");
-                                startActivity(back);
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-            }//event already disappeared
-            else{
-                //delete the eventid from sharedpreference
-                UserModel.getUserModel().deleteEventId();
-            }
-        }
 
     }
 
@@ -525,7 +521,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
         private static String [] activity;
         private ListAdapter adapter;
         private ArrayList<String> tempPassive;
-//        private boolean enableButton;
+        //        private boolean enableButton;
         private Button enablepassive;
         /**
          * Returns a new instance of this fragment for the given section

@@ -27,9 +27,7 @@ public class Setting extends Activity {
         EditText DetectionRange = (EditText) findViewById(R.id.DetectionRange);
 
         DetectionRange.setText(Constants.DEFAULT_RANGE_DETECTION+"");
-        DetectionRange.setEnabled(false);
-
-//        CheckBox checkBox = (CheckBox) findViewById(R.id.NotificationBox);
+        DetectionRange.setEnabled(false); //range detection is not allowed to modify in the current version
 
         Button confirm = (Button) findViewById(R.id.SettingConfirmButton);
         confirm.setOnClickListener(new pressButton());
@@ -41,17 +39,8 @@ public class Setting extends Activity {
         modifyButton.setOnClickListener(new pressButton());
 
 
-
-//        if (((Boolean) UserModel.getUserModel().getSetting().get("allowPassiveSearching")) == true){
-//            checkBox.setChecked(true);
-//        }
-//        else
-//        {
-//            checkBox.setChecked(false);
-//        }
-
-        UserServer myServer  = new UserServer();
-        myServer.updateInternalState();
+//        UserServer myServer  = new UserServer();
+        UserServer.updateInternalState(); //update all user data from the server
 
     }
 
@@ -70,8 +59,8 @@ public class Setting extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_about) {
+
+        if (id == R.id.action_about) { //show the about page if the item on the menu is selected
             Intent intent = new Intent(this, About.class);
             startActivity(intent);
         }
@@ -84,33 +73,25 @@ public class Setting extends Activity {
         @Override
         public void onClick(View view) {
             if (view.getId()== R.id.SettingConfirmButton){
-//                CheckBox checkBox = (CheckBox) findViewById(R.id.NotificationBox);
-//                if (checkBox.isChecked()){
-//                    UserModel.getUserModel().saveSetting(true);
-//                }
-//                else
-//                {
-//                    UserModel.getUserModel().saveSetting(false);
-//                }
 
-                finish();
+                finish(); //terminate the current setting activity so that the user could go back to the search activity
 
             }
-            if (view.getId() ==R.id.SettingClearButton){
+            if (view.getId() ==R.id.SettingClearButton){ //remove the user data on the device
                 Log.i(null, "Press Clear");
                 UserModel.getUserModel().wipeAlldata();
                 Toast.makeText(getApplicationContext(), "All Data are removed", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), Welcome.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP ); //clear the back stack
                 startActivity(intent);
                 finish();
 
             }
 
-            if (view.getId()== R.id.SettingInfoButton){
+            if (view.getId()== R.id.SettingInfoButton){ //go to the registration class for user to modify his/her data
                 Log.i(null, "Press Modify");
                 Intent intent = new Intent(getApplicationContext(), UserRegistration.class);
-                intent.putExtra("Context", Constants.MODIFY_REG);
+                intent.putExtra("Context", Constants.MODIFY_REG); //pass the message to the registration activity so that it knows it is currently modifying
                 startActivity(intent);
             }
         }

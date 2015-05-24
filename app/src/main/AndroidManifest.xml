@@ -36,13 +36,6 @@
 >
         </activity>
         <activity
-            android:name=".SearchMain"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_activity_search_main"
-            android:screenOrientation="portrait" >
->
-        </activity>
-        <activity
             android:name=".Setting"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_setting"
@@ -63,7 +56,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCP9l_atibNsB7jmMxV2bPC_Olrn34ihx0" />
+            android:value="AIzaSyD_zzrOpDDnlECR-swGuKpHHo44WZaxI1I" />
 
         <activity
             android:name=".Event.Map"

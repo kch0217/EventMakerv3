@@ -95,6 +95,7 @@ public class ActivityRefresh extends Service {
 
     public void networkAccess(){
         ServerConnection server = new ServerConnection(null, null);
+        server.run();
         if (UserServer.connectionState == false){
             connected = false;
             Intent i = new Intent(Constants.signaling).putExtra("Signal", Constants.ConnectionError);
