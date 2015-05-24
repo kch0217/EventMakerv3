@@ -27,7 +27,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="61dp"
                 android:weightSum="1"
-                android:id="@+id/">
+                android:id="@+id/c">
 
                 <TextView
                     android:layout_width="51dp"
