@@ -164,10 +164,12 @@ public class EventMenu extends Activity {
                         String[] idandname=operation.split("Name:");
                         System.out.println("1:"+idandname[0]);
                         System.out.println("2:" + idandname[1]);
-                        if(name_array.contains(idandname[1]))
+
+                        if(id_array.contains(idandname[0]))
                         {
-                            for(int i=0;i<id_array.size()-1;i++)
+                            for(int i=0;i<id_array.size();i++)
                             {
+
                                 if(id_array.get(i).equals(idandname[0]))
                                 {
                                     id_array.remove(i);
@@ -177,7 +179,6 @@ public class EventMenu extends Activity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(EventMenu.this,name_array.get(name_array.size()-1)+" removed",Toast.LENGTH_SHORT).show();
 
                                     String[] array = name_array.toArray(new String[name_array.size()]);
 
