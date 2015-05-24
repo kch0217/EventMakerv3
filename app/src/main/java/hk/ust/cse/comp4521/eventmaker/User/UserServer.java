@@ -32,7 +32,7 @@ public class UserServer {
         return UserInfoArrayList;
     }
 
-    public static void updateInternalState(){
+    public static void updateInternalState(){ //retrieve all users data from server
         Log.w(TAG, "Trying to update");
         RestClient.get().getUsers(new Callback<ArrayList<UserInfo>>() {
             @Override
@@ -45,7 +45,7 @@ public class UserServer {
                     Log.w(TAG, "Failed to fetch data!");
                 }
                 connectionState = true;
-                synchronized (lock) {
+                synchronized (lock) { //sometimes the main thread would wait for the server to update the data, so need to notify it
                     lock.notify();
                 }
             }
@@ -56,7 +56,7 @@ public class UserServer {
                 if (UserInfoArrayList == null)
                     UserInfoArrayList = new ArrayList<UserInfo>();
                 connectionState = false;
-                synchronized (lock) {
+                synchronized (lock) {//sometimes the main thread would wait for the server to update the data, so need to notify it
                     lock.notify();
                 }
             }
@@ -67,25 +67,8 @@ public class UserServer {
 
     }
 
-//    public static void updateInternalStateTest(){
-//        Log.w(TAG, "Trying to update");
-//        UserInfoArrayList = RestClient.get().getUsers2();
-//        if (UserInfoArrayList==null) {
-//            UserInfoArrayList = new ArrayList<UserInfo>();
-//            Log.w(TAG, "Failed to fetch data!");
-//            return;
-//        }
-//        synchronized (lock) {
-//            lock.notify();
-//        }
-//
-//
-//
-//
-//
-//    }
 
-    public static void addAUser(UserInfo2 userInfo){
+    public static void addAUser(UserInfo2 userInfo){ //add a user to the server
         RestClient.get().addUser(userInfo, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
@@ -103,7 +86,7 @@ public class UserServer {
 
     }
 
-    public static void updateUser(UserInfo2 userInfo ){ //userInfo needs to supply ID
+    public static void updateUser(UserInfo2 userInfo ){ //userInfo needs to supply ID, modify the user data
         RestClient.get().updateUser(userInfo, userInfo._id, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
@@ -118,13 +101,13 @@ public class UserServer {
 
     }
 
-    public static UserInfo getAUser(String phone){
+    public static UserInfo getAUser(String phone){ // retrieve a user data using its phone number
         //updateInternalState();
-        if (UserInfoArrayList == null || phone == null)
+        if (UserInfoArrayList == null || phone == null)//check for nullity
             return null;
         if (UserInfoArrayList.size() == 0)
             return null;
-        int target = calcID(phone);
+        int target = calcID(phone); //check the position of the target user in the arraylist
         if (target == -1)
             return null;
         returnInfo = null;
@@ -153,8 +136,8 @@ public class UserServer {
         return returnInfo;
     }
 
-    public static void deleteUser(String phone){
-        updateInternalState();
+    public static void deleteUser(String phone){ //delete a user
+        updateInternalState(); //update the user data
         UserInfo temp = null;
 
 
@@ -164,7 +147,7 @@ public class UserServer {
             return;
         int target = calcID(phone);
         String deleteId = null;
-        if (target == -1){
+        if (target == -1){ //not possible to happen, but as the last resort to search it
             temp = searchAUser(phone);
             if (temp == null)
                 return;
@@ -185,10 +168,10 @@ public class UserServer {
 
             }
         });
-        updateInternalState();
+        updateInternalState(); //update the user data from server
     }
 
-    public static UserInfo searchAUser(String phone){
+    public static UserInfo searchAUser(String phone){ // retrieve a specific user' data from server using its phone number
         searchUser = null;
         RestClient.get().searchUser(phone, new Callback<UserInfo>() {
             @Override
@@ -209,7 +192,7 @@ public class UserServer {
         return searchUser;
     }
 
-    public static int calcID(String phone){
+    public static int calcID(String phone){ //find the array position of the user
         int target = -1;
 
         for (int i = 0; i < UserInfoArrayList.size(); i++){

@@ -40,6 +40,7 @@ public class UserRegistration extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_registration);
 
+// reference to all the UI components
         Spinner spinner = (Spinner) findViewById(R.id.RegInterestGroup1);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.interest_array, R.layout.spinner_layout);
