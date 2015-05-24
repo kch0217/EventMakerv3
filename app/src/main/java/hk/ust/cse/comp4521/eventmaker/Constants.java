@@ -4,7 +4,7 @@ package hk.ust.cse.comp4521.eventmaker;
  * Created by Ken on 7/4/2015.
  */
 
-enum Interest{FootBall, BasketBall}
+
 
 public class Constants {
 

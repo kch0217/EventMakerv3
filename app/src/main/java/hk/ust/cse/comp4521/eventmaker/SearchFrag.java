@@ -148,7 +148,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
             userServer.lock = lock;
             UserInfo user = userServer.getAUser(UserModel.getUserModel().getPhoneNumberFromSP());
 
-            if (UserServer.returnInfo == null) {
+            if (UserServer.returnInfo == null) { //wait till the user info is obtained
                 synchronized (lock) {
                     try {
                         lock.wait();
@@ -165,7 +165,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
             event_t.lock = lock;
 
 
-            while (Event_T.test == null) {
+            while (Event_T.test == null) { //wait till events info is obtained
                 synchronized (lock){
                     Log.i("SearchFrag", "Loading Events");
                     try {
@@ -220,7 +220,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
         }
         pd2.dismiss();
 
-        mainloc = new Intent(getApplicationContext(), SearchHelper.class);
+        mainloc = new Intent(getApplicationContext(), SearchHelper.class); //start location detection service by binding to it
         mainloc.putExtra("Mode", "Voluntary");
         MainSearchFragment.getloc = mainloc;
         bindService(mainloc, serviceConnection, Context.BIND_AUTO_CREATE);
@@ -305,7 +305,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a MainSearchFragment (defined as a static inner class below).
-//            return MainSearchFragment.newInstance(position + 1);
+
             if (position ==0)
                 return MainSearchFragment.newInstance(position + 1);
             else
@@ -332,9 +332,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
         }
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
+
     public static class MainSearchFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
@@ -370,6 +368,8 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+
+            //set listview
             activity = getResources().getStringArray(R.array.interest_array2);
 
             final ListView list = (ListView) rootView.findViewById(R.id.searchselectionList);
@@ -380,7 +380,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
 
 
                     if (SearchHelper.mCurrentLocation == null) { //to check if there is any location detection
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()); //create dialogue to alert users about location service
 
                         //  Chain together various setter methods to set the dialog characteristics
                         builder.setMessage("No location detected!!")
@@ -414,7 +414,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                     Event_T.locker = true;
                     Event_T eventS = new Event_T();
                     eventS.test = null;
-                    eventS.getAllEvent();
+                    eventS.getAllEvent(); //get all events from server
                     while (eventS.test ==null){
                         synchronized (lock){
                             try {
@@ -463,15 +463,20 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                     }
                     else {
 
-
+                        //get the latitude and longitude of the current location
                         double lat = SearchHelper.mCurrentLocation.getLatitude();
                         double lon = SearchHelper.mCurrentLocation.getLongitude();
+
+                        Log.i(ARG_SECTION_NUMBER, "Successfully get the location");
                         Log.i("SearchFrag", (String) list.getAdapter().getItem(i) + " " + lat + " " + lon);
+
+                        //find if there is an existing event of a specific interest nearby
                         String id = Matching.checking((String) list.getAdapter().getItem(i), lat, lon);
+                        //stop the location detection service
                         getActivity().stopService(getloc);
 
 
-                        Log.i(ARG_SECTION_NUMBER, "Successfully get the location");
+                        ///if no events are nearby, create a new event and go to the map class to choose the location for it
                         if (id == null) {
                             Intent intent2 = new Intent(getActivity(), Map.class);
                             intent2.putExtra("Interest", (String) list.getAdapter().getItem(i));
@@ -482,34 +487,19 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                             intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent2);
 
-                        } else {
+                        } else { //if an event exists, navigate to it
                             Intent intent2 = new Intent(getActivity(), EventMenu.class);
                             intent2.putExtra(Constants.eventId, id);
                             intent2.putExtra(Constants.reconnect, 200);
                             Log.i(ARG_SECTION_NUMBER, "Go to the existing event");
-                            intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK); //clear back stack
                             startActivity(intent2);
                         }
                     }
                 }
             });
 
-
-
-
-
-
-
-//            getloc = new Intent(getActivity(), SearchHelper.class);
-//            getloc.putExtra("Mode", "Voluntary");
-//            getActivity().startService(getloc);
-
-
-//            Log.i(ARG_SECTION_NUMBER, UserServer.returnInfo._id);
-
-
-
-            return rootView;
+        return rootView;
         }
     }
 
@@ -522,7 +512,6 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
         private static String [] activity;
         private ListAdapter adapter;
         private ArrayList<String> tempPassive;
-        //        private boolean enableButton;
         private Button enablepassive;
         /**
          * Returns a new instance of this fragment for the given section
@@ -543,6 +532,8 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_passivesearch, container, false);
+
+            //set listview
             activity = getResources().getStringArray(R.array.interest_array2);
 
             final ListView list = (ListView) rootView.findViewById(R.id.passivesearchselectionList);
@@ -550,11 +541,8 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
 
             list.setAdapter(adapter);
             tempPassive = new ArrayList<>();
-//            enableButton = false;
 
-
-//            list.setSelection(((ArrayAdapter)list.getAdapter()).getPosition(UserModel.getUserModel().getInterest()));
-
+            //add or remove the interests in a list when user selects or deselects them
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -573,33 +561,31 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
             enablepassive.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-//                    if (enableButton){
-//
-//
-//                    }
+                    //enable passive search
                     String result = "Selected interests:";
                     for (int i= 0 ; i< tempPassive.size(); i++){
                         result = result +" "+ tempPassive.get(i);
                     }
                     Log.i(ARG_SECTION_NUMBER, result);
 
+                    //start passive search service
                     intent.putExtra("Mode", "Passive");
                     intent.putStringArrayListExtra("Interest", tempPassive);
                     getActivity().startService(intent);
 
-//                    enableButton = true;
                     return;
 
                 }
             });
+
             Button disablepassive = (Button) rootView.findViewById(R.id.passiveSearchDisabler);
             disablepassive.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    //disable passive search and send message to intended recipient that notification should be cancelled
                     Intent i = new Intent(Constants.closeNot).putExtra("Signal", Constants.closeNotification);
                     getActivity().sendBroadcast(i);
-//                    enableButton = false;
                     getActivity().stopService(intent);
 
                     return;

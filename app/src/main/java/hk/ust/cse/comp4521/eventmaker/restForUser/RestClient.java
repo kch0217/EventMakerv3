@@ -16,8 +16,7 @@ import retrofit.client.OkClient;
  */
 public class RestClient {
     private static userServerAPI restClient;
-//    public static Thread network;
-//    public static Thread networkIO;
+
 
     static {
         setupRestClient();
@@ -36,7 +35,7 @@ public class RestClient {
 
     private static void setupRestClient() {
 
-        // create client
+        // create http client and set timeout
         OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setReadTimeout(2, TimeUnit.SECONDS);
         okHttpClient.setConnectTimeout(2, TimeUnit.SECONDS);
@@ -47,7 +46,7 @@ public class RestClient {
                 .setErrorHandler(new RetrofitErrorHandler())
                 .setClient(new OkClient(okHttpClient))
                 .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setExecutors(new executeRest(), new executeRest()) ;
+                .setExecutors(new executeRest(), new executeRest()) ; //use new thread to execute the network operations
 
         RestAdapter restAdapter = builder.build();
         restClient = restAdapter.create(userServerAPI.class);
@@ -57,8 +56,7 @@ public class RestClient {
 
         @Override
         public void execute(Runnable runnable) {
-//            network = new Thread(runnable);
-//            network.start();
+
             Log.i("RestClient", "Using new thread to execute network...");
             new Thread(runnable).start();
         }

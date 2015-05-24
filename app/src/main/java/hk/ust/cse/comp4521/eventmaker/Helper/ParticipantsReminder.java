@@ -32,6 +32,7 @@ import hk.ust.cse.comp4521.eventmaker.SearchFrag;
 import hk.ust.cse.comp4521.eventmaker.User.UserModel;
 import hk.ust.cse.comp4521.eventmaker.User.UserServer;
 
+//This class regularly check the local data and see if there is any change in the number of participants in a event room
 public class ParticipantsReminder extends Service {
 
     private String eventID;
@@ -59,10 +60,9 @@ public class ParticipantsReminder extends Service {
         IntentFilter intentFilter = new IntentFilter(Constants.signaling);
         mReceiver = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context context, Intent intent) {
+            public void onReceive(Context context, Intent intent) { //receive some messages from broadcast receiver
                 if (intent.getIntExtra("Signal", -1) ==Constants.ConnectionError){
                     //stop participants service
-
                     stopSelf();
                 }
                 if (intent.getIntExtra("Signal", -1) == Constants.allserviceStopped)
@@ -72,7 +72,7 @@ public class ParticipantsReminder extends Service {
         };
 
 
-        this.registerReceiver(mReceiver, intentFilter);
+        this.registerReceiver(mReceiver, intentFilter); //register for the receiver
         super.onCreate();
     }
 
@@ -82,7 +82,7 @@ public class ParticipantsReminder extends Service {
         if(intent ==null)
             stopSelf();
         eventID = intent.getStringExtra(Constants.eventId);
-        if (Relahelper.relas == null) {
+        if (Relahelper.relas == null) { //get the relationship data if it is null
             Object lock = new Object();
             Relahelper.lock = lock;
             Relahelper.locker = true;
@@ -90,7 +90,7 @@ public class ParticipantsReminder extends Service {
             helper.getAllRelationship();
 
             while (Relahelper.relas == null) {
-                synchronized (lock) {
+                synchronized (lock) { //wait until the relationship data is received
                     Log.i("TAG", "Waiting");
                     try {
                         lock.wait();
@@ -102,13 +102,13 @@ public class ParticipantsReminder extends Service {
         }
 
         oldlist = new LinkedList<>();
-        copyList(oldlist, Relahelper.relas);
+        copyList(oldlist, Relahelper.relas); //copy the relationship data to a local list
         firstNotification = true;
-        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE); //prepare for notification service
         timer = new Timer(true);
         timer.schedule(new TimerTask() {
             @Override
-            public void run() {
+            public void run() { //regularly check the participant number
                 Log.i("ParticipantReminder", "TimeTask");
                 checkeventUserExist();
                 if (foundEvent) {
@@ -136,31 +136,31 @@ public class ParticipantsReminder extends Service {
 
     private void checkeventUserExist() {
         foundEvent = false;
-        for (int i = 0; i< Relahelper.relas.size(); i++){
+        for (int i = 0; i< Relahelper.relas.size(); i++){ //check if the user has relationship with an event
             if (Relahelper.relas.get(i).userId.equals(UserServer.returnInfo._id)){
                 foundEvent = true;
                 break;
             }
         }
-        if (!foundEvent){
+        if (!foundEvent){ // if the relationship is not found
             Intent i;
             try {
-                Thread.currentThread().sleep(1000);
+                Thread.currentThread().sleep(1000); //wait for a second to know the network connectivity
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if(ActivityRefresh.connected){
+            if(ActivityRefresh.connected){ //if connection problem
                 i = new Intent(Constants.signaling).putExtra("Signal", Constants.ConnectionError);
 
             }
-            else
+            else //otherwise event is deleted
                 i = new Intent(Constants.signaling).putExtra("Signal", Constants.EventDeleted);
             this.sendBroadcast(i);
             stopSelf();
         }
     }
 
-    private void copyList(LinkedList<Relationship> newList, List<Relationship> origin) {
+    private void copyList(LinkedList<Relationship> newList, List<Relationship> origin) { //copy the list
         for (int i = 0 ; i<origin.size(); i++){
             Relationship newRe = new Relationship();
             newRe.roomId = origin.get(i).roomId;
@@ -172,7 +172,7 @@ public class ParticipantsReminder extends Service {
 
 
 
-    private void checkNewParticipants(){
+    private void checkNewParticipants(){ // check if there is any personnel change
         LinkedList<Relationship> newRelate = new LinkedList<>();
         copyList(newRelate, Relahelper.relas);
         Log.i("Checkingparticipants", "New size: "+newRelate.size());
@@ -180,7 +180,7 @@ public class ParticipantsReminder extends Service {
         boolean doneChecking = false;
         id_add = new ArrayList<>();
         id_delete = new ArrayList<>();
-        while (!newRelate.isEmpty() && !oldlist.isEmpty() && !doneChecking){
+        while (!newRelate.isEmpty() && !oldlist.isEmpty() && !doneChecking){ //compare records in the old list and new list one by one
             if (newRelate.contains(oldlist.getFirst())){
                 newRelate.remove(oldlist.getFirst());
                 oldlist.removeFirst();
@@ -192,14 +192,14 @@ public class ParticipantsReminder extends Service {
         if (!newRelate.isEmpty()){
             for (int i = 0; i< newRelate.size(); i++){
                 if (newRelate.get(i).roomId.equals(eventID)){
-                    id_add.add(newRelate.get(i).userId);
+                    id_add.add(newRelate.get(i).userId); //id_add stores new participants
                 }
             }
         }
         if (!oldlist.isEmpty()){
             for (int i = 0; i< oldlist.size(); i++){
                 if (oldlist.get(i).roomId.equals(eventID)){
-                    id_delete.add(oldlist.get(i).userId);
+                    id_delete.add(oldlist.get(i).userId); //id_delete stores old participants
                 }
             }
         }
@@ -209,7 +209,7 @@ public class ParticipantsReminder extends Service {
 
     }
 
-    private void notifyMenu(){
+    private void notifyMenu(){ //check if there is personnel change
         if (!id_delete.isEmpty() || !id_add.isEmpty()) {
             Intent i = new Intent(Constants.signaling).putExtra("Signal", Constants.personnelChanges);
             this.sendBroadcast(i);
@@ -222,7 +222,7 @@ public class ParticipantsReminder extends Service {
         }
     }
 
-    private void putNotification(){
+    private void putNotification(){ //put notification to remind user about personnel change
 
         Bitmap largeIcon;
 
@@ -268,7 +268,7 @@ public class ParticipantsReminder extends Service {
 
     }
 
-    private void updateNotification(){
+    private void updateNotification(){ //update notificaiton
         Bitmap largeIcon;
 
         largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.playing);
@@ -314,7 +314,8 @@ public class ParticipantsReminder extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
+
+//        throw new UnsupportedOperationException("Not yet implemented");
+        return null;
     }
 }

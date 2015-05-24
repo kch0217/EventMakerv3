@@ -15,7 +15,7 @@ import hk.ust.cse.comp4521.eventmaker.Constants;
 import hk.ust.cse.comp4521.eventmaker.Event.Event_T;
 import hk.ust.cse.comp4521.eventmaker.Relationship.Relahelper;
 import hk.ust.cse.comp4521.eventmaker.User.UserServer;
-
+//This class is to regularly update all the data from the server after event creation
 public class ActivityRefresh extends Service {
 
     //use new threads to execute
@@ -37,10 +37,9 @@ public class ActivityRefresh extends Service {
         IntentFilter intentFilter = new IntentFilter(Constants.signaling);
         mReceiver = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context context, Intent intent) {
+            public void onReceive(Context context, Intent intent) { //react if receive messages from broadcast receiver
                 if (intent.getIntExtra("Signal", -1) ==Constants.ConnectionError){
                     //stop participants service
-
                     stopSelf();
                 }
                 if (intent.getIntExtra("Signal", -1) == Constants.allserviceStopped) {
@@ -52,7 +51,7 @@ public class ActivityRefresh extends Service {
         };
 
 
-        this.registerReceiver(mReceiver, intentFilter);
+        this.registerReceiver(mReceiver, intentFilter); //register for broadcast receiver
         super.onCreate();
     }
 
@@ -63,7 +62,7 @@ public class ActivityRefresh extends Service {
 
         timer.schedule(new TimerTask() {
             @Override
-            public void run() {
+            public void run() { //regularly access the server
 
                 Log.i("ActivityRefresh", "TimeTask");
                 networkAccess();
@@ -87,7 +86,7 @@ public class ActivityRefresh extends Service {
     @Override
     public void onDestroy() {
         Log.i("ActivityRefresh", "Stopping Refreshing the network.");
-        timer.cancel();
+        timer.cancel(); //cancel the timer
         this.unregisterReceiver(this.mReceiver);
         super.onDestroy();
 
@@ -95,8 +94,8 @@ public class ActivityRefresh extends Service {
 
     public void networkAccess(){
         ServerConnection server = new ServerConnection(null, null);
-        server.run();
-        if (UserServer.connectionState == false){
+        server.run();//check network connection
+        if (UserServer.connectionState == false){ //if fail to connect, broadcast a message and terminate
             connected = false;
             Intent i = new Intent(Constants.signaling).putExtra("Signal", Constants.ConnectionError);
             this.sendBroadcast(i);
@@ -105,7 +104,7 @@ public class ActivityRefresh extends Service {
         else {
             connected = true;
 
-            Event_T eventserver = new Event_T();
+            Event_T eventserver = new Event_T(); //get event data
             eventserver.getAllEvent();
             Object lock = new Object();
             Relahelper.relas = null;
@@ -113,7 +112,7 @@ public class ActivityRefresh extends Service {
             Relahelper.lock = lock;
 
 
-            Relahelper relationshiphelper = new Relahelper();
+            Relahelper relationshiphelper = new Relahelper(); //get relationship data
             relationshiphelper.getAllRelationship();
             while (Relahelper.relas == null){
                 synchronized (lock){
@@ -130,7 +129,7 @@ public class ActivityRefresh extends Service {
 
     }
 
-    private void checkeventExist() {
+    private void checkeventExist() { //check if the relationship between user and event exists
         boolean foundEvent = false;
         for (int i = 0; i< Relahelper.relas.size(); i++){
             if (Relahelper.relas.get(i).userId.equals(UserServer.returnInfo._id)){
@@ -140,9 +139,8 @@ public class ActivityRefresh extends Service {
         }
         Log.i("ActivityRefresh", "Result is "+ foundEvent);
         if (!foundEvent){
-//            Intent i = new Intent(Constants.signaling).putExtra("Signal", Constants.EventDeleted);
-//            this.sendBroadcast(i);
 
+            //if relationship is not found, terminate
             stopSelf();
         }
     }
@@ -150,23 +148,7 @@ public class ActivityRefresh extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-//        throw new UnsupportedOperationException("Not yet implemented");
-//        Timer timer = new Timer(true);
-//        timer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                Log.i("ActivityRefresh", "TimeTask");
-//                Thread thread = new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        networkAccess();
-//                    }
-//                });
-//                thread.start();
-//
-//            }
-//        }, 1000, 20000);
+
         binded = true;
         return null;
     }

@@ -21,7 +21,7 @@ public class restRelationship {
     private restRelationship(){}
     public static  relationshipApi get(){return restClient;}
     private static void setupRestClient(){
-        // create client
+        // create http client and set timeout
         OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setReadTimeout(3, TimeUnit.SECONDS);
         okHttpClient.setConnectTimeout(3, TimeUnit.SECONDS);

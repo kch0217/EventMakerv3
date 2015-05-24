@@ -216,7 +216,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
         }
         else //update notification after the related events no longer exist
         {
-            Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//            Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
             Notification.Builder mBuilder =
                     new Notification.Builder(this)
@@ -224,8 +224,8 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
                             .setLargeIcon(largeIcon.createScaledBitmap(largeIcon, 72, 72, false))
                             .setOngoing(true)
                             .setContentTitle("Searching...")
-                            .setContentText("")
-                            .setSound(alarmSound);
+                            .setContentText("");
+                    //                            .setSound(alarmSound);
 
             Intent resultIntent = new Intent(this, SearchFrag.class);
 
@@ -438,7 +438,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
             Object lock = new Object();
             eventdownloader.lock = lock;
 
-            eventdownloader.getAllEvent();
+            eventdownloader.getAllEvent(); //acquire all events
             while (Event_T.test==null){
                 synchronized (lock){
                     try {
@@ -452,19 +452,19 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
             ArrayList<Event> temp = new ArrayList<>();
             List<Event> all = Event_T.test;
-            for (int i = 0 ; i< all.size(); i++){
+            for (int i = 0 ; i< all.size(); i++){ //search through all events to check if there is a match
 
                 float [] results = {0.0f,0.0f,0.0f};
                 boolean matchInterest = false;
                 for (int j = 0 ; j< interest.size(); j++)
-                    if (all.get(i).interest.equals(interest.get(j))){
+                    if (all.get(i).interest.equals(interest.get(j))){ //filter unwanted events with irrelevant interests
                         matchInterest = true;
                         break;
                     }
                 if (!matchInterest){
                     break;
                 }
-                Location.distanceBetween(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), all.get(i).latitude, all.get(i).longitude, results);
+                Location.distanceBetween(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), all.get(i).latitude, all.get(i).longitude, results); //calculate distance between event location and user
                 if (results.length!=0 && results[0] < Constants.DEFAULT_RANGE_DETECTION){
                     temp.add(all.get(i));
                 }

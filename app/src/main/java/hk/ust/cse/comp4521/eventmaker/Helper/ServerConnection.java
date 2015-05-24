@@ -19,6 +19,8 @@ import hk.ust.cse.comp4521.eventmaker.restForUser.RestClient;
 /**
  * Created by Ken on 20/5/2015.
  */
+
+//This class is used for checking the connection to server
 public class ServerConnection implements Runnable{
 
     Context currentStage;
@@ -33,12 +35,6 @@ public class ServerConnection implements Runnable{
     }
 
 
-
-
-//    public ServerConnection() {
-//        currentStage = null;
-//    }
-
     @Override
     public void run() {
 
@@ -48,11 +44,11 @@ public class ServerConnection implements Runnable{
         userServer.lock = lock;
         userServer.connectionState = null;
 
-        userServer.updateInternalState();
+        userServer.updateInternalState(); //update the user data and check if there is any connection error
 
 
 
-        while (userServer.connectionState ==null){
+        while (userServer.connectionState ==null){ //wait for the connection result
             synchronized (lock){
                 try {
                     Log.i("ConnectionWait", "Waiting");
@@ -63,7 +59,7 @@ public class ServerConnection implements Runnable{
                 }
             }
         }
-        if (userServer.connectionState != null && userServer.connectionState == false && currentStage !=null){
+        if (userServer.connectionState != null && userServer.connectionState == false && currentStage !=null){ //if fail to connect and currently in an activity, display a dialog and transmit a message to the activity
             // 1. Instantiate an AlertDialog.Builder with its constructor
             AlertDialog.Builder builder = new AlertDialog.Builder(currentStage);
 

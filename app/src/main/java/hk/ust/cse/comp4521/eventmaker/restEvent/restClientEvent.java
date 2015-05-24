@@ -22,7 +22,7 @@ public class restClientEvent {
     public static  eventApi get(){return restClient;}
 
     private static void setupRestClient(){
-        // create client
+        // create http client and set timeout
         OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setReadTimeout(3, TimeUnit.SECONDS);
         okHttpClient.setConnectTimeout(3, TimeUnit.SECONDS);
