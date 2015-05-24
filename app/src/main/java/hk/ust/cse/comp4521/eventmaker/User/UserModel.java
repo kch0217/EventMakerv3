@@ -151,7 +151,8 @@ public class UserModel {
         myServer.deleteUser(prefs.getString("Phone", null));
         SharedPreferences.Editor prefed =prefs.edit();
         prefed.clear();
-        Event_T evhelper=new Event_T(); //delete the corresponding events and relationship
+        //delete the corresponding event and relationship
+        Event_T evhelper=new Event_T();
         Relahelper relhelper=new Relahelper();
         boolean flag=false;
         for(Event evt: Event_T.test){

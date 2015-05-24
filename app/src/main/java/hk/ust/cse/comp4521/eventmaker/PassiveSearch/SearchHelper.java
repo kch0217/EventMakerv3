@@ -71,12 +71,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
 
 
-    // Request code to use when launching the resolution activity
-    private static final int REQUEST_RESOLVE_ERROR = 1001;
-    // Unique tag for the error dialog fragment
-    private static final String DIALOG_ERROR = "dialog_error";
-    // Bool to track whether the app is already resolving an error
-    private boolean mResolvingError = false;
+
 
     private ArrayList<String> interest;
 
@@ -122,7 +117,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
 
 
-        if (intent.getStringExtra("Mode").equals("Passive")) {
+        if (intent.getStringExtra("Mode").equals("Passive")) { //in passive search, notificaiton is posted
 
             interest = intent.getStringArrayListExtra("Interest");
             Log.i(TAG, "Interests are received");
@@ -130,7 +125,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
 
 
-            putNotification();
+            putNotification(); // put notification
         }
         else
             mode = "Voluntary";
@@ -140,17 +135,16 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getIntExtra("Signal", -1) ==Constants.closeNotification){
+                if (intent.getIntExtra("Signal", -1) ==Constants.closeNotification){ //if receive signal, cancel notification
                     cancelNotification();
                 }
 
             }
         };
 
-        this.registerReceiver(mReceiver, intentFilter);
+        this.registerReceiver(mReceiver, intentFilter); //register for the message
 
-//        Thread helper = new Thread(new InternetHelper());
-//        helper.start();
+
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -190,7 +184,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
         largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.playing);
 
-        if (temp!=null) {
+        if (temp!=null) { //if related events are found
             String interests = "";
             for (int i = 0; i < temp.size() - 1; i++) {
                 interests = interests + temp.get(i).interest + ", ";
@@ -207,12 +201,8 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
                             .setContentTitle("Found matched event(s).")
                             .setContentText(interests)
                             .setSound(alarmSound);
-            // Creates an explicit intent for the Activity
-//        Intent resultIntent = new Intent(this, EventMenu.class);
-//        resultIntent.putExtra(Constants.eventId, _id);
-            Intent resultIntent = new Intent(this, SearchFrag.class);
-//        resultIntent.putExtra(Constants.eventId, _id);
 
+            Intent resultIntent = new Intent(this, SearchFrag.class);
 
             PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
@@ -224,7 +214,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
             mNotificationManager.notify(noteId, mBuilder.build());
 
         }
-        else
+        else //update notification after the related events no longer exist
         {
             Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
@@ -236,12 +226,8 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
                             .setContentTitle("Searching...")
                             .setContentText("")
                             .setSound(alarmSound);
-            // Creates an explicit intent for the Activity
-//        Intent resultIntent = new Intent(this, EventMenu.class);
-//        resultIntent.putExtra(Constants.eventId, _id);
-            Intent resultIntent = new Intent(this, SearchFrag.class);
-//        resultIntent.putExtra(Constants.eventId, _id);
 
+            Intent resultIntent = new Intent(this, SearchFrag.class);
 
             PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
@@ -260,7 +246,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
     }
 
-    private void cancelNotification() {
+    private void cancelNotification() { //cancel notification
         mNotificationManager.cancel(noteId);
         mode = "Voluntary";
         stopForeground(true);
@@ -285,7 +271,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
     @Override
     public IBinder onBind(Intent intent) {
         mode = "Voluntary";
-        // TODO: Return the communication channel to the service.
+
 //        throw new UnsupportedOperationException("Not yet implemented");
         return null;
     }
@@ -313,14 +299,9 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
 
-        // Sets the desired interval for active location updates. This interval is
-        // inexact. You may not receive updates at all if no location sources are available, or
-        // you may receive them slower than requested. You may also receive updates faster than
-        // requested if other applications are requesting location at a faster interval.
+        // Sets the desired interval for active location updates.
         mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
-
-        // Sets the fastest rate for active location updates. This interval is exact, and your
-        // application will never receive updates faster than this value.
+        // Sets the fastest rate for active location updates.
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
 
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -339,9 +320,6 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
      * Removes location updates from the FusedLocationApi.
      */
     protected void stopLocationUpdates() {
-        // It is a good practice to remove location requests when the activity is in a paused or
-        // stopped state. Doing so helps battery performance and is especially
-        // recommended in applications that request frequent location updates.
 
         // The final argument to {@code requestLocationUpdates()} is a LocationListener
         // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
@@ -361,7 +339,7 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
                     "  Latitude = " + String.valueOf(mLastLocation.getLatitude()) +
                     "  Longitude = " + String.valueOf(mLastLocation.getLongitude());
             Log.i(TAG, message);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, R.string.no_location_detected, Toast.LENGTH_SHORT).show();
         }
@@ -385,10 +363,10 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
                 "  Longitude = " + String.valueOf(mCurrentLocation.getLongitude() +
                 "\nLast Updated = " + mLastUpdateTime);
         Log.i(TAG, message);
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         if (mode.equals("Passive")) {
-            Thread comparison = new Thread(new InternetHelper());
-            comparison.start();
+            Thread comparison = new Thread(new InternetHelper()); //use new thread
+            comparison.start(); //invoke the passive search function
         }
     }
 
@@ -418,36 +396,36 @@ public class SearchHelper extends Service implements GoogleApiClient.ConnectionC
 
 
 
-    private class CompareHelper extends AsyncTask<String, Integer, ArrayList<String>>{
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Event_T eventdownloader = new Event_T();
-            Event_T.test = null;
-            eventdownloader.getAllEvent();
-            while (Event_T.test==null){
-
-            }
-
-        }
-
-        @Override
-        protected ArrayList<String> doInBackground(String... strings) {
-            ArrayList<String> temp = new ArrayList<>();
-            List<Event> all = Event_T.test;
-            for (int i = 0 ; i< all.size(); i++){
-                float [] results={};
-                Location.distanceBetween(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), all.get(i).latitude, all.get(i).longitude, results);
-                if (results.length!=0 && results[0] < Constants.DEFAULT_RANGE_DETECTION){
-                    temp.add(all.get(i)._id);
-                }
-            }
-            return temp;
-        }
-
-
-    }
+//    private class CompareHelper extends AsyncTask<String, Integer, ArrayList<String>>{
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//            Event_T eventdownloader = new Event_T();
+//            Event_T.test = null;
+//            eventdownloader.getAllEvent();
+//            while (Event_T.test==null){
+//
+//            }
+//
+//        }
+//
+//        @Override
+//        protected ArrayList<String> doInBackground(String... strings) {
+//            ArrayList<String> temp = new ArrayList<>();
+//            List<Event> all = Event_T.test;
+//            for (int i = 0 ; i< all.size(); i++){
+//                float [] results={};
+//                Location.distanceBetween(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), all.get(i).latitude, all.get(i).longitude, results);
+//                if (results.length!=0 && results[0] < Constants.DEFAULT_RANGE_DETECTION){
+//                    temp.add(all.get(i)._id);
+//                }
+//            }
+//            return temp;
+//        }
+//
+//
+//    }
 
     private class InternetHelper implements Runnable{
 
