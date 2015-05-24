@@ -155,28 +155,35 @@ public class UserModel {
         Event_T evhelper=new Event_T();
         Relahelper relhelper=new Relahelper();
         boolean flag=false;
+        boolean admin=false;
         for(Event evt: Event_T.test){
             if(evt._ownerid.equals(UserServer.returnInfo._id)){
                 evhelper.deleteEvent(evt._id);
                 flag=true;
-
+                admin=true;
+                for(Relationship rel: Relahelper.relas){
+                    if(rel.roomId.equals(evt._id)){
+                        relhelper.deleteRelationship(rel._id);
+                    }
+                }
                 break;
             }
 
         }
-        for(Relationship rel: Relahelper.relas){
-            if(rel.userId.equals(UserServer.returnInfo._id)) {
-                relhelper.deleteRelationship(rel._id);
-                if (flag == false)
-                {
+        if(!admin) {
+            for (Relationship rel : Relahelper.relas) {
+                if (rel.userId.equals(UserServer.returnInfo._id)) {
+                    relhelper.deleteRelationship(rel._id);
+                    if (flag == false) {
 
-                    EventMenu.pubnub.publish(EventMenu.event_id, "type:leave+id:" + UserServer.returnInfo._id + "Name:" + UserServer.returnInfo.Name, new Callback() {
-                    });
-                    EventMenu.name_array.clear();
-                    EventMenu.id_array.clear();
+                        EventMenu.pubnub.publish(EventMenu.event_id, "type:leave+id:" + UserServer.returnInfo._id + "Name:" + UserServer.returnInfo.Name, new Callback() {
+                        });
+                        EventMenu.name_array.clear();
+                        EventMenu.id_array.clear();
+
+                    }
 
                 }
-
             }
         }
         prefed.commit();
