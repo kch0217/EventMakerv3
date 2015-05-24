@@ -14,8 +14,8 @@
         <item>Sing Karaoke</item>
         <item>Have meal</item>
         <item>Do assignment</item>
-        <item>Revision</item>
-        <item>Test</item>
+        <item>Watch films</item>
+        <item>Playing Computer Games</item>
     </string-array>
     <string-array name="interest_array2">
         <item>Football</item>
@@ -24,8 +24,8 @@
         <item>Sing Karaoke</item>
         <item>Have meal</item>
         <item>Do assignment</item>
-        <item>Revision</item>
-        <item>Test</item>
+        <item>Watch films</item>
+        <item>Playing computer games</item>
     </string-array>
     <string name="title_activity_search_main">Search</string>
     <string name="title_activity_setting">Setting</string>

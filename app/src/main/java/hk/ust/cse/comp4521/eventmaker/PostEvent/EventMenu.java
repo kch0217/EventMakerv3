@@ -621,21 +621,7 @@ public class EventMenu extends Activity {
             }
             startActivity(tosetting);
         }
-        if (id == R.id.action_ic_settings){
-            Intent tosetting=new Intent(EventMenu.this,eventSetting.class);
-            tosetting.putExtra(Constants.eventSetting, event_id);
-            for(Event evt: Event_T.test){
-                if(evt._id.equals(event_id)){
-                    if(evt._ownerid.equals(UserServer.returnInfo._id)){
-                        tosetting.putExtra(Constants.eventSettingType,100);
-                    }
-                    else{
-                        tosetting.putExtra(Constants.eventSettingType,200);
-                    }
-                }
-            }
-            startActivity(tosetting);
-        }
+
 
         return super.onOptionsItemSelected(item);
     }

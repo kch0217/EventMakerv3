@@ -269,12 +269,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
             startActivity(intent);
             return true;
         }
-        if (id == R.id.action_ic_settings){
-            Log.i(null, "Setting Button is clicked");
-            Intent intent = new Intent(getApplicationContext(), Setting.class);
-            startActivity(intent);
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
     }
