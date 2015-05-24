@@ -148,12 +148,14 @@ public class UserModel {
     }
 
     public void saveEventId(String id){
+        //save event id for reconnection
         SharedPreferences.Editor pref=prefs.edit();
         pref.putString("Event", id);
         pref.commit();
     }
 
     public void deleteEventId(){
+        //delete event id
         SharedPreferences.Editor pedit=prefs.edit();
         pedit.remove("Event");
         pedit.commit();

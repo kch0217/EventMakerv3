@@ -22,7 +22,7 @@ public class Relahelper {
     public static Object lock;
     public static boolean locker = false;
 
-
+    //RESTFUL api communcation between server and application for relationship using Retrofit
     public void createRelationship(final Relationship2 rel){
         restRelationship.get().addRelationship(rel, new Callback<Response>() {
             @Override
@@ -34,7 +34,7 @@ public class Relahelper {
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.i(TAG,"create rel fails");
+                Log.i(TAG,"create rel fails"+retrofitError.getKind().name());
             }
         });
         getAllRelationship();

@@ -64,12 +64,13 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
             }
         }
     };
-
+    //make use of Google Map v.2 for implementation of map
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "map starting");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+        //set the type of google map
         GoogleMapOptions options=new GoogleMapOptions();
         options.mapType(GoogleMap.MAP_TYPE_NORMAL)
                 .compassEnabled(true);
@@ -88,11 +89,14 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
 
         Intent receive=getIntent();
         if(receive!=null){
+            //if intent is received, there should be at least three attributes
+            //latitude,longitude and the mode denoting where the intent is from
             mode=receive.getExtras().getInt(Constants.eventCode,0);
             orilat=receive.getExtras().getDouble("lat", 0);
             orilon=receive.getExtras().getDouble("lon",0);
             interest = receive.getExtras().getString("Interest", "");
             if(mode==100){
+                //the map is used to create new event
                 interest=receive.getExtras().getString("Interest", null);
                 Log.i(TAG,"from search");
                 // 1. Instantiate an AlertDialog.Builder with its constructor
@@ -113,10 +117,12 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
                 builder.create().show();
             }
             else if(mode==200){
+                //from event menu for users to check the location on the map
                 Log.i(TAG, "receive from event");
 
             }
             else{
+                //basically should not happen
                 Log.i(TAG,"something goes wrong");
             }
         }
@@ -145,11 +151,15 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
+        //things could only be done after the map is ready
         Log.i(TAG,"map ready");
         googleMap.setMyLocationEnabled(true);
         if(mode==100){
+            //submit button is available
             but.setVisibility(View.VISIBLE);
         }
+        //set the map center as the location provided. Location could be
+        //user's location or event's location
         LatLng mylocation=new LatLng(orilat,orilon);
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 16));
         if(mode==200){
@@ -158,6 +168,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
                             .title("destination")
             );
             back.setVisibility(View.VISIBLE);
+            //back button is available for going back to event menu
         }
 
         but.setOnClickListener(this);
@@ -167,6 +178,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
             public void onMapClick(LatLng latLng) {
                 if(mode==100) {
                     Log.i(TAG, "clicked");
+                    //only allow one marker for event location
                     if (num < ballcount) {
                         num++;
                         marker = googleMap.addMarker(new MarkerOptions()
@@ -186,7 +198,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
                     }
                 }
                 else{
-
+                    Log.i(TAG,"clciked in mode 200");
                 }
                 click = true;
             }
@@ -198,6 +210,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
         if(v.getId()==R.id.submit){
             Event2 eventToSubmit=new Event2();
             if (click == false && mode ==100) {
+                //user has not chosen the event location
                 Toast.makeText(Map.this, "Please select a venue for the event to take place!", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -207,7 +220,6 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
             eventToSubmit.longitude=lon;
             Timestamp eventtime=eventToSubmit.currentTimestamp;
             eventToSubmit.interest = interest;
-
             pd = ProgressDialog.show(Map.this,"Network Access", "Connecting to the server", true);
             ServerConnection serverConn = new ServerConnection(Map.this, handle);
             serverConn.run(); //test network connection
@@ -224,7 +236,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
             Event_T eventhelper=new Event_T();
             eventhelper.createEvent(eventToSubmit);
             boolean find=false;
-            //id
+            //getting back the id just created
             String _id=null;
             ProgressDialog dialog=ProgressDialog.show(Map.this,"loading","Please wait...",true);
             Log.i(TAG,"the id");
@@ -255,11 +267,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, View.On
             Intent startEvent=new Intent(Map.this,EventMenu.class);
             startEvent.putExtra(Constants.eventId, _id);
             startEvent.putExtra(Constants.reconnect,200);
-            // put it to the relationship
-//            Relahelper relhelp=new Relahelper();
-//            Relationship2 relationtosubmit=new Relationship2(_id,UserServer.returnInfo._id);
-//            relhelp.createRelationship(relationtosubmit);
-//            Log.i(TAG,"created rela and event on server(should be)");
+            //used for reconnection only
             Log.i(TAG, "Going to event menu");
             startEvent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(startEvent);

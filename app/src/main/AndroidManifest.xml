@@ -66,10 +66,6 @@
             android:value="AIzaSyCP9l_atibNsB7jmMxV2bPC_Olrn34ihx0" />
 
         <activity
-            android:name=".Event.Event_Test"
-            android:label="@string/title_activity_event__test" >
-        </activity>
-        <activity
             android:name=".Event.Map"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_map"

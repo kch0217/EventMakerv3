@@ -39,8 +39,10 @@ public class eventSetting extends Activity implements View.OnClickListener{
     private EditText editText;
     private TextView title;
     private int mode;//100=owner 200=non
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_setting2);
         startText= (TextView) findViewById(R.id.startT);
@@ -51,7 +53,7 @@ public class eventSetting extends Activity implements View.OnClickListener{
         partno= (TextView) findViewById(R.id.partno);
         changePart= (Button) findViewById(R.id.buttonPart);
         //event menu has to send event id to this activity
-        //suppose no nedd to check if event exists
+        //suppose no need to check if event exists
         evt_id=getIntent().getExtras().getString(Constants.eventSetting);
         for(Event ev: Event_T.test){
             if(ev._id.equals(evt_id)){
@@ -72,7 +74,9 @@ public class eventSetting extends Activity implements View.OnClickListener{
         changeEnd.setOnClickListener(this);
         changePart.setOnClickListener(this);
         mode=getIntent().getExtras().getInt(Constants.eventSettingType,0);
+        //100=owner 200=non owner
         if(mode==200){
+            //only the owner could change the setting
             changePart.setVisibility(View.INVISIBLE);
             changeEnd.setVisibility(View.INVISIBLE);
             changeStart.setVisibility(View.INVISIBLE);
@@ -115,6 +119,7 @@ public class eventSetting extends Activity implements View.OnClickListener{
         int minute=mcurrentTime.get(Calendar.MINUTE);
         final Event_T eventhelper=new Event_T();
         if(v.getId()==R.id.buttonStart){
+            //allow user to choose time on timepickerdialog
             TimePickerDialog start=new TimePickerDialog(eventSetting.this, new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -127,12 +132,14 @@ public class eventSetting extends Activity implements View.OnClickListener{
                     Event2 tobeupload=copyFromEvent(evt);
                     tobeupload.starting=texttobeset;
                     eventhelper.updateEvent(tobeupload,evt_id);
+                    //update the event on database whenever changes are made
                 }
             },hour,minute,false);
             start.setTitle("starting time");
             start.show();
         }
         else if(v.getId()==R.id.buttonEnd){
+            //allow user to choose time on timepickerdialog
             TimePickerDialog end=new TimePickerDialog(eventSetting.this, new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -145,12 +152,14 @@ public class eventSetting extends Activity implements View.OnClickListener{
                     Event2 tobeupload=copyFromEvent(evt);
                     tobeupload.ending=texttobeset;
                     eventhelper.updateEvent(tobeupload,evt_id);
+                    //update the event on database whenever changes are made
                 }
             },hour,minute,false);
             end.setTitle("ending time");
             end.show();
         }
         else if(v.getId()==R.id.buttonPart){
+            //create an alertdialog which uses an edittext as view
             AlertDialog.Builder builder=new AlertDialog.Builder(eventSetting.this);
             Log.i(TAG,"trying to set the builder");
             builder.setTitle("participants")
@@ -167,6 +176,7 @@ public class eventSetting extends Activity implements View.OnClickListener{
                             Event2 et=copyFromEvent(evt);
                             et.numOfPart=Integer.parseInt(editText.getText().toString());
                             eventhelper.updateEvent(et,evt_id);
+                            //update the event on database whenever changes are made
 
                         }
                     })
@@ -184,6 +194,7 @@ public class eventSetting extends Activity implements View.OnClickListener{
     }
 
     public Event2 copyFromEvent(Event evt){
+        //helper function
         Event2 et=new Event2();
         et._ownerid=evt._ownerid;
         et.interest=evt.interest;

@@ -1,7 +1,6 @@
 package hk.ust.cse.comp4521.eventmaker.Event;
 
 import android.location.Location;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,7 @@ import hk.ust.cse.comp4521.eventmaker.Constants;
 public class Matching{
     private String TAG="matching";
     public void Matching(){ }
-
+    //helper function to find the closest event to the user which fits his preference.
     //return eventid/null
     public static String checking(String interest, double lat, double longit){
         List<Event> events=Event_T.test;

@@ -2,8 +2,6 @@ package hk.ust.cse.comp4521.eventmaker.restRelationship;
 
 import java.util.ArrayList;
 
-import hk.ust.cse.comp4521.eventmaker.Event.Event;
-import hk.ust.cse.comp4521.eventmaker.Event.Event2;
 import hk.ust.cse.comp4521.eventmaker.Relationship.Relationship;
 import hk.ust.cse.comp4521.eventmaker.Relationship.Relationship2;
 import retrofit.Callback;
@@ -19,6 +17,7 @@ import retrofit.http.Path;
  * Created by User on 5/21/2015.
  */
 public interface relationshipApi {
+    //api for Retrofit
     @GET("/relationship")
     void getRelationships(Callback<ArrayList<Relationship>> callback);
 

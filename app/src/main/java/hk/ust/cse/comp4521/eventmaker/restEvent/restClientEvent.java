@@ -38,7 +38,7 @@ public class restClientEvent {
         RestAdapter restAdapter=builder.build();
         restClient=restAdapter.create(eventApi.class);
     }
-
+       //run restful api on other threads
     private static class eventExecutor implements Executor {
         @Override
         public void execute(Runnable command) {

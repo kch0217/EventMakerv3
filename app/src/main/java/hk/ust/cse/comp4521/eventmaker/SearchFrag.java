@@ -1,8 +1,5 @@
 package hk.ust.cse.comp4521.eventmaker;
 
-import java.util.ArrayList;
-import java.util.Locale;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
@@ -11,17 +8,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,14 +31,16 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.Locale;
+
 import hk.ust.cse.comp4521.eventmaker.Event.Event;
-import hk.ust.cse.comp4521.eventmaker.PostEvent.EventMenu;
 import hk.ust.cse.comp4521.eventmaker.Event.Event_T;
 import hk.ust.cse.comp4521.eventmaker.Event.Map;
 import hk.ust.cse.comp4521.eventmaker.Event.Matching;
-import hk.ust.cse.comp4521.eventmaker.PassiveSearch.SearchHelper;
 import hk.ust.cse.comp4521.eventmaker.Helper.ServerConnection;
-import hk.ust.cse.comp4521.eventmaker.Relationship.Relahelper;
+import hk.ust.cse.comp4521.eventmaker.PassiveSearch.SearchHelper;
+import hk.ust.cse.comp4521.eventmaker.PostEvent.EventMenu;
 import hk.ust.cse.comp4521.eventmaker.User.UserInfo;
 import hk.ust.cse.comp4521.eventmaker.User.UserModel;
 import hk.ust.cse.comp4521.eventmaker.User.UserServer;
@@ -194,14 +193,18 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
         bindService(mainloc, serviceConnection, Context.BIND_AUTO_CREATE);
         SharedPreferences pre = UserModel.getUserModel().getSharedPreferences();
         boolean find=false;
+        //for reconnection
+        //check if the event id exists in sharedpreference
         if (pre.contains("Event") && UserServer.connectionState ) {
             final String eventId = pre.getString("Event", "");
+            //find the event
             for(Event evt:Event_T.test){
                 if(evt._id.equals(eventId)){
                     find=true;
                 }
             }
             if(find) {
+                //if the event is found, the user would be directed back to the event.
                 new AlertDialog.Builder(SearchFrag.this)
                         .setTitle("redirection")
                         .setMessage("brining you back to the event")
@@ -220,6 +223,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                         .show();
             }//event already disappeared
             else{
+                //delete the eventid from sharedpreference
                 UserModel.getUserModel().deleteEventId();
             }
         }
@@ -427,6 +431,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
 
                     SharedPreferences pre = UserModel.getUserModel().getSharedPreferences();
                     boolean find=false;
+                    //check if event id exists in sharedpreference
                     if (pre.contains("Event")) {
                         final String eventId = pre.getString("Event", "");
                         for(Event evt:Event_T.test){
@@ -435,6 +440,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                             }
                         }
                         if(find) {
+                            //if the event is present, the user would be directed back to the event
                             new AlertDialog.Builder(getActivity())
                                     .setTitle("redirection")
                                     .setMessage("brining you back to the event")
@@ -454,6 +460,7 @@ public class SearchFrag extends ActionBarActivity implements ActionBar.TabListen
                                     .show();
                         }
                         else{
+                            //otherwise, the id would be deleted
                             UserModel.getUserModel().deleteEventId();
                         }
                     }

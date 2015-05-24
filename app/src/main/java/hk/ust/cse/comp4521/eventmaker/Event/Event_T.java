@@ -1,6 +1,5 @@
 package hk.ust.cse.comp4521.eventmaker.Event;
 
-import android.location.Location;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -24,13 +23,7 @@ public class Event_T{
     public static boolean locker = false;
 
 
-    public static double locationDetection(Location one, Location two){
-        double latdif=one.getLatitude()-two.getLatitude();
-        double longdif=one.getLongitude()-two.getLongitude();
-        double result=Math.sqrt(latdif*latdif+longdif*longdif);
-        return result;
-    };
-
+    //RESTFUL api communication between server and application for events using retrofit
     public void createEvent(final Event2 evt){
         restClientEvent.get().addEvent(evt, new Callback<retrofit.client.Response>() {
             @Override
@@ -107,7 +100,7 @@ public class Event_T{
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.i(TAG, "delete fail");
+                Log.i(TAG, "delete fail"+retrofitError.getKind().name());
             }
         });
         getAllEvent();
@@ -124,7 +117,7 @@ public class Event_T{
 
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.i(TAG,"FAIL get");
+                Log.i(TAG,"FAIL get"+retrofitError.getKind().name());
             }
         });
         getAllEvent();

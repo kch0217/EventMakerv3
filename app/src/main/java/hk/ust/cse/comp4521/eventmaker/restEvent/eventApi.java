@@ -17,6 +17,7 @@ import retrofit.http.Path;
  * Created by User on 5/4/2015.
  */
 public interface eventApi {
+    //api for Retrofit
     //
     @GET("/events")
     void getEvents(Callback<ArrayList<Event>> callback);

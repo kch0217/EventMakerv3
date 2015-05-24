@@ -6,7 +6,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 import hk.ust.cse.comp4521.eventmaker.Constants;
-import hk.ust.cse.comp4521.eventmaker.restEvent.eventApi;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 
@@ -38,6 +37,7 @@ public class restRelationship {
         RestAdapter restAdapter=builder.build();
         restClient=restAdapter.create(relationshipApi.class);
     }
+    //run restful api on other threads
     private static class eventExecutor implements Executor {
         @Override
         public void execute(Runnable command) {
